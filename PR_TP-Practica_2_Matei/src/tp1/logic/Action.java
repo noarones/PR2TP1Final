@@ -1,0 +1,45 @@
+package tp1.logic;
+
+/**
+ * Represents the allowed actions in the game
+ *
+ */
+public enum Action {
+	LEFT(-1,0), RIGHT(1,0), DOWN(0,1), UP(0,-1), STOP(0,0);
+	
+	private int x;
+	private int y;
+	
+	private Action(int x, int y) {
+		this.x=x;
+		this.y=y;
+	}
+	
+	public int getX() {
+		return x;
+	}
+
+	public int getY() {
+		return y;
+	}
+	
+	public static Action parseAction(String action) {
+		Action ret = null;
+		
+		switch(action) {
+		case "left" : ret = Action.LEFT; break;
+		case "l"    : ret = Action.LEFT; break;
+		case "r" : ret = Action.RIGHT; break;
+		case "right"    : ret = Action.RIGHT; break;
+		case "down" : ret = Action.DOWN; break;
+		case "d"    : ret = Action.DOWN; break;
+		case "up" : ret = Action.UP; break;
+		case "u"    : ret = Action.UP; break;
+		case "stop" : ret = Action.STOP; break;
+		case "s"    : ret = Action.STOP; break;
+		default: break;
+		}
+		return ret;
+	}
+	
+}

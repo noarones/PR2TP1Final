@@ -30,3 +30,8 @@ replay_pid*
 
 # Other files
 *.bak
+.vscode/
+.idea/
+.settings/
+enunciados/
+README.md

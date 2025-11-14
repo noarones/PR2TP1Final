@@ -316,15 +316,14 @@ public class Mario extends MovingObject{
                 this.big = false;
             } else {
                 game.removeLife();
+                this.dead();
                 if (game.numLives() > 0) {
                     game.reset(-2);
-                   return false;
                 }
             }
-            
-             return true;
+            return true;
         }
-        return true;
+        return false;
     }
 
 

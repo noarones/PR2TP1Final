@@ -55,7 +55,7 @@ public class Goomba extends MovingObject {
     //                   INTERACCIONES
     // ==========================================================
     public boolean receiveInteraction(Mario other) {
-        return this.isAlive() && handleDefeat();
+        return this.isAlive() && this.handleDefeat();
     }
 
     @Override

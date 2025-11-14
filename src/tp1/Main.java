@@ -36,3 +36,5 @@ public class Main {
 		}
 	}
 }
+
+//[Console]::InputEncoding = [Console]::OutputEncoding = New-Object System.Text.UTF8Encoding

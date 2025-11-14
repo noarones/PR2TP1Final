@@ -35,7 +35,7 @@ public class Mushroom extends MovingObject{
 
 
     private void setInitial(Action dir) {
-    	this.dir = dir == null ?  Action.LEFT : dir ;
+    	this.dir = dir == null ?  Action.RIGHT : dir ;
     	this.lastDir = dir;
     }
 

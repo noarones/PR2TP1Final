@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import tp1.logic.gameobjects.*;
-import tp1.view.Messages;
 
 
 public class Game implements GameStatus, GameWorld, GameModel {

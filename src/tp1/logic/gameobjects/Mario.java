@@ -4,9 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import tp1.logic.Action;
-import tp1.logic.Game;
 import tp1.logic.GameItem;
-import tp1.logic.GameModel;
 
 import tp1.logic.GameWorld;
 import tp1.logic.Position;
@@ -52,11 +50,16 @@ public class Mario extends MovingObject{
     //                      GETTERS / SETTERS
     // ==========================================================
     public String getIcon() {
-        return switch (dir) {
-            case LEFT -> Messages.MARIO_LEFT;
-            case STOP -> Messages.MARIO_STOP;
-            default -> Messages.MARIO_RIGHT;
-        };
+        if (this.dir == Action.DOWN && this.lastDir == Action.STOP){
+            return Messages.MARIO_STOP;
+        }
+        else {
+            return switch (dir) {
+                case LEFT -> Messages.MARIO_LEFT;
+                case STOP -> Messages.MARIO_STOP;
+                default -> Messages.MARIO_RIGHT;
+            };
+        }   
     }
 
     public boolean isBig() {
@@ -117,7 +120,6 @@ public class Mario extends MovingObject{
                     case DOWN -> handleDown(movedUp);
                     case STOP -> handleStop();
                 }
-                game.checkInteractions(this);
             }
         }
         clearActions();
@@ -135,6 +137,7 @@ public class Mario extends MovingObject{
                 moveHorizontal(Action.LEFT);
             else 
                 changeDirection(Action.RIGHT);
+            game.checkInteractions(this);
             return true;
         }
         return false;
@@ -146,6 +149,7 @@ public class Mario extends MovingObject{
                 moveHorizontal(Action.RIGHT);
             else 
                 changeDirection(Action.LEFT);
+            game.checkInteractions(this);
             return true;
         }
         return false;
@@ -170,6 +174,7 @@ public class Mario extends MovingObject{
         if (!movedDown && verticalCount < 4 && !game.solidUp(pos)) {
             pos = pos.move(Action.UP);
             isFalling = false;
+            game.checkInteractions(this);
             return true;
         }
         return false;
@@ -180,7 +185,11 @@ public class Mario extends MovingObject{
     }
 
     private void handleStop() {
-        if (!isFalling) dir = Action.STOP;
+        if (!isFalling) {
+             dir = Action.STOP;
+             this.lastDir = Action.STOP;
+             game.checkInteractions(this);
+        }
     }
 
     private void fallVertically() {
@@ -200,10 +209,17 @@ public class Mario extends MovingObject{
                 pendingActions.clear();
                 return;
             }
+
+            else {
+                game.checkInteractions(this);
+            }
         }
 
         isFalling = false;
-        if (wasOnGround) dir = Action.STOP;
+        if (wasOnGround) {
+             dir = Action.STOP;
+             this.lastDir = Action.STOP;
+        }
     }
 
 
@@ -270,6 +286,17 @@ public class Mario extends MovingObject{
     public boolean receiveInteraction(Mario obj) {
         return false;
     }
+
+    @Override
+	public boolean receiveInteraction(Mushroom obj) {
+        if (this.isBig() && obj.isInPosition(this.pos.up())) {
+            return obj.receiveInteraction(this);
+        }
+		if (!this.isBig()){
+            this.big = true;
+        }
+        return true;
+	}
 
     @Override
     public boolean receiveInteraction(Goomba obj) {
@@ -347,12 +374,6 @@ public class Mario extends MovingObject{
 		mario.setInitial(big, dir_);
 		game.setAsPrincipalCharacter(mario);
 		return mario;
-	}
-
-	@Override
-	public boolean receiveInteraction(Mushroom obj) {
-		// TODO Auto-generated method stub
-		return false;
 	}
 
 	@Override

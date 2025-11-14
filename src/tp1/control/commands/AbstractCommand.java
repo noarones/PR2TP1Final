@@ -1,8 +1,5 @@
 package tp1.control.commands;
 
-import tp1.logic.Game;
-import tp1.logic.GameWorld;
-import tp1.view.GameView;
 import tp1.view.Messages;
 
 public abstract class AbstractCommand implements Command {

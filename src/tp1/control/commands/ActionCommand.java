@@ -24,9 +24,9 @@ public class ActionCommand extends AbstractCommand {
 
 	@Override
 	public void execute(GameModel game, GameView view) {
-		for (Action a: action) {
-			game.addAction(a);
-		}
+		
+		for (Action a: action) game.addAction(a);
+		
 		action.clear();
 		
 		game.update();

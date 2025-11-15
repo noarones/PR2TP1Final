@@ -49,45 +49,6 @@ public class Mushroom extends MovingObject{
     }
 
 
-    // ==========================================================
-    //                      MOVIMIENTO
-    // ==========================================================
-    @Override
-    protected void horizontalMove() {
-        dir = (dir == Action.DOWN) ? lastDir : dir;
-        moveHorizontally();
-        
-    }
-
-
-    /** Controla el movimiento horizontal y el rebote ante obstáculos. */
-    private void moveHorizontally() {
-        Position nextPos = pos.move(dir);
-        boolean blocked = isBlockedHorizontally();
-
-        if (blocked) {
-            reverseDirection();
-        } else {
-            pos = nextPos;
-            lastDir = dir;
-        }
-    }
-
-    /** Devuelve true si el movimiento horizontal está bloqueado. */
-    private boolean isBlockedHorizontally() {
-        return switch (dir) {
-            case LEFT -> game.solidLeft(pos) || game.nextToLeftLimit(pos);
-            case RIGHT -> game.solidRight(pos) || game.nextToRightLimit(pos);
-            default -> false;
-        };
-    }
-
-    /** Invierte la dirección actual y actualiza la última dirección válida. */
-    private void reverseDirection() {
-        dir = (dir == Action.LEFT) ? Action.RIGHT : Action.LEFT;
-        lastDir = dir;
-    }
-
      // ==========================================================
     //                      REPRESENTACIÓN
     // ==========================================================
@@ -121,11 +82,7 @@ public class Mushroom extends MovingObject{
 
     @Override
     public boolean receiveInteraction(Mario obj) {
-        if (this.isAlive()) {
-            this.dead();
-            return true;
-        }
-        return false;
+        return isAlive() && dead();
     }
 
     @Override
@@ -140,21 +97,11 @@ public class Mushroom extends MovingObject{
 
     @Override
     protected GameObject create(String[] words, GameWorld game, Position pos) {
-        Mushroom mushroom = new Mushroom(game,pos);
-		Action dir_ = null;
-		
-		if(words.length >= 3 ) {
-			
-			 dir_ = Action.parseAction(words[2].toLowerCase());
-			if(!(dir_ == Action.LEFT || dir_ == Action.RIGHT)) 
-				dir_ = null;
-		
-			
-		}
-		
-		mushroom.setInitial(dir_);
-		
-		return mushroom;
+        Mushroom mushroom = new Mushroom(game, pos);
+
+        mushroom.setInitial(ParamParser.parseDirection(words, 2));
+
+        return mushroom;
     }
 
 	@Override

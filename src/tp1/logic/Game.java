@@ -267,7 +267,7 @@ public class Game implements GameStatus, GameWorld, GameModel {
 	}
 
 	@Override
-	public void setAsPrincipalCharacter(Mario mario) {
+	public void setAsMainCharacter(Mario mario) {
 		this.mario = mario;
 	}
 

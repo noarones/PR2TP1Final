@@ -2,8 +2,8 @@ package tp1.logic.gameobjects;
 
 import java.util.Arrays;
 import java.util.List;
-
 import tp1.logic.GameWorld;
+
 public class GameObjectFactory {
  
 	
@@ -21,12 +21,14 @@ public class GameObjectFactory {
 		for (GameObject g : availableObjects) {
 			
 			GameObject g_ = g.parse(objWords, game);
+			
             if (g_ != null)
                 return g_;
 			
 		}
 		
 		return null;
+		
 	}
 	
 }

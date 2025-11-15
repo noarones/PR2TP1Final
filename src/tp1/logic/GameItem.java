@@ -8,7 +8,7 @@ public interface GameItem {
 	public  boolean isSolid();
 	public  boolean isAlive();
 	public  boolean isInPosition(Position pos);
-    public boolean wasInPosition(Position pos);
+ 
 	
 	public  boolean interactWith(GameItem item);
 

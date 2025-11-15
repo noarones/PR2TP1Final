@@ -40,28 +40,51 @@ public abstract class MovingObject extends GameObject{
 
 	}
 
-	protected void horizontalMove() {}
+    protected void horizontalMove() {
+        dir = (dir == Action.DOWN) ? lastDir : dir;
+        moveHorizontally();
+        saveLastDir(dir);
+    }
 
+
+    /** Controla el movimiento horizontal y el rebote ante obstáculos. */
+    private boolean moveHorizontally() {
+    	
+        return isBlockedHorizontally() ? reverseDirection() : (move(dir));
+    }
+    
+    private boolean saveLastDir(Action dir) {
+    	lastDir = dir;
+    	return true;
+    }
+
+    /** Devuelve true si el movimiento horizontal está bloqueado. */
+    private boolean isBlockedHorizontally() {
+        return switch (dir) {
+            case LEFT -> game.solidLeft(pos) || game.nextToLeftLimit(pos);
+            case RIGHT -> game.solidRight(pos) || game.nextToRightLimit(pos);
+            default -> false;
+        };
+    }
+
+    /** Invierte la dirección actual y actualiza la última dirección válida. */
+    private boolean reverseDirection() {
+        dir = (dir == Action.LEFT) ? Action.RIGHT : Action.LEFT;
+        return true;
+    }
+
+    
+  
 	protected void fall() {
 
-		pos = pos.move(Action.DOWN);
-
+		move(Action.DOWN);
 		dir = Action.DOWN;
-
 		isFalling = true;
 
 	}
 
-	public boolean wasInPosition(Position pos) {
-		return lastPos.equals(pos);
-	}
  
-	protected void saveLastPosition() {
-        lastPos = lastPos.copy(pos);
-    }
-	
-	
-	
+	protected void saveLastPosition() { lastPos = lastPos.copy(pos); }
 	
 	protected void automaticMove() {};
 

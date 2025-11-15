@@ -18,31 +18,26 @@ public class Land extends GameObject{
 	
 	@Override
 	public boolean interactWith(GameItem item) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public boolean receiveInteraction(Land obj) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public boolean receiveInteraction(ExitDoor obj) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public boolean receiveInteraction(Mario obj) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public boolean receiveInteraction(Goomba obj) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
@@ -53,22 +48,15 @@ public class Land extends GameObject{
 
 	@Override
 	public void update() {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public String getIcon() {
-		// TODO Auto-generated method stub
 		return Messages.LAND;
 	}
 
 
-	@Override
-	public boolean wasInPosition(Position pos) {
-		// TODO Auto-generated method stub
-		return false;
-	}
 	@Override public String toString() {
 		return "Land";
 	}
@@ -80,13 +68,11 @@ public class Land extends GameObject{
 
 	@Override
 	public boolean receiveInteraction(Mushroom obj) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public boolean receiveInteraction(Box obj) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 

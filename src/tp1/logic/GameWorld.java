@@ -15,7 +15,7 @@ public interface GameWorld{
 	public void addPoints(int p);
 	public void marioExited();
 	public void removeLife();
-	public void setAsPrincipalCharacter(Mario mario);
+	public void setAsMainCharacter(Mario mario);
 	public boolean isInBoard(Position pos); 
 	// Se utilizan en Mario
 	public void reset(int nLevel);

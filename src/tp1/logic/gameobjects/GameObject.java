@@ -7,7 +7,7 @@ import tp1.logic.Position;
 import tp1.util.*;
 public abstract class GameObject implements GameItem {  
 
-	protected Position pos; // If you can, make it private.
+	protected Position pos; 
 	private boolean isAlive;
 	protected GameWorld game; 
 	protected int points;
@@ -17,8 +17,6 @@ public abstract class GameObject implements GameItem {
 		this.game =  game;
 	}
 	
-	
-	
 	public boolean isInPosition(Position p) {
 		return pos.equals(p);
 	}
@@ -27,28 +25,29 @@ public abstract class GameObject implements GameItem {
 		return isAlive;
 	}
 	
-	public void dead(){
+	public boolean dead(){
 		this.isAlive = false;
+	return true;
 	}
 	
-	// TODO implement and decide, Which one is abstract?
     public abstract boolean isSolid();
 
     public abstract void update();
 	
 	public abstract String getIcon();
 
-	// Not mandatory but recommended
-	protected void move(Action dir) {
-		
+
+	protected boolean move(Action dir) {
+		pos = pos.move(dir);
+        
+	return true;
 	}
 	
-	protected Position parsePosition(String[] words) {
+	
+	protected Position parsePosition(String[] words) {	
 		String[] coords = words[0].replace("(", "").replace(")", "").split(",");
-        int x = Integer.parseInt(coords[0]);
-        int y = Integer.parseInt(coords[1]);
-        
-        return new Position(x, y);
+		
+        return new Position(Integer.parseInt(coords[0]), Integer.parseInt(coords[1]));
 	}
 	
 	protected boolean handleDefeat() {
@@ -65,6 +64,7 @@ public abstract class GameObject implements GameItem {
 				      this.create(words, game, pos1) : null;
 		
 	}
+	
 	 protected abstract GameObject create(String[] words, GameWorld game, Position pos);
 	
 }

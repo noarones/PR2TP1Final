@@ -59,29 +59,22 @@ public class Goomba extends MovingObject {
     }
 
     @Override
-    public boolean interactWith(GameItem item) {
-        boolean canInteract = item.isInPosition(this.pos);
-        if (canInteract) {
-            return item.receiveInteraction(this);
-        }
-        return canInteract;
+    public boolean interactWith(GameItem item) {        
+        return  item.isInPosition(this.pos) ? item.receiveInteraction(this) : false;
     }
 
     @Override
     public boolean receiveInteraction(Land obj) {
-        // TODO Auto-generated method stub
         return false;
     }
 
     @Override
     public boolean receiveInteraction(ExitDoor obj) {
-        // TODO Auto-generated method stub
         return false;
     }
 
     @Override
     public boolean receiveInteraction(Goomba obj) {
-        // TODO Auto-generated method stub
         return false;
     }
 
@@ -99,74 +92,25 @@ public class Goomba extends MovingObject {
     // ==========================================================
     //                      MOVIMIENTO
     // ==========================================================
+
+    
     @Override
-    protected void horizontalMove() {
-        dir = (dir == Action.DOWN) ? lastDir : dir;
-        moveHorizontally();
+    protected GameObject create(String[] words, GameWorld game, Position pos) {
+        Goomba goomba = new Goomba(game, pos);
+
+        goomba.setInitial(ParamParser.parseDirection(words, 2));
         
+        return goomba;
     }
 
-
-    /** Controla el movimiento horizontal y el rebote ante obstáculos. */
-    private void moveHorizontally() {
-        Position nextPos = pos.move(dir);
-        boolean blocked = isBlockedHorizontally();
-
-        if (blocked) {
-            reverseDirection();
-        } else {
-            pos = nextPos;
-            lastDir = dir;
-        }
-    }
-
-    /** Devuelve true si el movimiento horizontal está bloqueado. */
-    private boolean isBlockedHorizontally() {
-        return switch (dir) {
-            case LEFT -> game.solidLeft(pos) || game.nextToLeftLimit(pos);
-            case RIGHT -> game.solidRight(pos) || game.nextToRightLimit(pos);
-            default -> false;
-        };
-    }
-
-    /** Invierte la dirección actual y actualiza la última dirección válida. */
-    private void reverseDirection() {
-        dir = (dir == Action.LEFT) ? Action.RIGHT : Action.LEFT;
-        lastDir = dir;
-    }
-
-    
-  
-    
-    
-	@Override
-	protected GameObject create(String[] words, GameWorld game, Position pos) {
-		Goomba goomba = new Goomba(game,pos);
-		Action dir_ = null;
-		
-		if(words.length >= 3 ) {
-			
-			 dir_ = Action.parseAction(words[2].toLowerCase());
-			if(!(dir_ == Action.LEFT || dir_ == Action.RIGHT)) 
-				dir_ = null;
-		
-			
-		}
-		
-		goomba.setInitial(dir_);
-		
-		return goomba;
-	}
 
 	@Override
 	public boolean receiveInteraction(Mushroom obj) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public boolean receiveInteraction(Box obj) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 

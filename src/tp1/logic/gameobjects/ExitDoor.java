@@ -62,11 +62,6 @@ public class ExitDoor extends GameObject{
 		return Messages.EXIT_DOOR;
 	}
 
-	@Override
-	public boolean wasInPosition(Position pos) {
-		// TODO Auto-generated method stub
-		return false;
-	}
 
 	@Override 
     public String toString() {
@@ -75,19 +70,16 @@ public class ExitDoor extends GameObject{
 
 	@Override
 	protected GameObject create(String[] words, GameWorld game, Position pos) {
-		
 		return new ExitDoor(game , pos);
 	}
 
 	@Override
 	public boolean receiveInteraction(Mushroom obj) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public boolean receiveInteraction(Box obj) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 	

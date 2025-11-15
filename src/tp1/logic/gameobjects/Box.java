@@ -32,29 +32,24 @@ public class Box extends GameObject{
 
 	 @Override
 	    public boolean interactWith(GameItem item) {
-	        boolean canInteract = item.isInPosition(this.pos.under());
-	        if (canInteract) {
-	            return item.receiveInteraction(this);
-	        }
-	        return canInteract;
+	        
+	        return item.isInPosition(this.pos.under()) ? item.receiveInteraction(this) : false;
 	    }
 
 	@Override
 	public boolean receiveInteraction(Land obj) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public boolean receiveInteraction(ExitDoor obj) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
-	private String[] buildString(String type, Position pos) {
+	private String[] buildString(String object, Position pos) {
 	    return new String[] {
 	        pos.toString(), 
-	        type
+	        object
 	    };
 	}
 	
@@ -63,12 +58,12 @@ public class Box extends GameObject{
 		 abierto = true;
 		 game.addPoints(points);
 	     game.addGameObject(buildString("Mushroom", this.pos.up()), "spawn");
+	     
 		 return isAlive();
 	}
 
 	@Override
 	public boolean receiveInteraction(Goomba obj) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
@@ -86,13 +81,11 @@ public class Box extends GameObject{
 
 	@Override
 	protected GameObject create(String[] words, GameWorld game, Position pos) {
-		Box box = new Box(game,pos);
-		boolean abierto_ = false;
-		if(words.length > 2 && (words[2].toLowerCase().equals("empty") || words[2].toLowerCase().equals("e")))
-			abierto = true;
-		else if(words.length > 2 && (words[2].toLowerCase().equals("full") || words[2].toLowerCase().equals("f")))
-		box.setInitial(abierto_);
-		return box;
+	    Box box = new Box(game, pos);
+
+	    box.setInitial(ParamParser.parseBoolean(words, 2,"empty", "e","full", "f", false));
+	    
+	    return box;
 	}
 
 	@Override
@@ -103,18 +96,15 @@ public class Box extends GameObject{
 
 	@Override
 	public boolean receiveInteraction(Box obj) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
-	@Override
-	public boolean wasInPosition(Position pos) {
-		return false;
-	}
-
+	
 	@Override
 	public void update() {
 	
 		
 	}
+
+	
 }

@@ -50,17 +50,15 @@ public class Mario extends MovingObject{
     //                      GETTERS / SETTERS
     // ==========================================================
     public String getIcon() {
-        if (this.dir == Action.DOWN && this.lastDir == Action.STOP){
-            return Messages.MARIO_STOP;
-        }
-        else {
-            return switch (dir) {
-                case LEFT -> Messages.MARIO_LEFT;
-                case STOP -> Messages.MARIO_STOP;
-                default -> Messages.MARIO_RIGHT;
-            };
-        }   
+        return (dir == Action.DOWN && lastDir == Action.STOP)
+                ? Messages.MARIO_STOP
+                : switch (dir) {
+                      case LEFT -> Messages.MARIO_LEFT;
+                      case STOP -> Messages.MARIO_STOP;
+                      default -> Messages.MARIO_RIGHT;
+                  };
     }
+
 
     public boolean isBig() {
         return this.big;
@@ -103,6 +101,7 @@ public class Mario extends MovingObject{
     //                  PROCESAMIENTO DE ACCIONES
     // ==========================================================
     private void action() {
+    	
         boolean XMoved = false;
         boolean movedUp = false;
         boolean movedDown = false;
@@ -260,11 +259,7 @@ public class Mario extends MovingObject{
     // ==========================================================
     @Override
     public boolean interactWith(GameItem item) {
-        boolean canInteract = item.isInPosition(this.pos);
-        if (canInteract) {
-            return item.receiveInteraction(this);
-        }
-        return canInteract;
+    	return  item.isInPosition(this.pos) ? item.receiveInteraction(this) : false;
     }
 
     public boolean marioExited() {
@@ -300,10 +295,12 @@ public class Mario extends MovingObject{
 
     @Override
     public boolean receiveInteraction(Goomba obj) {
+    	
         if (lastPos != null && obj.isInPosition(lastPos.under())) {
             // Mata al Goomba sin perder tamaño
             return true;
         }
+        
         if (isBig() && obj.isInPosition(this.pos.up())) {
             this.big = false;
             return obj.receiveInteraction(this);
@@ -343,41 +340,21 @@ public class Mario extends MovingObject{
     }
     
 
-	@Override
-	protected GameObject create(String[] words, GameWorld game, Position pos) {
-		
-		Mario mario = new Mario(game,pos);
-		boolean big = false;
-		Action dir_ = null;
-		
-		if(words.length >= 3 ) {
-			
-			 dir_ = Action.parseAction(words[2].toLowerCase());
-			if(!(dir_ == Action.LEFT || dir_ == Action.RIGHT)) 
-				dir_ = null;
-			
-			if(words.length == 4) {
-				
-				if(words[3].toLowerCase().equals("big") || words[3].toLowerCase().equals("b")) {
-					big = true;
-				}
-				else if(words[3].toLowerCase().equals("small") || words[3].toLowerCase().equals("s")) {
-					big = false;
-				}
-				else big = true;
-				
-			}
-			
-		}
-		
-		mario.setInitial(big, dir_);
-		game.setAsPrincipalCharacter(mario);
-		return mario;
-	}
+    @Override
+    protected GameObject create(String[] words, GameWorld game, Position pos) {
+        Mario mario = new Mario(game, pos);
+
+        mario.setInitial(ParamParser.parseBoolean(words, 3, "big", "b", "small", "s", false), 
+        		         ParamParser.parseDirection(words, 2));
+        
+        game.setAsMainCharacter(mario);
+        
+        return mario;
+    }
+
 
 	@Override
 	public boolean receiveInteraction(Box obj) {
-		
 		return obj.receiveInteraction(this);
 	}
 }

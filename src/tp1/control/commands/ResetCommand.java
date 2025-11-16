@@ -11,11 +11,18 @@ public class ResetCommand extends AbstractCommand{
 	private static final String HELP = Messages.COMMAND_RESET_HELP;
 	private int a;
 	private boolean noArguments;
+	
 	public ResetCommand() {
 		super(NAME, SHORTCUT , DETAILS, HELP);
-	  noArguments = true;
+		this.noArguments = true;
 	}
 
+	public ResetCommand(int nLevel, boolean noArguments) {
+		super(NAME, SHORTCUT , DETAILS, HELP);
+		this.noArguments = noArguments;
+		this.a = nLevel;
+	}
+	
 	@Override
 	public void execute(GameModel game, GameView view) {
 	if(a == 2 || a == 0 || a == 1 || a == -1 || a == -2 || noArguments)
@@ -32,17 +39,14 @@ public class ResetCommand extends AbstractCommand{
 
 	@Override
 	public Command parse(String[] commandWords) {
+		int nLevel = -2;
 		if(matchCommandName(commandWords[0])) {
 			if(commandWords.length > 1) {
-			 a = Integer.parseInt(commandWords[1]);
-		     noArguments = false;
+			 nLevel = Integer.parseInt(commandWords[1]);
+			 this.noArguments = false;
 			} 
-			else noArguments = true;
-			return this;
+			return new ResetCommand(nLevel, this.noArguments);
 		}
-		
-		
-		
 		return null;
 	}
 

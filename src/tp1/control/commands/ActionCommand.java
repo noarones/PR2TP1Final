@@ -22,6 +22,12 @@ public class ActionCommand extends AbstractCommand {
 		
 	}
 
+	public ActionCommand(List<Action> actionList) {
+		super(NAME, SHORTCUT, DETAILS, HELP);
+		this.action = actionList;
+		
+	}
+	
 	@Override
 	public void execute(GameModel game, GameView view) {
 		
@@ -35,19 +41,20 @@ public class ActionCommand extends AbstractCommand {
 
 	@Override
 	public Command parse(String[] commandWords) {
-	
+		List<Action> listaAux = new ArrayList<>();
+		
 		boolean ok = true;
 		
 		if(matchCommandName(commandWords[0]) &&commandWords.length > 1) {
 		  for (int j = 1; j < commandWords.length && ok; j++) {
 			  Action ret = Action.parseAction(commandWords[j].toLowerCase());
 		       ok = ret != null;		  
-			if(ok) action.add(ret);	  
+			if(ok) listaAux.add(ret);	  
 		}
 		  
-		  if(!ok) action.clear();
+		  if(!ok) listaAux.clear();
 		  
-		 return this;
+		 return new ActionCommand(listaAux);
 		  
 		}
 		

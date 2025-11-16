@@ -1,7 +1,5 @@
+/* GRUPO 19 : NOÉ HARIM ARONES DE LA CRUZ , MATEI-CRISTIAN FLOREA */
 package tp1.logic.gameobjects;
-
-
-
 import tp1.logic.*;
 
 public abstract class MovingObject extends GameObject{

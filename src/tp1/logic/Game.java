@@ -1,278 +1,250 @@
 /**
  *  GRUPO 19 : NOÉ HARIM ARONES DE LA CRUZ
-MATEI-CRISTIAN FLOREA
+ *  MATEI-CRISTIAN FLOREA
  */
 package tp1.logic;
 import java.util.ArrayList;
 import java.util.List;
-
 import tp1.logic.gameobjects.*;
-
 
 public class Game implements GameStatus, GameWorld, GameModel {
 
-	public static final int DIM_X = 30;
-	public static final int DIM_Y = 15;
-    
-	private int remainingTime;
-	private boolean won = false;
-	private int nLevel;
-	private int points;
-	private int lives;
-	private Mario mario;
-	private GameObjectContainer gameObjects;
-	private List<GameObject> spawnObjects = new ArrayList<>();
-	private boolean playerExits = false;
-	
-	public Game(int nLevel) {
-		initLevel(nLevel);
-	}
-	
-	public void reset(int nLevel) {
-		if (nLevel != -1) {
-			int pointsAux = this.points, livesAux = this.lives;
+    // ===== Constantes del juego =====
+    public static final int DIM_X = 30;
+    public static final int DIM_Y = 15;
 
-			initLevel(nLevel = nLevel == -2 ? this.nLevel : nLevel);
+    // ===== Estado interno del juego =====
+    private int remainingTime;
+    private boolean won = false;
+    private int nLevel;
+    private int points;
+    private int lives;
+    private Mario mario;
+    private GameObjectContainer gameObjects;
+    private List<GameObject> spawnObjects = new ArrayList<>();
+    private boolean playerExits = false;
 
-			points = pointsAux; lives = livesAux;
-		}
-		
-		else initLevel(nLevel);
-		
-	}
+    // ===== Constructor =====
+    public Game(int nLevel) {
+        initLevel(nLevel);
+    }
 
+    // ===== Métodos de inicialización de nivel =====
+    private void initLevel(int lvl) {
+        setInitialGameValues(lvl);
+        if(lvl == -1) return;
 
+        // Construcción del mapa
+        buildBaseGround();
+        buildPlatforms();
+        buildFinalJump();
+        addCharacters(lvl);
+    }
 
+    private void setInitialGameValues(int lvl) {
+        this.nLevel = lvl;
+        this.remainingTime = 100;
+        this.lives = 3;
+        this.points = 0;
+        gameObjects = new GameObjectContainer();
+    }
 
-	public void update() {
-		this.remainingTime--;
-		if (!isFinished()) {
-			gameObjects.update();
+    /* Construcción del mapa (refactorizado para evitar duplicación) */
+    private void buildBaseGround() {
+        for(int c = 0; c < 15; c++) {
+            gameObjects.add(new Land(this,new Position(13, c)));
+            gameObjects.add(new Land(this,new Position(14, c)));		
+        }
+
+        gameObjects.add(new Land(this,new Position(Game.DIM_Y - 3, 9)));
+        gameObjects.add(new Land(this,new Position(Game.DIM_Y - 3, 12)));
+
+        for (int c = 17; c < Game.DIM_X; c++) {
+            gameObjects.add(new Land(this,new Position(Game.DIM_Y - 2, c)));
+            gameObjects.add(new Land(this,new Position(Game.DIM_Y - 1, c)));		
+        }
+    }
+
+    private void buildPlatforms() {
+        gameObjects.add(new Land(this,new Position(9,2)));
+        gameObjects.add(new Land(this,new Position(9,5)));
+        gameObjects.add(new Land(this,new Position(9,6)));
+        gameObjects.add(new Land(this,new Position(9,7)));
+        gameObjects.add(new Land(this,new Position(5,6)));
+    }
+
+    private void buildFinalJump() {
+        int tamX = 8, tamY = 8;
+        int posIniX = Game.DIM_X - 3 - tamX;
+        int posIniY = Game.DIM_Y - 3;
+
+        for(int col = 0; col < tamX; col++) {
+            for (int fila = 0; fila < col + 1; fila++) {
+                gameObjects.add(new Land(this,new Position(posIniY - fila, posIniX + col)));
+            }
+        }
+    }
+
+    private void addCharacters(int lvl) {
+        this.mario = new Mario(this, new Position(Game.DIM_Y - 3, 0));
+        gameObjects.add(this.mario);
+
+        gameObjects.add(new Goomba(this, new Position(0, 19)));
+        if(lvl == 1 || lvl == 2) {
+            gameObjects.add(new Goomba(this, new Position(4, 6)));
+            gameObjects.add(new Goomba(this, new Position(12, 6)));
+            gameObjects.add(new Goomba(this, new Position(12, 8)));
+            gameObjects.add(new Goomba(this, new Position(10, 10)));
+            gameObjects.add(new Goomba(this, new Position(12, 11)));
+            gameObjects.add(new Goomba(this, new Position(12, 14)));
+        }
+        if(lvl == 2) {
+            gameObjects.add(new Box(this, new Position(9,4)));
+            gameObjects.add(new Mushroom(this, new Position(12,8)));
+            gameObjects.add(new Mushroom(this, new Position(2,20)));
+        }
+
+        gameObjects.add(new ExitDoor(this,new Position(Game.DIM_Y - 3, Game.DIM_X - 1)));
+    }
+
+    // ===== Métodos de reinicio del juego =====
+    public void reset(int nLevel) {
+        if (nLevel != -1) {
+            int pointsAux = this.points, livesAux = this.lives;
+            initLevel(nLevel = nLevel == -2 ? this.nLevel : nLevel);
+            points = pointsAux; 
+            lives = livesAux;
+        } else initLevel(nLevel);
+    }
+
+    // ===== Actualización del juego =====
+    public void update() {
+        this.remainingTime--;
+        if (!isFinished()) {
+            gameObjects.update();
             if(!spawnObjects.isEmpty()) addSpawns();		
-		}
-		
-	}
+        }
+    }
 
-	private void addSpawns() {
-		
-		  for (GameObject o : spawnObjects) {
-		        if (o != null) gameObjects.add(o);
-		  }
-		    spawnObjects.clear();
-	}
+    private void addSpawns() {
+        for (GameObject o : spawnObjects) {
+            if (o != null) gameObjects.add(o);
+        }
+        spawnObjects.clear();
+    }
 
-	
-	public void checkInteractions(GameObject obj) {
-		gameObjects.doInteractions(obj);
-	}
-	
-	
-	public void marioExited() {
-		this.points += this.remainingTime * 10;
-		this.won = true;
-		this.remainingTime = 0;
-	}
+    public void checkInteractions(GameObject obj) {
+        gameObjects.doInteractions(obj);
+    }
 
-	public void addAction(Action act) {
-	    if (mario != null) {
-	        mario.addAction(act);
-	    }
-	}
+    // ===== Métodos de Mario =====
+    public void marioExited() {
+        this.points += this.remainingTime * 10;
+        this.won = true;
+        this.remainingTime = 0;
+    }
 
-	public void removeLife() {
-		this.lives = this.lives - 1;
-	}
+    public void addAction(Action act) {
+        if (mario != null) {
+            mario.addAction(act);
+        }
+    }
 
-	/* ====== Colisiones / límites ====== */
+    // ===== Gestión de vidas =====
+    public void removeLife() {
+        this.lives = this.lives - 1;
+    }
 
-	public boolean solidUnder(Position pos) {
-		Position posAux = pos.under();
-		return gameObjects.isSolid(posAux);
-	}
+    // ===== Métodos de colisiones y límites =====
+    public boolean solidUnder(Position pos) {
+        return gameObjects.isSolid(pos.under());
+    }
 
-	public boolean solidRight(Position pos) {
-		Position posAux = pos.right();
-		return gameObjects.isSolid(posAux);
-	}
+    public boolean solidRight(Position pos) {
+        return gameObjects.isSolid(pos.right());
+    }
 
-	public boolean solidLeft(Position pos) {
-		Position posAux = pos.left();
-		return gameObjects.isSolid(posAux);
-	}
+    public boolean solidLeft(Position pos) {
+        return gameObjects.isSolid(pos.left());
+    }
 
-	public boolean solidUp(Position pos) {
-		Position posAux = pos.up();
-		return gameObjects.isSolid(posAux);
-	}
+    public boolean solidUp(Position pos) {
+        return gameObjects.isSolid(pos.up());
+    }
 
-	public boolean nextToRightLimit(Position pos) {
-		return pos.nextToLimit(pos, DIM_X - 1);
-	}
+    public boolean nextToRightLimit(Position pos) {
+        return pos.nextToLimit(pos, DIM_X - 1);
+    }
 
-	public boolean nextToLeftLimit(Position pos) {
-		return pos.nextToLimit(pos, 0);
-	}
+    public boolean nextToLeftLimit(Position pos) {
+        return pos.nextToLimit(pos, 0);
+    }
 
-	public boolean fallenOut(Position pos) {
-		return pos.fallenOut(pos, DIM_Y - 1);
-	}
+    public boolean fallenOut(Position pos) {
+        return pos.fallenOut(pos, DIM_Y - 1);
+    }
 
-	public boolean isInBoard(Position pos) {
-		return pos.isInBoard(DIM_X, DIM_Y);
-	}
-	/* ====== Estado del juego ====== */
+    public boolean isInBoard(Position pos) {
+        return pos.isInBoard(DIM_X, DIM_Y);
+    }
 
-	public boolean isFinished() {
-		return (playerWins() || playerLoses() || this.playerExits || this.remainingTime == 0);
-	}
+    // ===== Estado del juego =====
+    public boolean isFinished() {
+        return (playerWins() || playerLoses() || this.playerExits || this.remainingTime == 0);
+    }
 
-	public boolean playerWins() {
-		return this.won;
-	}
-	
-	public boolean playerLoses() {
-		return lives == 0 || this.remainingTime == 0;
-	}
+    public boolean playerWins() {
+        return this.won;
+    }
 
-	public void exit() {
-		this.playerExits = true;
-	}
+    public boolean playerLoses() {
+        return lives == 0 || this.remainingTime == 0;
+    }
 
-	public int remainingTime() {
-		return this.remainingTime;
-	}
+    public void exit() {
+        this.playerExits = true;
+    }
 
-	public int points() {
-		return this.points;
-	}
+    public int remainingTime() {
+        return this.remainingTime;
+    }
 
-	public void addPoints(int p) {
-		this.points += p;
-	}
+    public int points() {
+        return this.points;
+    }
 
-	public int numLives() {
-		return this.lives;
-	}
+    public void addPoints(int p) {
+        this.points += p;
+    }
 
-	@Override
-	public String toString() {
-		return "Mario Bros 2.0";
-	}
-	
-    //solo anade si o no es null _Mode determina si es add para accion o spawn de otro objeto.
+    public int numLives() {
+        return this.lives;
+    }
+
     @Override
-	public boolean addGameObject(String[] objectDescription, String Mode) {
-    	
-    	GameObject o = GameObjectFactory.parse(objectDescription, this);
-    	
-    	if(Mode.equalsIgnoreCase("spawn")) return o!=null && spawnObjects.add(o);
-    	
-		return o != null && gameObjects.add(o);
-	}
-    
-	
-	public String positionToString(int col, int row) {
-		
-	    return gameObjects.positionToString(new Position(row,col));
-	}
+    public String toString() {
+        return "Mario Bros 2.0";
+    }
 
-	/* ====== Inicialización de niveles ====== */
-		
-	private void initLevel(int lvl) {
-		setInitialGameValues(lvl);
-		if(lvl == -1) return;
-		// Mapa
-		buildBaseGround();
-		buildPlatforms();
-		buildFinalJump();
-		addCharacters(lvl);
-	}
-	
-	
+    // ===== Gestión de objetos del juego =====
+    @Override
+    public boolean addGameObject(String[] objectDescription, String Mode) {
+        GameObject o = GameObjectFactory.parse(objectDescription, this);
 
-	private void setInitialGameValues(int lvl) {
-		this.nLevel = lvl;
-		this.remainingTime = 100;
-		this.lives = 3;
-		this.points = 0;
-		gameObjects = new GameObjectContainer();
-	}
-	
+        if(Mode.equalsIgnoreCase("spawn")) 
+            return o!=null && spawnObjects.add(o);
 
-	
-	/* Construcción común del mapa (refact. para evitar duplicacion) */
-	
-	private void buildBaseGround() {
-		for(int c = 0; c < 15; c++) {
-			gameObjects.add(new Land(this,new Position(13, c)));
-			gameObjects.add(new Land(this,new Position(14, c)));		
-		}
+        return o != null && gameObjects.add(o);
+    }
 
-		gameObjects.add(new Land(this,new Position(Game.DIM_Y - 3, 9)));
-		gameObjects.add(new Land(this,new Position(Game.DIM_Y - 3, 12)));
+    public String positionToString(int col, int row) {
+        return gameObjects.positionToString(new Position(row,col));
+    }
 
-		for (int c = 17; c < Game.DIM_X; c++) {
-			gameObjects.add(new Land(this,new Position(Game.DIM_Y - 2, c)));
-			gameObjects.add(new Land(this,new Position(Game.DIM_Y - 1, c)));		
-		}
-	}
+    // ===== Setters =====
+    @Override
+    public void setAsMainCharacter(Mario mario) {
+        this.mario = mario;
+    }
 
-	private void buildPlatforms() {
-		gameObjects.add(new Land(this,new Position(9,2)));
-		gameObjects.add(new Land(this,new Position(9,5)));
-		gameObjects.add(new Land(this,new Position(9,6)));
-		gameObjects.add(new Land(this,new Position(9,7)));
-		gameObjects.add(new Land(this,new Position(5,6)));
-	}
-
-	private void buildFinalJump() {
-		int tamX = 8, tamY = 8;
-		int posIniX = Game.DIM_X - 3 - tamX;
-		int posIniY = Game.DIM_Y - 3;
-		
-		for(int col = 0; col < tamX; col++) {
-			for (int fila = 0; fila < col + 1; fila++) {
-				gameObjects.add(new Land(this,new Position(posIniY - fila, posIniX + col)));
-			}
-		}
-	}
-
-
-
-	private void addCharacters(int lvl) {
-		
-		this.mario = new Mario(this, new Position(Game.DIM_Y - 3, 0));
-		
-		
-		gameObjects.add(this.mario);
-		
-		gameObjects.add(new Goomba(this, new Position(0, 19)));
-     if(lvl == 1 || lvl == 2) {
-		
-		gameObjects.add(new Goomba(this, new Position(4, 6)));
-		gameObjects.add(new Goomba(this, new Position(12, 6)));
-		gameObjects.add(new Goomba(this, new Position(12, 8)));
-		gameObjects.add(new Goomba(this, new Position(10, 10)));
-		gameObjects.add(new Goomba(this, new Position(12, 11)));
-		gameObjects.add(new Goomba(this, new Position(12, 14)));
-     }
-     if(lvl == 2) {
-    	 gameObjects.add(new Box(this, new Position(9,4)));
-    	 gameObjects.add(new Mushroom(this, new Position(12,8)));
-    	 gameObjects.add(new Mushroom(this, new Position(2,20)));
-     }
-     
-     gameObjects.add(new ExitDoor(this,new Position(Game.DIM_Y - 3, Game.DIM_X - 1)));
-     
-	}
-
-	@Override
-	public void setAsMainCharacter(Mario mario) {
-		this.mario = mario;
-	}
-
-
-
-	
 }
-	

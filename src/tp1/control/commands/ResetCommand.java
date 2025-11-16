@@ -1,3 +1,7 @@
+/**
+ *  GRUPO 19 : NOÉ HARIM ARONES DE LA CRUZ
+MATEI-CRISTIAN FLOREA
+ */
 package tp1.control.commands;
 
 import tp1.logic.GameModel;
@@ -25,29 +29,28 @@ public class ResetCommand extends AbstractCommand{
 	
 	@Override
 	public void execute(GameModel game, GameView view) {
-	if(a == 2 || a == 0 || a == 1 || a == -1 || a == -2 || noArguments)
-		{
-		game.reset(noArguments ? -2 : a);
-	
-		view.showGame(); }
-	else { view.showError(Messages.INVALID_LEVEL_NUMBER + Messages.LINE_SEPARATOR); 
-	}
-	  
+		
+     if(!((a >= -2 && a <=2 || noArguments) && reset(game,view)))
+     
+	 view.showError(Messages.INVALID_LEVEL_NUMBER + Messages.LINE_SEPARATOR); 
 	
 	}
-
+	
+   private boolean reset(GameModel game, GameView view) {
+	   
+	   game.reset(noArguments ? -2 : a);
+	   view.showGame(); 
+	 	
+	   return true;
+   }
 
 	@Override
 	public Command parse(String[] commandWords) {
-		int nLevel = -2;
-		if(matchCommandName(commandWords[0])) {
-			if(commandWords.length > 1) {
-			 nLevel = Integer.parseInt(commandWords[1]);
-			 this.noArguments = false;
-			} 
-			return new ResetCommand(nLevel, this.noArguments);
-		}
-		return null;
+			
+			return matchCommandName(commandWords[0]) ? new ResetCommand((commandWords.length > 1) ? 
+					Integer.parseInt(commandWords[1]) : -2, false) : null;
+		
+		
 	}
 
 }

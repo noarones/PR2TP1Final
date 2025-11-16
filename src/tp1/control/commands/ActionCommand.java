@@ -1,3 +1,7 @@
+/**
+ *  GRUPO 19 : NOÉ HARIM ARONES DE LA CRUZ
+MATEI-CRISTIAN FLOREA
+ */
 package tp1.control.commands;
 
 import java.util.ArrayList;
@@ -39,26 +43,26 @@ public class ActionCommand extends AbstractCommand {
 		view.showGame();
 	}
 
+	private boolean commandValido(String[] commandWords) {
+		return isValidParamCommand(commandWords) && prepararLista(commandWords);
+	}
+	
+	private boolean prepararLista(String[] commandWords) {
+		
+		Action ret = Action.STOP;
+		for (int j = 1; j < commandWords.length && ret != null; j++) {
+			
+			ret = Action.parseAction(commandWords[j].toLowerCase());
+	     
+			if(ret != null) action.add(ret);	  
+		}
+		  
+		return true;
+	}
+	
 	@Override
 	public Command parse(String[] commandWords) {
-		List<Action> listaAux = new ArrayList<>();
-		
-		boolean ok = true;
-		
-		if(matchCommandName(commandWords[0]) &&commandWords.length > 1) {
-		  for (int j = 1; j < commandWords.length && ok; j++) {
-			  Action ret = Action.parseAction(commandWords[j].toLowerCase());
-		       ok = ret != null;		  
-			if(ok) listaAux.add(ret);	  
-		}
-		  
-		  if(!ok) listaAux.clear();
-		  
-		 return new ActionCommand(listaAux);
-		  
-		}
-		
-		return null;
+		return commandValido(commandWords) ? new ActionCommand(action): null;
 	}
 
 }

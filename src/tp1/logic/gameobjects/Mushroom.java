@@ -1,3 +1,4 @@
+/* GRUPO 19 : NOÉ HARIM ARONES DE LA CRUZ , MATEI-CRISTIAN FLOREA */
 package tp1.logic.gameobjects;
 
 import tp1.logic.Action;
@@ -7,12 +8,6 @@ import tp1.logic.Position;
 import tp1.view.Messages;
 
 public class Mushroom extends MovingObject{
-
-    // ==========================================================
-    //                      ATRIBUTOS
-    // ==========================================================
-  
-
 
     // ==========================================================
     //                     CONSTRUCTOR
@@ -94,6 +89,13 @@ public class Mushroom extends MovingObject{
 	public boolean receiveInteraction(Mushroom obj) {
 		return false;
 	}
+    
+	@Override
+	public boolean receiveInteraction(Box obj) {
+		
+		return false;
+	}
+
 
     @Override
     protected GameObject create(String[] words, GameWorld game, Position pos) {
@@ -104,10 +106,5 @@ public class Mushroom extends MovingObject{
         return mushroom;
     }
 
-	@Override
-	public boolean receiveInteraction(Box obj) {
-		
-		return false;
-	}
 
 }

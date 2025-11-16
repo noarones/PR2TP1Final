@@ -47,28 +47,19 @@ public class GameObjectContainer {
      * Actualiza todos los objetos y gestiona interacciones y limpieza.
      */
     public void update() {
-    	
         // Primero actualizamos todos los objetos
         for (GameObject obj : objects) {
             obj.update();
             doInteractions(obj);
-            
         }
         // Limpiamos los objetos muertos
-        clean();
-        
-         
-        
+        clean(); 
     }
 
     public void doInteractions(GameObject obj) {
-        for (GameObject other : objects) {
-            if (obj.isAlive()) {
-                if (obj.interactWith(other)) {
-                    if(!other.interactWith(obj)) break;
-                }
-            }
-        }
+        for (GameObject other : objects) 
+            if (obj.isAlive() && obj.interactWith(other) && !other.interactWith(obj)) 
+              break; 
     }
 
     /**
@@ -78,6 +69,7 @@ public class GameObjectContainer {
         Iterator<GameObject> it = objects.iterator();
         while (it.hasNext()) {
             GameObject obj = it.next();
+            
             if (!obj.isAlive()) 
                 it.remove();
             
@@ -109,7 +101,7 @@ public class GameObjectContainer {
      * Indica si una posición está ocupada por un objeto sólido (por ejemplo, Land).
      */
     public boolean isSolid(Position pos) {
-    	//  return objects.stream()   #Lmbd. expresion para 1 sola linea. TP2? 
+    	//  return objects.stream()   //Lmbd. expresion para 1 solo return
        // .anyMatch(ob -> ob.isInPosition(pos) && ob.isSolid());
     	
     	for (GameObject ob : objects) {

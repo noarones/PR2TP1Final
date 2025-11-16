@@ -1,3 +1,7 @@
+/**
+ * GRUPO 19 : NOÉ HARIM ARONES DE LA CRUZ
+ * MATEI-CRISTIAN FLOREA
+ */
 package tp1.logic.gameobjects;
 
 import java.util.Arrays;
@@ -21,10 +25,9 @@ public class GameObjectFactory {
 		for (GameObject g : availableObjects) {
 			
 			GameObject g_ = g.parse(objWords, game);
-			
             if (g_ != null)
                 return g_;
-			
+		
 		}
 		
 		return null;

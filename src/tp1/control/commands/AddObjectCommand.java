@@ -1,3 +1,7 @@
+/**
+ *  GRUPO 19 : NOÉ HARIM ARONES DE LA CRUZ
+MATEI-CRISTIAN FLOREA
+ */
 package tp1.control.commands;
 
 import java.util.Arrays;
@@ -38,16 +42,8 @@ public class AddObjectCommand extends AbstractCommand {
 
 	 @Override
 	    public Command parse(String[] commandWords) {
-	        if (matchCommandName(commandWords[0])) {
-	            if (commandWords.length > 1) {
-	                // Copiamos el resto de las palabras como descripción del objeto
-	                String[] objDesc = Arrays.copyOfRange(commandWords, 1, commandWords.length);
-	                return new AddObjectCommand(objDesc);
-	            } else {
-	                // Faltan argumentos
-	                return null;
-	            }
-	        }
-	        return null;
+
+	        return isValidParamCommand(commandWords) ? 
+	        		new AddObjectCommand(Arrays.copyOfRange(commandWords, 1, commandWords.length)) : null;
 	    }
 }

@@ -1,3 +1,7 @@
+/**
+ * GRUPO 19 : NOÉ HARIM ARONES DE LA CRUZ
+ * MATEI-CRISTIAN FLOREA
+ */
 package tp1.logic.gameobjects;
 
 import tp1.logic.GameItem;

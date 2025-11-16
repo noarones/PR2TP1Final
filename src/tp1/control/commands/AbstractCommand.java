@@ -1,10 +1,14 @@
+/**
+ *  GRUPO 19 : NOÉ HARIM ARONES DE LA CRUZ
+MATEI-CRISTIAN FLOREA
+ */
 package tp1.control.commands;
 
 import tp1.view.Messages;
 
 public abstract class AbstractCommand implements Command {
 
-	// Forman parte de atributos de estado
+	
 	private final String name;
 	private final String shorcut;
 	private final String details;
@@ -25,6 +29,9 @@ public abstract class AbstractCommand implements Command {
 	protected boolean matchCommandName(String name) {
 		return getShortcut().equalsIgnoreCase(name) || 
 			   getName().equalsIgnoreCase(name);
+	}
+	protected boolean isValidParamCommand(String[] commandWords) {
+		return matchCommandName(commandWords[0])&&(commandWords.length > 1);
 	}
 
 	@Override

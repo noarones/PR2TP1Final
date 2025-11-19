@@ -5,7 +5,7 @@ import tp1.util.MyStringUtils;
 
 public class Messages {
 	
-	public static final String VERSION = "2.X";
+	public static final String VERSION = "3.0";
 
 	public static final String GAME_NAME = "MarioBross";
 

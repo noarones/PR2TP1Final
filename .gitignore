@@ -35,3 +35,5 @@ replay_pid*
 .settings/
 enunciados/
 README.md
+
+*_output.txt

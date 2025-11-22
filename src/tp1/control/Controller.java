@@ -16,6 +16,7 @@ import tp1.view.Messages;
 public class Controller {
 
 	private Game game;
+	
 	private GameView view;
 
 	public Controller(Game game, GameView view) {

@@ -8,7 +8,8 @@ import tp1.logic.GameItem;
 import tp1.logic.GameWorld;
 import tp1.logic.Position;
 import tp1.view.Messages;
-
+import tp1.exceptions.OffBoardException;
+import tp1.exceptions.ObjectParseException;
 public class Box extends GameObject {
 
     // ===== Estado interno =====
@@ -51,11 +52,14 @@ public class Box extends GameObject {
     public boolean receiveInteraction(Mario obj) {
         abierto = true;
         game.addPoints(points);
-        game.addGameObject(new String[] { pos.up().toString(), "Mushroom" }, "spawn");
-        
+        try {
+            game.addGameObject(new String[] { pos.up().toString(), "Mushroom" }, "spawn");
+        } catch (OffBoardException | ObjectParseException e) {
+            // En teoría no debería pasar nunca con un spawn bien hecho.
+            // Podrías loguearlo si quisieras.
+        }
         return isAlive();
     }
-
     
     @Override
     public boolean receiveInteraction(Land obj) {

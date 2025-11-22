@@ -59,6 +59,13 @@ public class Messages {
 	public static final String ERROR_COMMAND_EXECUTE = "Command execute problem";
 
 	
+	
+	// Errores de objetos del juego
+	public static final String UNKNOWN_GAME_OBJECT = "Unknown game object: \"%s\"";
+	public static final String OFF_BOARD_OBJECT = "Object position is off board: \"%s\"";
+
+	
+	
 	public static final String HELP_AVAILABLE_COMMANDS = "Available commands:";
 	@Deprecated
 	/* @formatter:off */

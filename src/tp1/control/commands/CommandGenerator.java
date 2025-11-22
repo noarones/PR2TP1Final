@@ -9,6 +9,7 @@ import java.util.List;
 
 
 import tp1.view.Messages;
+import tp1.exceptions.CommandParseException;
 
 public class CommandGenerator {
 
@@ -22,14 +23,14 @@ public class CommandGenerator {
 			
 	);
 
-	public static Command parse(String[] commandWords) {		
+	public static Command parse(String[] commandWords) throws CommandParseException{		
 		for (Command c: availableCommands) {
 			Command parsed = c.parse(commandWords);
 			if(parsed != null)	
 			return parsed;
 
 		}
-		return null;
+		  throw new CommandParseException(Messages.UNKNOWN_COMMAND.formatted(commandWords[0]));
 	}
 		
 	public static String commandHelp() {

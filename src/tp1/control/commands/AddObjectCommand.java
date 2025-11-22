@@ -10,6 +10,10 @@ import java.util.Arrays;
 import tp1.logic.GameModel;
 import tp1.view.GameView;
 import tp1.view.Messages;
+import tp1.exceptions.CommandExecuteException;
+import tp1.exceptions.CommandParseException;
+import tp1.exceptions.OffBoardException;
+import tp1.exceptions.ObjectParseException;
 
 public class AddObjectCommand extends AbstractCommand {
 
@@ -30,20 +34,27 @@ public class AddObjectCommand extends AbstractCommand {
 	        this.objectDescription = objectDescription;
 	    }
 	 
-	 @Override
-	    public void execute(GameModel game, GameView view) {
-	     
-	        if (game.addGameObject(objectDescription, "command")) 
-	        	view.showGame();
-	        else 
-	            view.showError(Messages.INVALID_GAME_OBJECT.formatted(String.join(" ", objectDescription)));
-	        
+	@Override
+	public void execute(GameModel game, GameView view) throws CommandExecuteException {
+	    try {
+	        game.addGameObject(objectDescription, "command");
+	        view.showGame();
+	    } catch (OffBoardException | ObjectParseException e) {
+	        // Envolvemos en CommandExecuteException
+	        throw new CommandExecuteException(Messages.ERROR_COMMAND_EXECUTE, e);
 	    }
+	}
 
-	 @Override
-	    public Command parse(String[] commandWords) {
 
-	        return isValidParamCommand(commandWords) ? 
-	        		new AddObjectCommand(Arrays.copyOfRange(commandWords, 1, commandWords.length)) : null;
-	    }
+	@Override
+	public Command parse(String[] commandWords) throws CommandParseException {
+
+	    if (!matchCommandName(commandWords[0])) return null;
+	    
+	    if (commandWords.length <= 1) 
+	        throw new CommandParseException(Messages.COMMAND_PARAMETERS_MISSING);
+	    
+	    return new AddObjectCommand(Arrays.copyOfRange(commandWords, 1, commandWords.length));
+	}
+
 }

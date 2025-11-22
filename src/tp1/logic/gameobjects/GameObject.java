@@ -9,7 +9,9 @@ import tp1.logic.GameItem;
 import tp1.logic.GameWorld;
 import tp1.logic.Position;
 import tp1.util.*;
-
+import tp1.exceptions.ObjectParseException;
+import tp1.exceptions.OffBoardException;
+import tp1.view.Messages;
 public abstract class GameObject implements GameItem {  
 
     // ===== Estado interno del objeto =====
@@ -68,12 +70,41 @@ public abstract class GameObject implements GameItem {
     }
 
     // ===== Creación / parseo de objetos a partir de descripción =====
-    public GameObject parse(String[] words, GameWorld game) {
-        Position pos1 = parsePosition(words);
-        return (words[1].equalsIgnoreCase(this.toString()) 
-                || words[1].equalsIgnoreCase(MyStringUtils.onlyUpper(this.toString()))) 
-                && game.isInBoard(pos1) ?
-                    this.create(words, game, pos1) : null;
+    public GameObject parse(String[] words, GameWorld game)
+            throws ObjectParseException, OffBoardException {
+
+        Position pos1;
+
+        // 1. Parsear la posición
+        try {
+            pos1 = parsePosition(words);
+        } catch (Exception e) {
+            throw new ObjectParseException(
+                Messages.INVALID_GAME_OBJECT.formatted(String.join(" ", words)),
+                e
+            );
+        }
+
+        // 2. ¿Es el tipo correcto?
+        boolean matchesType =
+                words[1].equalsIgnoreCase(this.toString()) ||
+                words[1].equalsIgnoreCase(MyStringUtils.onlyUpper(this.toString()));
+
+        if (!matchesType) {
+            // IMPORTANTE: devolver null aquí NO es un error
+            // simplemente significa que "no es este objeto"
+            return null;
+        }
+
+        // 3. Tipo coincide → ahora cualquier fallo es ERROR REAL
+        if (!game.isInBoard(pos1)) {
+            throw new OffBoardException(
+                Messages.OFF_BOARD_OBJECT.formatted(String.join(" ", words))
+            );
+        }
+
+        // 4. Crear el objeto válido
+        return this.create(words, game, pos1);
     }
 
 }

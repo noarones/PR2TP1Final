@@ -7,7 +7,7 @@ package tp1.control.commands;
 import tp1.logic.GameModel;
 import tp1.view.GameView;
 import tp1.view.Messages;
-
+import tp1.exceptions.CommandExecuteException;
 public class HelpCommand extends NoParamsCommand {
 
     private static final String NAME = Messages.COMMAND_HELP_NAME;
@@ -20,7 +20,7 @@ public class HelpCommand extends NoParamsCommand {
 	}
 	
 	@Override
-	public void execute(GameModel game, GameView view) {
+	public void execute(GameModel game, GameView view) throws CommandExecuteException{
 		
 		view.showMessage(CommandGenerator.commandHelp());
 	}

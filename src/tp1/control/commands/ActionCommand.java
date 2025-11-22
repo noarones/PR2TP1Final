@@ -12,6 +12,8 @@ import tp1.logic.Action;
 import tp1.logic.GameModel;
 import tp1.view.GameView;
 import tp1.view.Messages;
+import tp1.exceptions.CommandParseException;
+import tp1.exceptions.CommandExecuteException;
 
 public class ActionCommand extends AbstractCommand {
 	private static final String NAME = Messages.COMMAND_ACTION_NAME;
@@ -33,7 +35,7 @@ public class ActionCommand extends AbstractCommand {
 	}
 	
 	@Override
-	public void execute(GameModel game, GameView view) {
+	public void execute(GameModel game, GameView view) throws CommandExecuteException{
 		
 		for (Action a: action) game.addAction(a);
 		
@@ -61,8 +63,23 @@ public class ActionCommand extends AbstractCommand {
 	}
 	
 	@Override
-	public Command parse(String[] commandWords) {
-		return commandValido(commandWords) ? new ActionCommand(action): null;
+	public Command parse(String[] commandWords) throws CommandParseException {
+
+	    if (!matchCommandName(commandWords[0])) {
+	        return null;
+	    }
+
+	    // si no hay acciones -> error de parámetros
+	    if (commandWords.length < 2) {
+	        throw new CommandParseException(Messages.COMMAND_PARAMETERS_MISSING);
+	    }
+
+	    if (!commandValido(commandWords)) {
+	        throw new CommandParseException(Messages.INVALID_COMMAND_PARAMETERS);
+	    }
+
+	    return new ActionCommand(action);
 	}
+
 
 }

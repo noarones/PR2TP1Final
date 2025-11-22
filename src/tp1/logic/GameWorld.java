@@ -4,6 +4,8 @@
  */
 package tp1.logic;
 
+import tp1.exceptions.ObjectParseException;
+import tp1.exceptions.OffBoardException;
 import tp1.logic.gameobjects.GameObject;
 import tp1.logic.gameobjects.Mario;
 
@@ -24,6 +26,6 @@ public interface GameWorld{
 	// Se utilizan en Mario
 	public void reset(int nLevel);
 	public int numLives();
-	public boolean addGameObject(String[] objectDescription, String Mode);
+	public boolean addGameObject(String[] objectDescription, String Mode) throws OffBoardException, ObjectParseException; ;
     public void checkInteractions(GameObject obj);
 }

@@ -6,7 +6,8 @@ package tp1.logic;
 import java.util.ArrayList;
 import java.util.List;
 import tp1.logic.gameobjects.*;
-
+import tp1.exceptions.OffBoardException;
+import tp1.exceptions.ObjectParseException;
 public class Game implements GameStatus, GameWorld, GameModel {
 
     // ===== Constantes del juego =====
@@ -227,15 +228,24 @@ public class Game implements GameStatus, GameWorld, GameModel {
     }
 
     // ===== Gestión de objetos del juego =====
+
     @Override
-    public boolean addGameObject(String[] objectDescription, String Mode) {
+    public boolean addGameObject(String[] objectDescription, String Mode)
+            throws OffBoardException, ObjectParseException {
+
         GameObject o = GameObjectFactory.parse(objectDescription, this);
 
-        if(Mode.equalsIgnoreCase("spawn")) 
-            return o!=null && spawnObjects.add(o);
+        // Si GameObjectFactory.parse devuelve null, sería un fallo de diseño,
+        // pero en nuestro siguiente paso haremos que lance excepciones.
 
-        return o != null && gameObjects.add(o);
+        if (Mode.equalsIgnoreCase("spawn")) {
+            spawnObjects.add(o);
+        } else {
+            gameObjects.add(o);
+        }
+        return true;
     }
+
 
     public String positionToString(int col, int row) {
         return gameObjects.positionToString(new Position(row,col));

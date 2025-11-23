@@ -11,6 +11,7 @@ import tp1.logic.Position;
 import tp1.util.*;
 import tp1.exceptions.ObjectParseException;
 import tp1.exceptions.OffBoardException;
+import tp1.exceptions.PositionParseException;
 import tp1.view.Messages;
 public abstract class GameObject implements GameItem {  
 
@@ -57,9 +58,31 @@ public abstract class GameObject implements GameItem {
     }
 
     // ===== Manejo de posiciones =====
-    protected Position parsePosition(String[] words) {    
-        String[] coords = words[0].replace("(", "").replace(")", "").split(",");
-        return new Position(Integer.parseInt(coords[0]), Integer.parseInt(coords[1]));
+    protected Position parsePosition(String[] words) throws PositionParseException {
+
+        try {
+            // Extraer coordenadas (ej: "(a,4)" → "a", "4")
+            String cleaned = words[0].replace("(", "").replace(")", "");
+            String[] coords = cleaned.split(",");
+
+            int row = Integer.parseInt(coords[0]);
+            int col = Integer.parseInt(coords[1]);
+
+            return new Position(row, col);
+
+        } catch (NumberFormatException nfe) {
+            // Error en parseInt → posición inválida
+            throw new PositionParseException(
+                Messages.INVALID_POSITION.formatted(words[0]),
+                nfe
+            );
+        } catch (Exception e) {
+            // Cualquier otro fallo: formato inválido
+            throw new PositionParseException(
+                Messages.INVALID_POSITION.formatted(words[0]),
+                e
+            );
+        }
     }
 
     // ===== Manejo de derrota / puntuación =====
@@ -71,16 +94,16 @@ public abstract class GameObject implements GameItem {
 
     // ===== Creación / parseo de objetos a partir de descripción =====
     public GameObject parse(String[] words, GameWorld game)
-            throws ObjectParseException, OffBoardException {
+            throws ObjectParseException, OffBoardException, PositionParseException {
 
         Position pos1;
 
         // 1. Parsear la posición
         try {
             pos1 = parsePosition(words);
-        } catch (Exception e) {
+        } catch (PositionParseException e) {
             throw new ObjectParseException(
-                Messages.INVALID_GAME_OBJECT.formatted(String.join(" ", words)),
+                Messages.INVALID_OBJECT_POSITION.formatted(String.join(" ", words)),
                 e
             );
         }

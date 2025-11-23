@@ -13,6 +13,8 @@ import tp1.logic.GameModel;
 import tp1.view.GameView;
 import tp1.view.Messages;
 import tp1.exceptions.CommandParseException;
+import tp1.exceptions.ObjectParseException;
+import tp1.exceptions.ActionParseException;
 import tp1.exceptions.CommandExecuteException;
 
 public class ActionCommand extends AbstractCommand {
@@ -45,21 +47,22 @@ public class ActionCommand extends AbstractCommand {
 		view.showGame();
 	}
 
-	private boolean commandValido(String[] commandWords) {
+	private boolean commandValido(String[] commandWords)  {
 		return isValidParamCommand(commandWords) && prepararLista(commandWords);
 	}
 	
 	private boolean prepararLista(String[] commandWords) {
-		
+		action.clear();
 		Action ret = Action.STOP;
 		for (int j = 1; j < commandWords.length && ret != null; j++) {
 			
 			ret = Action.parseAction(commandWords[j].toLowerCase());
 	     
-			if(ret != null) action.add(ret);	  
+			if(ret != null) action.add(ret);
+		
 		}
 		  
-		return true;
+		return !action.isEmpty();
 	}
 	
 	@Override
@@ -71,11 +74,13 @@ public class ActionCommand extends AbstractCommand {
 
 	    // si no hay acciones -> error de parámetros
 	    if (commandWords.length < 2) {
-	        throw new CommandParseException(Messages.COMMAND_PARAMETERS_MISSING);
+	        throw new CommandParseException(Messages.COMMAND_INCORRECT_PARAMETER_NUMBER);
 	    }
 
+
 	    if (!commandValido(commandWords)) {
-	        throw new CommandParseException(Messages.INVALID_COMMAND_PARAMETERS);
+	        throw new CommandParseException(Messages.INCORRECT_ACTION_COMMAND);
+	    
 	    }
 
 	    return new ActionCommand(action);

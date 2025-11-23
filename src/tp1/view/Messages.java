@@ -57,14 +57,15 @@ public class Messages {
 	public static final String INVALID_COMMAND = "Invalid command: %s";
 	public static final String INVALID_COMMAND_PARAMETERS = "Invalid command parameters";
 	public static final String ERROR_COMMAND_EXECUTE = "Command execute problem";
-
-	
-	
+    public static final String INCORRECT_ACTION_COMMAND = "Incorrect 'action command', because the action list is empty (all actions are unknown).";
+	public static final String OBJECT_PARSE_ERROR ="Object parse error, too much args: \"%s\"";
+    public static final String INVALID_OBJECT_POSITION = "Invalid object position: \"%s\"";
+    public static final String INVALID_POSITION = "Invalid position: \"%s\"";
 	// Errores de objetos del juego
 	public static final String UNKNOWN_GAME_OBJECT = "Unknown game object: \"%s\"";
 	public static final String OFF_BOARD_OBJECT = "Object position is off board: \"%s\"";
 
-	
+	public static final String UNKNOWN_MOVING_DIRECTION = "Unknown moving object direction: \"%s\"";
 	
 	public static final String HELP_AVAILABLE_COMMANDS = "Available commands:";
 	@Deprecated

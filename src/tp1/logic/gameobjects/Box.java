@@ -9,6 +9,7 @@ import tp1.logic.GameWorld;
 import tp1.logic.Position;
 import tp1.view.Messages;
 import tp1.exceptions.OffBoardException;
+import tp1.exceptions.PositionParseException;
 import tp1.exceptions.ObjectParseException;
 public class Box extends GameObject {
 
@@ -54,9 +55,8 @@ public class Box extends GameObject {
         game.addPoints(points);
         try {
             game.addGameObject(new String[] { pos.up().toString(), "Mushroom" }, "spawn");
-        } catch (OffBoardException | ObjectParseException e) {
-            // En teoría no debería pasar nunca con un spawn bien hecho.
-            // Podrías loguearlo si quisieras.
+        } catch (OffBoardException | ObjectParseException | PositionParseException e) {
+        
         }
         return isAlive();
     }

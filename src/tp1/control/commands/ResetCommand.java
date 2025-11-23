@@ -31,10 +31,12 @@ public class ResetCommand extends AbstractCommand{
 	
 	@Override
 	public void execute(GameModel game, GameView view) throws CommandExecuteException{
-		
-     if(!((a >= -2 && a <=2 || noArguments) && reset(game,view)))
-     
-	 view.showError(Messages.INVALID_LEVEL_NUMBER + Messages.LINE_SEPARATOR); 
+	
+		if(a == -2 && !noArguments)	
+			throw new CommandExecuteException(Messages.INVALID_LEVEL_NUMBER); 
+
+     if(!((a >= -2 && a <=2 || noArguments) && reset(game,view))) 
+        throw new CommandExecuteException(Messages.INVALID_LEVEL_NUMBER); 
 	
 	}
 	
@@ -68,7 +70,7 @@ public class ResetCommand extends AbstractCommand{
            }
        }
 
-       return new ResetCommand(level, false);
+       return new ResetCommand(level, commandWords.length == 1);
    }
 
 

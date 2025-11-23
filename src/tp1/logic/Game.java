@@ -6,7 +6,9 @@ package tp1.logic;
 import java.util.ArrayList;
 import java.util.List;
 import tp1.logic.gameobjects.*;
+import tp1.view.Messages;
 import tp1.exceptions.OffBoardException;
+import tp1.exceptions.PositionParseException;
 import tp1.exceptions.ObjectParseException;
 public class Game implements GameStatus, GameWorld, GameModel {
 
@@ -231,8 +233,11 @@ public class Game implements GameStatus, GameWorld, GameModel {
 
     @Override
     public boolean addGameObject(String[] objectDescription, String Mode)
-            throws OffBoardException, ObjectParseException {
+            throws OffBoardException, ObjectParseException , PositionParseException{
 
+    	if(objectDescription.length > 3)
+    		throw new ObjectParseException(String.format(Messages.OBJECT_PARSE_ERROR, String.join(" ", objectDescription)));
+    	
         GameObject o = GameObjectFactory.parse(objectDescription, this);
 
         // Si GameObjectFactory.parse devuelve null, sería un fallo de diseño,

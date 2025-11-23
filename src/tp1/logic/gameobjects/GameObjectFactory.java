@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 import tp1.logic.GameWorld;
 import tp1.exceptions.OffBoardException;
+import tp1.exceptions.PositionParseException;
 import tp1.exceptions.ObjectParseException;
 import tp1.view.Messages;
 public class GameObjectFactory {
@@ -23,7 +24,7 @@ public class GameObjectFactory {
 		);
 	
 	public static GameObject parse(String[] objWords, GameWorld game)
-	        throws OffBoardException, ObjectParseException {
+	        throws OffBoardException, ObjectParseException, PositionParseException{
 
 	    for (GameObject g : availableObjects) {
 	        GameObject obj = g.parse(objWords, game);

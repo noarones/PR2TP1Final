@@ -7,6 +7,8 @@ package tp1.logic.gameobjects;
 import java.util.ArrayList;
 import java.util.List;
 
+import tp1.exceptions.ActionParseException;
+import tp1.exceptions.ObjectParseException;
 import tp1.logic.Action;
 import tp1.logic.GameItem;
 import tp1.logic.GameWorld;
@@ -37,6 +39,13 @@ public class Mario extends MovingObject {
         this.pendingActions = new ArrayList<>();
     }
 
+    private static boolean tamValido(String str) {
+    	return str.equalsIgnoreCase("big") ||
+    			str.equalsIgnoreCase("small") ||
+    			str.equalsIgnoreCase("s") ||
+    			str.equalsIgnoreCase("b") ;
+    			
+    }
     // ===== Representación visual =====
     public String getIcon() {
         return (dir == Action.DOWN && lastDir == Action.STOP)
@@ -284,14 +293,25 @@ public class Mario extends MovingObject {
 
     // ===== Creación dinámica =====
     @Override
-    protected GameObject create(String[] words, GameWorld game, Position pos) {
+    protected GameObject create(String[] words, GameWorld game, Position pos) throws ObjectParseException{
         Mario mario = new Mario(game, pos);
 
+        if(words.length > 4)
+        	throw new ObjectParseException(Messages.OBJECT_PARSE_ERROR.formatted(String.join(" ", words)));
+        
+        if(words.length > 3 &&!tamValido(words[3]))
+        	throw new ObjectParseException(Messages.INVALID_MARIO_SIZE.formatted(String.join(" ", words)));
+        
+        try {
+        		
         mario.setInitial(
             ParamParser.parseBoolean(words, 3, "big", "b", "small", "s", false),
             ParamParser.parseDirection(words, 2)
         );
-
+        }
+        catch(ActionParseException a) {
+        	throw new ObjectParseException( Messages.UNKNOWN_MOVING_DIRECTION.formatted(String.join(" ", words)), a);
+        }
         game.setAsMainCharacter(mario);
 
         return mario;

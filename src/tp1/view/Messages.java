@@ -66,8 +66,10 @@ public class Messages {
 	public static final String OFF_BOARD_OBJECT = "Object position is off board: \"%s\"";
 
 	public static final String UNKNOWN_MOVING_DIRECTION = "Unknown moving object direction: \"%s\"";
-	
+	public static final String INVALID_MOVING_DIRECTION = "Invalid moving object direction: \"%s\"";
 	public static final String HELP_AVAILABLE_COMMANDS = "Available commands:";
+	public static final String INVALID_BOX_STATUS = " Invalid Box status: \"%s\"";
+	public static final String INVALID_MARIO_SIZE = "Invalid Mario size: \"%s\"";
 	@Deprecated
 	/* @formatter:off */
 	public static final String[] HELP_LINES = new String[] { HELP_AVAILABLE_COMMANDS,

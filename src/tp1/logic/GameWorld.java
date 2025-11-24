@@ -4,6 +4,7 @@
  */
 package tp1.logic;
 
+import tp1.exceptions.ActionParseException;
 import tp1.exceptions.ObjectParseException;
 import tp1.exceptions.OffBoardException;
 import tp1.exceptions.PositionParseException;
@@ -27,6 +28,6 @@ public interface GameWorld{
 	// Se utilizan en Mario
 	public void reset(int nLevel, boolean noArguments);
 	public int numLives();
-	public boolean addGameObject(String[] objectDescription, String Mode) throws OffBoardException, ObjectParseException, PositionParseException ;
+	public boolean addGameObject(String[] objectDescription, String Mode) throws OffBoardException, ObjectParseException, PositionParseException;
     public void checkInteractions(GameObject obj);
 }

@@ -10,6 +10,7 @@ import java.util.Arrays;
 import tp1.logic.GameModel;
 import tp1.view.GameView;
 import tp1.view.Messages;
+import tp1.exceptions.ActionParseException;
 import tp1.exceptions.CommandExecuteException;
 import tp1.exceptions.CommandParseException;
 import tp1.exceptions.OffBoardException;
@@ -55,7 +56,8 @@ public class AddObjectCommand extends AbstractCommand {
 	    if (commandWords.length <= 2) 
 	        throw new CommandParseException(Messages.COMMAND_INCORRECT_PARAMETER_NUMBER);
 	    
-	    
+	   
+	 
 	    
 	    return new AddObjectCommand(Arrays.copyOfRange(commandWords, 1, commandWords.length));
 	}

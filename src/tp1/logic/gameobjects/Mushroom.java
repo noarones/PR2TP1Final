@@ -1,6 +1,8 @@
 /* GRUPO 19 : NOÉ HARIM ARONES DE LA CRUZ , MATEI-CRISTIAN FLOREA */
 package tp1.logic.gameobjects;
 
+import tp1.exceptions.ActionParseException;
+import tp1.exceptions.ObjectParseException;
 import tp1.logic.Action;
 import tp1.logic.GameItem;
 import tp1.logic.GameWorld;
@@ -75,11 +77,14 @@ public class Mushroom extends MovingObject{
 
 
     @Override
-    protected GameObject create(String[] words, GameWorld game, Position pos) {
+    protected GameObject create(String[] words, GameWorld game, Position pos) throws ObjectParseException{
         Mushroom mushroom = new Mushroom(game, pos);
-
+try {
         mushroom.setInitial(ParamParser.parseDirection(words, 2));
-
+}
+        catch(ActionParseException a) {
+        	throw new ObjectParseException( Messages.UNKNOWN_MOVING_DIRECTION.formatted(String.join("", words)), a);
+        }
         return mushroom;
     }
 

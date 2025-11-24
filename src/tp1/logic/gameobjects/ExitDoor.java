@@ -4,6 +4,8 @@
  */
 package tp1.logic.gameobjects;
 
+import tp1.exceptions.ActionParseException;
+import tp1.exceptions.ObjectParseException;
 import tp1.logic.GameItem;
 import tp1.logic.GameWorld;
 import tp1.logic.Position;
@@ -51,7 +53,7 @@ public class ExitDoor extends GameObject {
 
     // ===== Creación dinámica =====
     @Override
-    protected GameObject create(String[] words, GameWorld game, Position pos) {
+    protected GameObject create(String[] words, GameWorld game, Position pos) throws ObjectParseException {
         return new ExitDoor(game , pos);
     }
 

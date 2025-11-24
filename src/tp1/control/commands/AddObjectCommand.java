@@ -61,7 +61,7 @@ public class AddObjectCommand extends AbstractCommand {
 	        throw new CommandParseException(Messages.COMMAND_INCORRECT_PARAMETER_NUMBER);
 	    
 	    try {
-		    if (commandWords.length > 4) {
+		    if (commandWords.length > 5) {
 		    	String args = String.join(" ", Arrays.copyOfRange(commandWords, 1, commandWords.length));
 		    	throw new CommandParseException(Messages.OBJECT_PARSE_ERROR.formatted(args));
 		    }

@@ -96,11 +96,16 @@ public class Box extends GameObject {
     @Override
     protected GameObject create(String[] words, GameWorld game, Position pos) throws ObjectParseException{
         Box box = new Box(game, pos);
-        String status = words[2].toLowerCase();
-        if(!status.equals("empty") && !status.equals("e") && !status.equals("full") && !status.equals("f")) {
-            throw new ObjectParseException(Messages.INVALID_BOX_STATUS.formatted(String.join(" ", words)));
+        if (words.length <= 3) {
+	        String status = words[2].toLowerCase();
+	        if(!status.equals("empty") && !status.equals("e") && !status.equals("full") && !status.equals("f")) {
+	            throw new ObjectParseException(Messages.INVALID_BOX_STATUS.formatted(String.join(" ", words)));
+	        }
+	        box.setInitial(ParamParser.parseBoolean(words, 2, "empty", "e", "full", "f", false));
         }
-        box.setInitial(ParamParser.parseBoolean(words, 2, "empty", "e", "full", "f", false));
+        else
+        	throw new ObjectParseException(Messages.OBJECT_PARSE_ERROR.formatted(String.join(" ", words)));
+        	
         return box;
     }
 

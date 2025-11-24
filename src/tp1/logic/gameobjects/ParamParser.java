@@ -15,9 +15,13 @@ public class ParamParser {
         String a = words[index];
         switch(words[index].toLowerCase()) {
         case "left": return Action.LEFT;
+        case "l": return Action.LEFT;
         case "right": return Action.RIGHT;
+        case "r": return Action.RIGHT;
         case "up": return Action.UP;
+        case "u": return Action.UP;
         case "down": return Action.DOWN;
+        case "d": return Action.DOWN;
         default:
             throw new ObjectParseException(Messages.UNKNOWN_ACTION.formatted(a));
         }

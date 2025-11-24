@@ -289,16 +289,25 @@ public class Mario extends MovingObject {
     // ===== Creación dinámica =====
     @Override
     protected GameObject create(String[] words, GameWorld game, Position pos) throws ObjectParseException {
-        Mario mario = new Mario(game, pos);
+    	Mario mario = new Mario(game, pos);
+	    Action dir;
+	    try {
+	        dir = ParamParser.parseDirection(words, 2);
+	    } 
+	    catch (ObjectParseException obj) {
+	        throw new ObjectParseException(Messages.UNKNOWN_MOVING_DIRECTION.formatted(String.join(" ", words)), obj);
+	    }
+	    if (words.length > 3) {
+	        String status = words[3].toLowerCase();
+	        if (!status.equals("big") && !status.equals("b")   && !status.equals("small") && !status.equals("s")) {
+	            throw new ObjectParseException(Messages.INVALID_MARIO_SIZE.formatted(String.join(" ", words)));
+	        }
+	    }
 
-        mario.setInitial(
-            ParamParser.parseBoolean(words, 3, "big", "b", "small", "s", false),
-            ParamParser.parseDirection(words, 2)
-        );
-
-        game.setAsMainCharacter(mario);
-
-        return mario;
+	    boolean isBig = ParamParser.parseBoolean(words, 3, "big", "b", "small", "s", false);
+	    mario.setInitial(isBig, dir);
+	    game.setAsMainCharacter(mario);
+	    return mario;
     }
 
 }

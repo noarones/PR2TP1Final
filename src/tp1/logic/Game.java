@@ -235,7 +235,7 @@ public class Game implements GameStatus, GameWorld, GameModel {
     public boolean addGameObject(String[] objectDescription, String Mode)
             throws OffBoardException, ObjectParseException , PositionParseException{
 
-    	if(objectDescription.length > 3)
+    	if(objectDescription.length > 4)
     		throw new ObjectParseException(String.format(Messages.OBJECT_PARSE_ERROR, String.join(" ", objectDescription)));
     	
         GameObject o = GameObjectFactory.parse(objectDescription, this);

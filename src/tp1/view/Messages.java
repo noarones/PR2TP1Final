@@ -67,6 +67,7 @@ public class Messages {
 	public static final String UNKNOWN_MOVING_DIRECTION = "Unknown moving object direction: \"%s\"";
 	public static final String INVALID_MOVING_DIRECTION = "Invalid moving object direction: \"%s\"";
 	public static final String INVALID_BOX_STATUS = " Invalid Box status: \"%s\"";
+	public static final String INVALID_MARIO_SIZE = "Invalid Mario size: \"%s\"";
 	
 	public static final String HELP_AVAILABLE_COMMANDS = "Available commands:";
 	@Deprecated

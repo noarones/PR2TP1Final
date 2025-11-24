@@ -119,11 +119,12 @@ Command > [DEBUG] Executing: addObject (2,9) Box Full extraArgs
 Command > [DEBUG] Executing: ADDOBJECT (3,4) mARIO nORMAL
 
 [ERROR] Error: Command execute problem
+[ERROR] Error: Unknown moving object direction: "(3,4) mARIO nORMAL"
 [ERROR] Error: Unknown action: "nORMAL"
 Command > [DEBUG] Executing: ADDOBJECT (3,4) mARIO RiGHT nORMAL
 
 [ERROR] Error: Command execute problem
-[ERROR] Error: Object parse error, too much args: "(3,4) mARIO RiGHT nORMAL"
+[ERROR] Error: Invalid Mario size: "(3,4) mARIO RiGHT nORMAL"
 Command > [DEBUG] Executing: addObject (3,5) Mario Right Big extraArgs
 
 [ERROR] Error: Command execute problem

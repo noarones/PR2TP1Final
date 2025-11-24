@@ -90,19 +90,23 @@ public class Goomba extends MovingObject {
     // ===== Creación dinámica =====
     @Override
     protected GameObject create(String[] words, GameWorld game, Position pos) throws ObjectParseException {
-        Goomba goomba = new Goomba(game, pos);
-        Action dir;
-        try {
-        	dir = ParamParser.parseDirection(words, 2);
-        }
-        catch(ObjectParseException obj) {
-        	throw new ObjectParseException(Messages.UNKNOWN_MOVING_DIRECTION.formatted(String.join(" ", words)), obj);
-        }
-        if (dir == Action.UP || dir == Action.DOWN) {
-            throw new ObjectParseException(Messages.INVALID_MOVING_DIRECTION.formatted(String.join(" ", words)));
-        }
-
-        goomba.setInitial(dir);
+    	Goomba goomba = new Goomba(game, pos);
+    	if (words.length <= 3) {
+	        Action dir;
+	        try {
+	        	dir = ParamParser.parseDirection(words, 2);
+	        }
+	        catch(ObjectParseException obj) {
+	        	throw new ObjectParseException(Messages.UNKNOWN_MOVING_DIRECTION.formatted(String.join(" ", words)), obj);
+	        }
+	        if (dir == Action.UP || dir == Action.DOWN) {
+	            throw new ObjectParseException(Messages.INVALID_MOVING_DIRECTION.formatted(String.join(" ", words)));
+	        }
+	
+	        goomba.setInitial(dir);
+    	}
+    	else
+    		throw new ObjectParseException(Messages.OBJECT_PARSE_ERROR.formatted(String.join(" ", words)));
         return goomba;
     }
 

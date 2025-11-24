@@ -13,7 +13,7 @@ public interface GameModel {
 	public void addAction(Action act);
 	public boolean addGameObject(String[] objectDescription, String Mode)  throws OffBoardException, ObjectParseException, PositionParseException;
 	public void exit();
-	public void reset(int nLevel);
+	public void reset(int nLevel, boolean noArguments);
 	
 	
 }

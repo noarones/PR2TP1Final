@@ -218,14 +218,11 @@ public class Mario extends MovingObject {
         return true;
     }
 
-    @Override
-    public boolean receiveInteraction(Land obj) { return false; }
 
     @Override
     public boolean receiveInteraction(ExitDoor obj) { return true; }
 
-    @Override
-    public boolean receiveInteraction(Mario obj) { return false; }
+
 
     @Override
     public boolean receiveInteraction(Mushroom obj) {
@@ -251,18 +248,18 @@ public class Mario extends MovingObject {
         }
 
         // Colisión lateral o frontal → Mario pierde tamaño o vida
-        if (obj.isInPosition(this.pos)) {
+        
             if (isBig()) this.big = false;
             else {
                 game.removeLife();
                 this.dead();
                 if (game.numLives() > 0) {
-                    game.reset(-2);
+                    game.reset(2025,true);
                 }
             }
             return true;
-        }
-        return false;
+        
+        
     }
 
     @Override
@@ -281,7 +278,7 @@ public class Mario extends MovingObject {
     protected void handleDeath() {
         game.removeLife();
         if (game.numLives() > 0) {
-            game.reset(-2);
+            game.reset(2025,true);
         }
     }
 

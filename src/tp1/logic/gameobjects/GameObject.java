@@ -129,5 +129,20 @@ public abstract class GameObject implements GameItem {
         // 4. Crear el objeto válido
         return this.create(words, game, pos1);
     }
+    
+    
+    
+    
+	public  boolean receiveInteraction(Land obj) { return false; }
+	
+	public  boolean receiveInteraction(ExitDoor obj) { return false; }
+	
+	public  boolean receiveInteraction(Mario obj) { return false; }
+	
+	public  boolean receiveInteraction(Goomba obj) { return false; }
+	
+	public  boolean receiveInteraction(Mushroom obj) { return false; }
+	
+	public  boolean receiveInteraction(Box obj) { return false; }
 
 }

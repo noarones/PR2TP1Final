@@ -65,36 +65,13 @@ public class Mushroom extends MovingObject{
         return canInteract;
     }
 
-    @Override
-    public boolean receiveInteraction(Land obj) {
-        return false;
-    }
-
-    @Override
-    public boolean receiveInteraction(ExitDoor obj) {
-        return false;
-    }
 
     @Override
     public boolean receiveInteraction(Mario obj) {
         return isAlive() && dead();
     }
 
-    @Override
-    public boolean receiveInteraction(Goomba obj) {
-        return false;
-    }
 
-    @Override
-	public boolean receiveInteraction(Mushroom obj) {
-		return false;
-	}
-    
-	@Override
-	public boolean receiveInteraction(Box obj) {
-		
-		return false;
-	}
 
 
     @Override

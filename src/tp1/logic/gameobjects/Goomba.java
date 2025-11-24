@@ -54,30 +54,7 @@ public class Goomba extends MovingObject {
         return item.isInPosition(this.pos) ? item.receiveInteraction(this) : false;
     }
 
-    @Override
-    public boolean receiveInteraction(Land obj) {
-        return false;
-    }
 
-    @Override
-    public boolean receiveInteraction(ExitDoor obj) {
-        return false;
-    }
-
-    @Override
-    public boolean receiveInteraction(Goomba obj) {
-        return false;
-    }
-
-    @Override
-    public boolean receiveInteraction(Mushroom obj) {
-        return false;
-    }
-
-    @Override
-    public boolean receiveInteraction(Box obj) {
-        return false;
-    }
 
     // ===== Movimiento automático =====
     @Override 

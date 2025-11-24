@@ -61,30 +61,7 @@ public class Box extends GameObject {
         return isAlive();
     }
     
-    @Override
-    public boolean receiveInteraction(Land obj) {
-        return false;
-    }
 
-    @Override
-    public boolean receiveInteraction(ExitDoor obj) {
-        return false;
-    }
-
-    @Override
-    public boolean receiveInteraction(Goomba obj) {
-        return false;
-    }
-
-    @Override
-    public boolean receiveInteraction(Mushroom obj) {
-        return false;
-    }
-
-    @Override
-    public boolean receiveInteraction(Box obj) {
-        return false;
-    }
 
     // ===== Colisión =====
     @Override

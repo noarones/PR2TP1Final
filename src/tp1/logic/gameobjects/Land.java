@@ -25,25 +25,7 @@ public class Land extends GameObject{
 		return false;
 	}
 
-	@Override
-	public boolean receiveInteraction(Land obj) {
-		return false;
-	}
-
-	@Override
-	public boolean receiveInteraction(ExitDoor obj) {
-		return false;
-	}
-
-	@Override
-	public boolean receiveInteraction(Mario obj) {
-		return false;
-	}
-
-	@Override
-	public boolean receiveInteraction(Goomba obj) {
-		return false;
-	}
+	
 
 	@Override
 	public boolean isSolid() {
@@ -70,14 +52,6 @@ public class Land extends GameObject{
 		return new Land(game,pos);
 	}
 
-	@Override
-	public boolean receiveInteraction(Mushroom obj) {
-		return false;
-	}
 
-	@Override
-	public boolean receiveInteraction(Box obj) {
-		return false;
-	}
 
 }

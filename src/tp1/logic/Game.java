@@ -111,10 +111,10 @@ public class Game implements GameStatus, GameWorld, GameModel {
     }
 
     // ===== Métodos de reinicio del juego =====
-    public void reset(int nLevel) {
+    public void reset(int nLevel, boolean noArguments) {
         if (nLevel != -1) {
             int pointsAux = this.points, livesAux = this.lives;
-            initLevel(nLevel = nLevel == -2 ? this.nLevel : nLevel);
+            initLevel(nLevel = noArguments ? this.nLevel : nLevel);
             points = pointsAux; 
             lives = livesAux;
         } else initLevel(nLevel);

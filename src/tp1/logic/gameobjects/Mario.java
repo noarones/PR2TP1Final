@@ -7,6 +7,7 @@ package tp1.logic.gameobjects;
 import java.util.ArrayList;
 import java.util.List;
 
+import tp1.exceptions.ObjectParseException;
 import tp1.logic.Action;
 import tp1.logic.GameItem;
 import tp1.logic.GameWorld;
@@ -287,7 +288,7 @@ public class Mario extends MovingObject {
 
     // ===== Creación dinámica =====
     @Override
-    protected GameObject create(String[] words, GameWorld game, Position pos) {
+    protected GameObject create(String[] words, GameWorld game, Position pos) throws ObjectParseException {
         Mario mario = new Mario(game, pos);
 
         mario.setInitial(

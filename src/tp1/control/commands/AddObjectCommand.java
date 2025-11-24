@@ -10,6 +10,11 @@ import java.util.Arrays;
 import tp1.logic.GameModel;
 import tp1.view.GameView;
 import tp1.view.Messages;
+import tp1.exceptions.CommandExecuteException;
+import tp1.exceptions.CommandParseException;
+import tp1.exceptions.OffBoardException;
+import tp1.exceptions.PositionParseException;
+import tp1.exceptions.ObjectParseException;
 
 public class AddObjectCommand extends AbstractCommand {
 
@@ -29,21 +34,49 @@ public class AddObjectCommand extends AbstractCommand {
 	        this();
 	        this.objectDescription = objectDescription;
 	    }
+	
+	private boolean matchNoDirObject(String object) {
+		return object.toLowerCase().equals("land") || object.toLowerCase().equals("l")
+				|| object.toLowerCase().equals("exitdoor") || object.toLowerCase().equals("e");
+	}
 	 
-	 @Override
-	    public void execute(GameModel game, GameView view) {
-	     
-	        if (game.addGameObject(objectDescription, "command")) 
-	        	view.showGame();
-	        else 
-	            view.showError(Messages.INVALID_GAME_OBJECT.formatted(String.join(" ", objectDescription)));
-	        
+	@Override
+	public void execute(GameModel game, GameView view) throws CommandExecuteException {
+	    try {
+	        game.addGameObject(objectDescription, "command");
+	        view.showGame();
+	    } catch (OffBoardException | ObjectParseException | PositionParseException e) {
+	        // Envolvemos en CommandExecuteException
+	        throw new CommandExecuteException(Messages.ERROR_COMMAND_EXECUTE, e);
 	    }
+	}
 
-	 @Override
-	    public Command parse(String[] commandWords) {
 
-	        return isValidParamCommand(commandWords) ? 
-	        		new AddObjectCommand(Arrays.copyOfRange(commandWords, 1, commandWords.length)) : null;
+	@Override
+	public Command parse(String[] commandWords) throws CommandParseException {
+
+	    if (!matchCommandName(commandWords[0])) return null;
+	    
+	    if (commandWords.length <= 2) 
+	        throw new CommandParseException(Messages.COMMAND_INCORRECT_PARAMETER_NUMBER);
+	    
+	    try {
+		    if (commandWords.length > 4) {
+		    	String args = String.join(" ", Arrays.copyOfRange(commandWords, 1, commandWords.length));
+		    	throw new CommandParseException(Messages.OBJECT_PARSE_ERROR.formatted(args));
+		    }
+		    
+		    if (matchNoDirObject(commandWords[2]) && commandWords.length > 3) {
+		    	String args = String.join(" ", Arrays.copyOfRange(commandWords, 1, commandWords.length));
+		    	throw new CommandParseException(Messages.OBJECT_PARSE_ERROR.formatted(args));
+		    }
 	    }
+	    catch(CommandParseException com) {
+	    	throw new CommandParseException(Messages.ERROR_COMMAND_EXECUTE, com);
+	    }
+	    
+	    
+	    return new AddObjectCommand(Arrays.copyOfRange(commandWords, 1, commandWords.length));
+	}
+
 }

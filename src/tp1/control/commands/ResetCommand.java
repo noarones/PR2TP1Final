@@ -7,6 +7,8 @@ package tp1.control.commands;
 import tp1.logic.GameModel;
 import tp1.view.GameView;
 import tp1.view.Messages;
+import tp1.exceptions.CommandParseException;
+import tp1.exceptions.CommandExecuteException;
 
 public class ResetCommand extends AbstractCommand{
 	private static final String NAME = Messages.COMMAND_RESET_NAME;
@@ -28,11 +30,13 @@ public class ResetCommand extends AbstractCommand{
 	}
 	
 	@Override
-	public void execute(GameModel game, GameView view) {
-		
-     if(!((a >= -2 && a <=2 || noArguments) && reset(game,view)))
-     
-	 view.showError(Messages.INVALID_LEVEL_NUMBER + Messages.LINE_SEPARATOR); 
+	public void execute(GameModel game, GameView view) throws CommandExecuteException{
+	
+		if(a == -2 && !noArguments)	
+			throw new CommandExecuteException(Messages.INVALID_LEVEL_NUMBER); 
+
+     if(!((a >= -2 && a <=2 || noArguments) && reset(game,view))) 
+        throw new CommandExecuteException(Messages.INVALID_LEVEL_NUMBER); 
 	
 	}
 	
@@ -44,13 +48,30 @@ public class ResetCommand extends AbstractCommand{
 	   return true;
    }
 
-	@Override
-	public Command parse(String[] commandWords) {
-			
-			return matchCommandName(commandWords[0]) ? new ResetCommand((commandWords.length > 1) ? 
-					Integer.parseInt(commandWords[1]) : -2, false) : null;
-		
-		
-	}
+   @Override
+   public Command parse(String[] commandWords) throws CommandParseException {
+
+       if (!matchCommandName(commandWords[0])) return null; 
+       
+       if (commandWords.length > 2) 
+           throw new CommandParseException(Messages.COMMAND_INCORRECT_PARAMETER_NUMBER);
+       
+
+       int level = -2; // tu valor especial por defecto
+
+       if (commandWords.length == 2) {
+           try {
+               level = Integer.parseInt(commandWords[1]);
+           } catch (NumberFormatException nfe) {
+               throw new CommandParseException(
+                       Messages.LEVEL_NOT_A_NUMBER_ERROR.formatted(commandWords[1]),
+                       nfe
+               );
+           }
+       }
+
+       return new ResetCommand(level, commandWords.length == 1);
+   }
+
 
 }

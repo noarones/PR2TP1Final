@@ -8,7 +8,9 @@ import tp1.logic.GameItem;
 import tp1.logic.GameWorld;
 import tp1.logic.Position;
 import tp1.view.Messages;
-
+import tp1.exceptions.OffBoardException;
+import tp1.exceptions.PositionParseException;
+import tp1.exceptions.ObjectParseException;
 public class Box extends GameObject {
 
     // ===== Estado interno =====
@@ -51,11 +53,13 @@ public class Box extends GameObject {
     public boolean receiveInteraction(Mario obj) {
         abierto = true;
         game.addPoints(points);
-        game.addGameObject(new String[] { pos.up().toString(), "Mushroom" }, "spawn");
+        try {
+            game.addGameObject(new String[] { pos.up().toString(), "Mushroom" }, "spawn");
+        } catch (OffBoardException | ObjectParseException | PositionParseException e) {
         
+        }
         return isAlive();
     }
-
     
     @Override
     public boolean receiveInteraction(Land obj) {
@@ -90,8 +94,12 @@ public class Box extends GameObject {
 
     // ===== Creación dinámica =====
     @Override
-    protected GameObject create(String[] words, GameWorld game, Position pos) {
+    protected GameObject create(String[] words, GameWorld game, Position pos) throws ObjectParseException{
         Box box = new Box(game, pos);
+        String status = words[2].toLowerCase();
+        if(!status.equals("empty") && !status.equals("e") && !status.equals("full") && !status.equals("f")) {
+            throw new ObjectParseException(Messages.INVALID_BOX_STATUS.formatted(String.join(" ", words)));
+        }
         box.setInitial(ParamParser.parseBoolean(words, 2, "empty", "e", "full", "f", false));
         return box;
     }

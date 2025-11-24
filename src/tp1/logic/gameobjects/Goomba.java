@@ -4,6 +4,7 @@
  */
 package tp1.logic.gameobjects;
 
+import tp1.exceptions.ObjectParseException;
 import tp1.logic.Action;
 import tp1.logic.GameItem;
 import tp1.logic.GameWorld;
@@ -88,9 +89,20 @@ public class Goomba extends MovingObject {
 
     // ===== Creación dinámica =====
     @Override
-    protected GameObject create(String[] words, GameWorld game, Position pos) {
+    protected GameObject create(String[] words, GameWorld game, Position pos) throws ObjectParseException {
         Goomba goomba = new Goomba(game, pos);
-        goomba.setInitial(ParamParser.parseDirection(words, 2));
+        Action dir;
+        try {
+        	dir = ParamParser.parseDirection(words, 2);
+        }
+        catch(ObjectParseException obj) {
+        	throw new ObjectParseException(Messages.UNKNOWN_MOVING_DIRECTION.formatted(String.join(" ", words)), obj);
+        }
+        if (dir == Action.UP || dir == Action.DOWN) {
+            throw new ObjectParseException(Messages.INVALID_MOVING_DIRECTION.formatted(String.join(" ", words)));
+        }
+
+        goomba.setInitial(dir);
         return goomba;
     }
 

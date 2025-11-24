@@ -9,6 +9,9 @@ import tp1.control.commands.CommandGenerator;
 import tp1.logic.Game;
 import tp1.view.GameView;
 import tp1.view.Messages;
+import tp1.exceptions.CommandException;
+import tp1.exceptions.CommandParseException;
+import tp1.exceptions.CommandExecuteException;
 
 /**
  *  Accepts user input and coordinates the game execution logic
@@ -16,6 +19,7 @@ import tp1.view.Messages;
 public class Controller {
 
 	private Game game;
+	
 	private GameView view;
 
 	public Controller(Game game, GameView view) {
@@ -33,16 +37,18 @@ public class Controller {
 	    
 	    while (!game.isFinished()) {
 	        String[] words = view.getPrompt();
-	        Command command = CommandGenerator.parse(words);
-	        
-	        if (command != null) {
+	        try {
+	            Command command = CommandGenerator.parse(words);
 	            command.execute(game, view);
-	            
-	        } 
-	        else {
-	            view.showError(Messages.UNKNOWN_COMMAND.formatted(String.join(" ", words)));
-	           
+	        } catch (CommandException e) {
+	            view.showError(e.getMessage());
+	            Throwable cause = e.getCause();
+	            while (cause != null) {
+	                view.showError(cause.getMessage());
+	                cause = cause.getCause();
+	            }
 	        }
+
 	    }
 
 	    view.showEndMessage();

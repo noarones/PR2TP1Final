@@ -1,15 +1,26 @@
 /* GRUPO 19 : NOÉ HARIM ARONES DE LA CRUZ , MATEI-CRISTIAN FLOREA */
 package tp1.logic.gameobjects;
 
+import java.util.Arrays;
+
+import tp1.exceptions.ObjectParseException;
 import tp1.logic.Action;
+import tp1.view.Messages;
 
 public class ParamParser {
 
     // ===== Parseo de dirección =====
-    public static Action parseDirection(String[] words, int index) {
+    public static Action parseDirection(String[] words, int index) throws ObjectParseException{
         if(words.length <= index) return null;
-        Action a = Action.parseAction(words[index].toLowerCase());
-        return (a == Action.LEFT || a == Action.RIGHT ? a : null);
+        String a = words[index];
+        switch(words[index].toLowerCase()) {
+        case "left": return Action.LEFT;
+        case "right": return Action.RIGHT;
+        case "up": return Action.UP;
+        case "down": return Action.DOWN;
+        default:
+            throw new ObjectParseException(Messages.UNKNOWN_ACTION.formatted(a));
+        }
     }
 
     // ===== Parseo de booleanos con múltiples alias =====

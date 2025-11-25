@@ -12,6 +12,7 @@ import tp1.view.Messages;
 import tp1.exceptions.OffBoardException;
 import tp1.exceptions.PositionParseException;
 import tp1.exceptions.ActionParseException;
+import tp1.exceptions.GameModelException;
 import tp1.exceptions.ObjectParseException;
 public class Box extends GameObject {
 
@@ -65,7 +66,7 @@ public class Box extends GameObject {
         game.addPoints(points);
         try {
             game.addGameObject(new String[] { pos.up().toString(), "Mushroom" }, "spawn");
-        } catch (OffBoardException | ObjectParseException | PositionParseException e) {
+        } catch (GameModelException e) {
         
         }
         return isAlive();
@@ -81,7 +82,7 @@ public class Box extends GameObject {
 
     // ===== Creación dinámica =====
     @Override
-    protected GameObject create(String[] words, GameWorld game, Position pos) throws ObjectParseException{
+    protected GameObject create(String[] words, GameWorld game, Position pos) throws GameModelException{
     	
     	if(words.length > 3)
     		throw new ObjectParseException(Messages.OBJECT_PARSE_ERROR.formatted(String.join(" ", words)));

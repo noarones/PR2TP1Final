@@ -10,6 +10,7 @@ import tp1.logic.GameWorld;
 import tp1.logic.Position;
 import tp1.util.*;
 import tp1.exceptions.ActionParseException;
+import tp1.exceptions.GameModelException;
 import tp1.exceptions.ObjectParseException;
 import tp1.exceptions.OffBoardException;
 import tp1.exceptions.PositionParseException;
@@ -50,7 +51,7 @@ public abstract class GameObject implements GameItem {
 
     public abstract String getIcon();
 
-    protected abstract GameObject create(String[] words, GameWorld game, Position pos) throws ObjectParseException;
+    protected abstract GameObject create(String[] words, GameWorld game, Position pos) throws GameModelException;
 
     // ===== Movimiento =====
     protected boolean move(Action dir) {
@@ -95,7 +96,7 @@ public abstract class GameObject implements GameItem {
 
     // ===== Creación / parseo de objetos a partir de descripción =====
     public GameObject parse(String[] words, GameWorld game)
-            throws ObjectParseException, OffBoardException, PositionParseException{
+            throws GameModelException{
 
         Position pos1;
 

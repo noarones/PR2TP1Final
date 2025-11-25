@@ -10,6 +10,7 @@ import tp1.view.Messages;
 import tp1.exceptions.OffBoardException;
 import tp1.exceptions.PositionParseException;
 import tp1.exceptions.ActionParseException;
+import tp1.exceptions.GameModelException;
 import tp1.exceptions.ObjectParseException;
 public class Game implements GameStatus, GameWorld, GameModel {
 
@@ -234,7 +235,7 @@ public class Game implements GameStatus, GameWorld, GameModel {
 
     @Override
     public boolean addGameObject(String[] objectDescription, String Mode)
-            throws OffBoardException, ObjectParseException , PositionParseException{
+            throws GameModelException{
 
     
         GameObject o = GameObjectFactory.parse(objectDescription, this);

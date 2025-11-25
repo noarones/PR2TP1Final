@@ -10,6 +10,7 @@ import tp1.logic.GameWorld;
 import tp1.exceptions.OffBoardException;
 import tp1.exceptions.PositionParseException;
 import tp1.exceptions.ActionParseException;
+import tp1.exceptions.GameModelException;
 import tp1.exceptions.ObjectParseException;
 import tp1.view.Messages;
 public class GameObjectFactory {
@@ -25,7 +26,7 @@ public class GameObjectFactory {
 		);
 	
 	public static GameObject parse(String[] objWords, GameWorld game)
-	        throws OffBoardException, ObjectParseException, PositionParseException{
+	        throws GameModelException{
 
 	    for (GameObject g : availableObjects) {
 	        GameObject obj = g.parse(objWords, game);

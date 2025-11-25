@@ -3,14 +3,24 @@
  *  MATEI-CRISTIAN FLOREA
  */
 package tp1.logic;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import tp1.logic.gameobjects.*;
 import tp1.view.Messages;
 import tp1.exceptions.OffBoardException;
 import tp1.exceptions.PositionParseException;
+import tp1.exceptions.ActionParseException;
+import tp1.exceptions.GameLoadException;
+import tp1.exceptions.GameModelException;
 import tp1.exceptions.ObjectParseException;
+
 public class Game implements GameStatus, GameWorld, GameModel {
+    // ===== Configuración del juego =====
+    private GameConfiguration conf = FileGameConfiguration.NONE;
 
     // ===== Constantes del juego =====
     public static final int DIM_X = 30;
@@ -111,13 +121,23 @@ public class Game implements GameStatus, GameWorld, GameModel {
     }
 
     // ===== Métodos de reinicio del juego =====
-    public void reset(int nLevel) {
-        if (nLevel != -1) {
-            int pointsAux = this.points, livesAux = this.lives;
-            initLevel(nLevel = nLevel == -2 ? this.nLevel : nLevel);
-            points = pointsAux; 
-            lives = livesAux;
-        } else initLevel(nLevel);
+    public void reset(int nLevel, boolean noArguments) {
+        if (conf == FileGameConfiguration.NONE) {
+            if (nLevel != -1) {
+                int pointsAux = this.points, livesAux = this.lives;
+                initLevel(nLevel = noArguments ? this.nLevel : nLevel);
+                points = pointsAux; 
+                lives = livesAux;
+            } else initLevel(nLevel);
+        }
+        else {
+            this.gameObjects = conf.getGameObjects();
+            this.remainingTime = conf.getRemainingTime();
+            this.points = conf.getPoints();
+            this.lives = conf.getNumLives();
+            this.won = false;
+            this.playerExits = false;
+        }
     }
 
     // ===== Actualización del juego =====
@@ -233,15 +253,13 @@ public class Game implements GameStatus, GameWorld, GameModel {
 
     @Override
     public boolean addGameObject(String[] objectDescription, String Mode)
-            throws OffBoardException, ObjectParseException , PositionParseException{
+            throws GameModelException{
 
-    	if(objectDescription.length > 4)
-    		throw new ObjectParseException(String.format(Messages.OBJECT_PARSE_ERROR, String.join(" ", objectDescription)));
-    	
+    
         GameObject o = GameObjectFactory.parse(objectDescription, this);
-
-        // Si GameObjectFactory.parse devuelve null, sería un fallo de diseño,
-        // pero en nuestro siguiente paso haremos que lance excepciones.
+    	
+    
+     
 
         if (Mode.equalsIgnoreCase("spawn")) {
             spawnObjects.add(o);
@@ -256,10 +274,29 @@ public class Game implements GameStatus, GameWorld, GameModel {
         return gameObjects.positionToString(new Position(row,col));
     }
 
+    // ===== Gestión del guardado =====
+    @Override
+    public void save(String fileName) throws GameModelException {
+        try(PrintWriter outChars = new PrintWriter(new OutputStreamWriter(new FileOutputStream(fileName), "UTF-8"))) {
+            outChars.print(this);   
+        }
+        catch (Exception e) {
+            throw new GameModelException(Messages.ERROR_SAVING_GAME.formatted(fileName), e);
+        }
+    }
+
+    // ===== Gestión del cargado =====
+    public void load(String fileName) throws GameLoadException {
+        this.conf = new FileGameConfiguration(fileName, this);
+        this.remainingTime = this.conf.getRemainingTime();
+        this.points = this.conf.getPoints();
+        this.lives = this.conf.getNumLives();
+        this.gameObjects = this.conf.getGameObjects();
+    }
+
     // ===== Setters =====
     @Override
     public void setAsMainCharacter(Mario mario) {
         this.mario = mario;
     }
-
 }

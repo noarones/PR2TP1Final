@@ -9,6 +9,8 @@ import tp1.logic.GameItem;
 import tp1.logic.GameWorld;
 import tp1.logic.Position;
 import tp1.util.*;
+import tp1.exceptions.ActionParseException;
+import tp1.exceptions.GameModelException;
 import tp1.exceptions.ObjectParseException;
 import tp1.exceptions.OffBoardException;
 import tp1.exceptions.PositionParseException;
@@ -49,7 +51,7 @@ public abstract class GameObject implements GameItem {
 
     public abstract String getIcon();
 
-    protected abstract GameObject create(String[] words, GameWorld game, Position pos) throws ObjectParseException;
+    protected abstract GameObject create(String[] words, GameWorld game, Position pos) throws ObjectParseException, OffBoardException;
 
     // ===== Movimiento =====
     protected boolean move(Action dir) {
@@ -94,7 +96,7 @@ public abstract class GameObject implements GameItem {
 
     // ===== Creación / parseo de objetos a partir de descripción =====
     public GameObject parse(String[] words, GameWorld game)
-            throws ObjectParseException, OffBoardException, PositionParseException {
+            throws ObjectParseException, OffBoardException {
 
         Position pos1;
 
@@ -113,11 +115,8 @@ public abstract class GameObject implements GameItem {
                 words[1].equalsIgnoreCase(this.toString()) ||
                 words[1].equalsIgnoreCase(MyStringUtils.onlyUpper(this.toString()));
 
-        if (!matchesType) {
-            // IMPORTANTE: devolver null aquí NO es un error
-            // simplemente significa que "no es este objeto"
-            return null;
-        }
+        if (!matchesType) return null;
+        
 
         // 3. Tipo coincide → ahora cualquier fallo es ERROR REAL
         if (!game.isInBoard(pos1)) {
@@ -129,5 +128,20 @@ public abstract class GameObject implements GameItem {
         // 4. Crear el objeto válido
         return this.create(words, game, pos1);
     }
+    
+    
+    
+    
+	public  boolean receiveInteraction(Land obj) { return false; }
+	
+	public  boolean receiveInteraction(ExitDoor obj) { return false; }
+	
+	public  boolean receiveInteraction(Mario obj) { return false; }
+	
+	public  boolean receiveInteraction(Goomba obj) { return false; }
+	
+	public  boolean receiveInteraction(Mushroom obj) { return false; }
+	
+	public  boolean receiveInteraction(Box obj) { return false; }
 
 }

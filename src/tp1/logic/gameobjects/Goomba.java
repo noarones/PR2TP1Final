@@ -4,6 +4,7 @@
  */
 package tp1.logic.gameobjects;
 
+import tp1.exceptions.ActionParseException;
 import tp1.exceptions.ObjectParseException;
 import tp1.logic.Action;
 import tp1.logic.GameItem;
@@ -13,6 +14,7 @@ import tp1.view.Messages;
 
 public class Goomba extends MovingObject {
 
+	
     // ===== Constructores =====
     public Goomba(GameWorld game, Position pos) {
         super(game, pos);
@@ -25,11 +27,15 @@ public class Goomba extends MovingObject {
 
     // ===== Inicialización =====
     private void setInitial(Action dir) {
-        this.dir = dir == null ?  Action.LEFT : dir ;
+    	
+        if(dirValido(dir)) this.dir = dir;
         this.lastDir = dir;
         this.points = 100;
     }
 
+    private static boolean  dirValido(Action dir) {
+    	return dir == Action.LEFT || dir == Action.RIGHT; 
+    }
     // ===== Representación y estado =====
     @Override
     public String getIcon() {
@@ -55,30 +61,7 @@ public class Goomba extends MovingObject {
         return item.isInPosition(this.pos) ? item.receiveInteraction(this) : false;
     }
 
-    @Override
-    public boolean receiveInteraction(Land obj) {
-        return false;
-    }
 
-    @Override
-    public boolean receiveInteraction(ExitDoor obj) {
-        return false;
-    }
-
-    @Override
-    public boolean receiveInteraction(Goomba obj) {
-        return false;
-    }
-
-    @Override
-    public boolean receiveInteraction(Mushroom obj) {
-        return false;
-    }
-
-    @Override
-    public boolean receiveInteraction(Box obj) {
-        return false;
-    }
 
     // ===== Movimiento automático =====
     @Override 
@@ -89,25 +72,26 @@ public class Goomba extends MovingObject {
 
     // ===== Creación dinámica =====
     @Override
-    protected GameObject create(String[] words, GameWorld game, Position pos) throws ObjectParseException {
-    	Goomba goomba = new Goomba(game, pos);
-    	if (words.length <= 3) {
-	        Action dir;
-	        try {
-	        	dir = ParamParser.parseDirection(words, 2);
-	        }
-	        catch(ObjectParseException obj) {
-	        	throw new ObjectParseException(Messages.UNKNOWN_MOVING_DIRECTION.formatted(String.join(" ", words)), obj);
-	        }
-	        if (dir == Action.UP || dir == Action.DOWN) {
-	            throw new ObjectParseException(Messages.INVALID_MOVING_DIRECTION.formatted(String.join(" ", words)));
-	        }
-	
-	        goomba.setInitial(dir);
-    	}
-    	else
+    protected GameObject create(String[] words, GameWorld game, Position pos) throws ObjectParseException{
+    	if(words.length > 3)
     		throw new ObjectParseException(Messages.OBJECT_PARSE_ERROR.formatted(String.join(" ", words)));
+    	try {
+    		
+    		
+        Goomba goomba = new Goomba(game, pos);
+        Action dir = ParamParser.parseDirection(words, 2);
+        
+        if(!dirValido(dir)) 
+        	throw new ObjectParseException(Messages.INVALID_MOVING_DIRECTION.formatted(String.join(" ", words)));
+       
+        goomba.setInitial(dir);
+        
         return goomba;
+        
+    } catch(ActionParseException a) {
+    	throw new ObjectParseException(Messages.UNKNOWN_MOVING_DIRECTION.formatted(String.join(" ", words)), a);
+    } 
+   
     }
 
 }

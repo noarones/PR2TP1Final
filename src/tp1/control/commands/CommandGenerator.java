@@ -14,13 +14,14 @@ import tp1.exceptions.CommandParseException;
 public class CommandGenerator {
 
 	private static final List<Command> availableCommands = Arrays.asList(
+			new LoadCommand(),
+			new SaveCommand(),
 			new AddObjectCommand(),
 			new ActionCommand(),
 			new UpdateCommand(),
 			new ResetCommand(),
 			new HelpCommand(),
-			new ExitCommand()
-			
+			new ExitCommand()			
 	);
 
 	public static Command parse(String[] commandWords) throws CommandParseException{		

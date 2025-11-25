@@ -1,6 +1,7 @@
 /* GRUPO 19 : NOÉ HARIM ARONES DE LA CRUZ , MATEI-CRISTIAN FLOREA */
 package tp1.logic.gameobjects;
 
+import tp1.exceptions.ActionParseException;
 import tp1.exceptions.ObjectParseException;
 import tp1.logic.Action;
 import tp1.logic.GameItem;
@@ -66,44 +67,24 @@ public class Mushroom extends MovingObject{
         return canInteract;
     }
 
-    @Override
-    public boolean receiveInteraction(Land obj) {
-        return false;
-    }
-
-    @Override
-    public boolean receiveInteraction(ExitDoor obj) {
-        return false;
-    }
 
     @Override
     public boolean receiveInteraction(Mario obj) {
         return isAlive() && dead();
     }
 
-    @Override
-    public boolean receiveInteraction(Goomba obj) {
-        return false;
-    }
 
-    @Override
-	public boolean receiveInteraction(Mushroom obj) {
-		return false;
-	}
-    
-	@Override
-	public boolean receiveInteraction(Box obj) {
-		
-		return false;
-	}
 
 
     @Override
-    protected GameObject create(String[] words, GameWorld game, Position pos) throws ObjectParseException {
+    protected GameObject create(String[] words, GameWorld game, Position pos) throws ObjectParseException{
         Mushroom mushroom = new Mushroom(game, pos);
-
+try {
         mushroom.setInitial(ParamParser.parseDirection(words, 2));
-
+}
+        catch(ActionParseException a) {
+        	throw new ObjectParseException( Messages.UNKNOWN_MOVING_DIRECTION.formatted(String.join("", words)), a);
+        }
         return mushroom;
     }
 

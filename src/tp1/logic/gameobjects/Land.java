@@ -4,6 +4,8 @@
  */
 package tp1.logic.gameobjects;
 
+import tp1.exceptions.ActionParseException;
+import tp1.exceptions.ObjectParseException;
 import tp1.logic.GameItem;
 import tp1.logic.GameWorld;
 import tp1.logic.Position;
@@ -25,25 +27,7 @@ public class Land extends GameObject{
 		return false;
 	}
 
-	@Override
-	public boolean receiveInteraction(Land obj) {
-		return false;
-	}
-
-	@Override
-	public boolean receiveInteraction(ExitDoor obj) {
-		return false;
-	}
-
-	@Override
-	public boolean receiveInteraction(Mario obj) {
-		return false;
-	}
-
-	@Override
-	public boolean receiveInteraction(Goomba obj) {
-		return false;
-	}
+	
 
 	@Override
 	public boolean isSolid() {
@@ -66,18 +50,12 @@ public class Land extends GameObject{
 	}
 
 	@Override
-	protected GameObject create(String[] words, GameWorld game, Position pos) {
+	protected GameObject create(String[] words, GameWorld game, Position pos) throws ObjectParseException{
+		if(words.length >= 3) 
+    		throw new ObjectParseException(Messages.OBJECT_PARSE_ERROR.formatted(String.join(" ", words)));
 		return new Land(game,pos);
 	}
 
-	@Override
-	public boolean receiveInteraction(Mushroom obj) {
-		return false;
-	}
 
-	@Override
-	public boolean receiveInteraction(Box obj) {
-		return false;
-	}
 
 }

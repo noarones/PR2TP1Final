@@ -29,6 +29,10 @@ public class GameObjectContainer {
         this.objects = new ArrayList<>();
     }
 
+    public GameObjectContainer(GameObjectContainer other) {
+        this.objects = new ArrayList<>(other.objects);
+    }
+
     // ============================================================
     // == Métodos principales =====================================
     // ============================================================

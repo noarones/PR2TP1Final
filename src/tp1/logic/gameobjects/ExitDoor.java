@@ -4,6 +4,8 @@
  */
 package tp1.logic.gameobjects;
 
+import tp1.exceptions.ActionParseException;
+import tp1.exceptions.ObjectParseException;
 import tp1.logic.GameItem;
 import tp1.logic.GameWorld;
 import tp1.logic.Position;
@@ -28,33 +30,9 @@ public class ExitDoor extends GameObject {
     
     @Override
     public boolean receiveInteraction(Mario obj) {
-        return obj.isInPosition(this.pos) ? obj.marioExited() : false;
+        return obj.marioExited();
     }
    
-    @Override
-    public boolean receiveInteraction(Land obj) {
-        return false;
-    }
-
-    @Override
-    public boolean receiveInteraction(ExitDoor obj) {
-        return false;
-    }
-
-    @Override
-    public boolean receiveInteraction(Goomba obj) {
-        return false;
-    }
-
-    @Override
-    public boolean receiveInteraction(Mushroom obj) {
-        return false;
-    }
-
-    @Override
-    public boolean receiveInteraction(Box obj) {
-        return false;
-    }
 
     // ===== Colisión =====
     @Override
@@ -75,7 +53,7 @@ public class ExitDoor extends GameObject {
 
     // ===== Creación dinámica =====
     @Override
-    protected GameObject create(String[] words, GameWorld game, Position pos) {
+    protected GameObject create(String[] words, GameWorld game, Position pos) throws ObjectParseException {
         return new ExitDoor(game , pos);
     }
 

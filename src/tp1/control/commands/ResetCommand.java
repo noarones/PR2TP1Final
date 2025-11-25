@@ -15,7 +15,7 @@ public class ResetCommand extends AbstractCommand{
 	private static final String SHORTCUT = Messages.COMMAND_RESET_SHORTCUT;
 	private static final String DETAILS = Messages.COMMAND_RESET_DETAILS;
 	private static final String HELP = Messages.COMMAND_RESET_HELP;
-	private int a;
+	private int level;
 	private boolean noArguments;
 	
 	public ResetCommand() {
@@ -23,26 +23,23 @@ public class ResetCommand extends AbstractCommand{
 		this.noArguments = true;
 	}
 
-	public ResetCommand(int nLevel, boolean noArguments) {
+	public ResetCommand(int nLevel) {
 		super(NAME, SHORTCUT , DETAILS, HELP);
-		this.noArguments = noArguments;
-		this.a = nLevel;
+		this.noArguments = false;
+		this.level = nLevel;
 	}
 	
 	@Override
 	public void execute(GameModel game, GameView view) throws CommandExecuteException{
 	
-		if(a == -2 && !noArguments)	
-			throw new CommandExecuteException(Messages.INVALID_LEVEL_NUMBER); 
-
-     if(!((a >= -2 && a <=2 || noArguments) && reset(game,view))) 
+     if(!((level > -2 && level <=2 || noArguments) && reset(game,view))) 
         throw new CommandExecuteException(Messages.INVALID_LEVEL_NUMBER); 
 	
 	}
 	
    private boolean reset(GameModel game, GameView view) {
 	   
-	   game.reset(noArguments ? -2 : a);
+	   game.reset(level, noArguments);
 	   view.showGame(); 
 	 	
 	   return true;
@@ -57,11 +54,12 @@ public class ResetCommand extends AbstractCommand{
            throw new CommandParseException(Messages.COMMAND_INCORRECT_PARAMETER_NUMBER);
        
 
-       int level = -2; // tu valor especial por defecto
+       
 
        if (commandWords.length == 2) {
            try {
-               level = Integer.parseInt(commandWords[1]);
+               int level = Integer.parseInt(commandWords[1]);
+               return new ResetCommand(level);
            } catch (NumberFormatException nfe) {
                throw new CommandParseException(
                        Messages.LEVEL_NOT_A_NUMBER_ERROR.formatted(commandWords[1]),
@@ -70,7 +68,7 @@ public class ResetCommand extends AbstractCommand{
            }
        }
 
-       return new ResetCommand(level, commandWords.length == 1);
+       return new ResetCommand();
    }
 
 

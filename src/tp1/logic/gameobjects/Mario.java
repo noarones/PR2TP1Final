@@ -7,6 +7,7 @@ package tp1.logic.gameobjects;
 import java.util.ArrayList;
 import java.util.List;
 
+import tp1.exceptions.ActionParseException;
 import tp1.exceptions.ObjectParseException;
 import tp1.logic.Action;
 import tp1.logic.GameItem;
@@ -38,6 +39,13 @@ public class Mario extends MovingObject {
         this.pendingActions = new ArrayList<>();
     }
 
+    private static boolean tamValido(String str) {
+    	return str.equalsIgnoreCase("big") ||
+    			str.equalsIgnoreCase("small") ||
+    			str.equalsIgnoreCase("s") ||
+    			str.equalsIgnoreCase("b") ;
+    			
+    }
     // ===== Representación visual =====
     public String getIcon() {
         return (dir == Action.DOWN && lastDir == Action.STOP)
@@ -219,14 +227,11 @@ public class Mario extends MovingObject {
         return true;
     }
 
-    @Override
-    public boolean receiveInteraction(Land obj) { return false; }
 
     @Override
     public boolean receiveInteraction(ExitDoor obj) { return true; }
 
-    @Override
-    public boolean receiveInteraction(Mario obj) { return false; }
+
 
     @Override
     public boolean receiveInteraction(Mushroom obj) {
@@ -252,18 +257,18 @@ public class Mario extends MovingObject {
         }
 
         // Colisión lateral o frontal → Mario pierde tamaño o vida
-        if (obj.isInPosition(this.pos)) {
+        
             if (isBig()) this.big = false;
             else {
                 game.removeLife();
                 this.dead();
                 if (game.numLives() > 0) {
-                    game.reset(-2);
+                    game.reset(2025,true);
                 }
             }
             return true;
-        }
-        return false;
+        
+        
     }
 
     @Override
@@ -282,32 +287,34 @@ public class Mario extends MovingObject {
     protected void handleDeath() {
         game.removeLife();
         if (game.numLives() > 0) {
-            game.reset(-2);
+            game.reset(2025,true);
         }
     }
 
     // ===== Creación dinámica =====
     @Override
-    protected GameObject create(String[] words, GameWorld game, Position pos) throws ObjectParseException {
-    	Mario mario = new Mario(game, pos);
-	    Action dir;
-	    try {
-	        dir = ParamParser.parseDirection(words, 2);
-	    } 
-	    catch (ObjectParseException obj) {
-	        throw new ObjectParseException(Messages.UNKNOWN_MOVING_DIRECTION.formatted(String.join(" ", words)), obj);
-	    }
-	    if (words.length > 3) {
-	        String status = words[3].toLowerCase();
-	        if (!status.equals("big") && !status.equals("b")   && !status.equals("small") && !status.equals("s")) {
-	            throw new ObjectParseException(Messages.INVALID_MARIO_SIZE.formatted(String.join(" ", words)));
-	        }
-	    }
+    protected GameObject create(String[] words, GameWorld game, Position pos) throws ObjectParseException{
+        Mario mario = new Mario(game, pos);
 
-	    boolean isBig = ParamParser.parseBoolean(words, 3, "big", "b", "small", "s", false);
-	    mario.setInitial(isBig, dir);
-	    game.setAsMainCharacter(mario);
-	    return mario;
+        if(words.length > 4)
+        	throw new ObjectParseException(Messages.OBJECT_PARSE_ERROR.formatted(String.join(" ", words)));
+        
+        if(words.length > 3 &&!tamValido(words[3]))
+        	throw new ObjectParseException(Messages.INVALID_MARIO_SIZE.formatted(String.join(" ", words)));
+        
+        try {
+        		
+        mario.setInitial(
+            ParamParser.parseBoolean(words, 3, "big", "b", "small", "s", false),
+            ParamParser.parseDirection(words, 2)
+        );
+        }
+        catch(ActionParseException a) {
+        	throw new ObjectParseException( Messages.UNKNOWN_MOVING_DIRECTION.formatted(String.join(" ", words)), a);
+        }
+        game.setAsMainCharacter(mario);
+
+        return mario;
     }
 
 }

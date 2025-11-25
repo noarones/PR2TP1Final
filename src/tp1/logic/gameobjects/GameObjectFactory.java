@@ -9,6 +9,8 @@ import java.util.List;
 import tp1.logic.GameWorld;
 import tp1.exceptions.OffBoardException;
 import tp1.exceptions.PositionParseException;
+import tp1.exceptions.ActionParseException;
+import tp1.exceptions.GameModelException;
 import tp1.exceptions.ObjectParseException;
 import tp1.view.Messages;
 public class GameObjectFactory {
@@ -24,7 +26,7 @@ public class GameObjectFactory {
 		);
 	
 	public static GameObject parse(String[] objWords, GameWorld game)
-	        throws OffBoardException, ObjectParseException, PositionParseException{
+	        throws ObjectParseException, OffBoardException, GameModelException{
 
 	    for (GameObject g : availableObjects) {
 	        GameObject obj = g.parse(objWords, game);
@@ -39,6 +41,17 @@ public class GameObjectFactory {
 	    throw new ObjectParseException(
 	            Messages.UNKNOWN_GAME_OBJECT.formatted(String.join(" ", objWords))
 	    );
+	}
+
+	public static GameObject parse(String line, GameWorld game) throws ObjectParseException, OffBoardException {
+		String[] sLine = line.trim().split("[),\\s]+"); // delimitadores para leer
+
+		for (GameObject g : availableObjects) {
+			GameObject obj = g.parse(sLine, game);
+			if (obj != null)
+				return obj;
+		}
+		throw new ObjectParseException(Messages.UNKNOWN_GAME_OBJECT.formatted(line));
 	}
 
 	}

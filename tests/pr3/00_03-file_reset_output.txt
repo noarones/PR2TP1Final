@@ -26,7 +26,8 @@ Lives: 3
 
 Command > [DEBUG] Executing: load conf_0
 
-[ERROR] Error: Unknown command: load
+[ERROR] Error: Unable to load game configuration from file "conf_0"
+[ERROR] Error: Invalid game status "1111 9999 22"
 Command > [DEBUG] Executing: 
 
 Time: 99

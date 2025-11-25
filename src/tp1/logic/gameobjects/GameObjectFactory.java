@@ -26,6 +26,7 @@ public class GameObjectFactory {
 		);
 	
 	public static GameObject parse(String[] objWords, GameWorld game)
+
 	        throws GameModelException{
 
 	    for (GameObject g : availableObjects) {
@@ -43,6 +44,12 @@ public class GameObjectFactory {
 	    );
 	}
 
+	public  static GameObject parse(String line, GameWorld game)
+	        throws GameModelException {
+	    return parse(line.trim().split("\\s+"), game);  
 	}
+
+	
+}
 	
 

@@ -96,6 +96,25 @@ public class Messages {
 	public static final String COMMAND_EXIT_DETAILS = "[e]xit";
 	public static final String COMMAND_EXIT_HELP = "exits the game";
 	
+	//SAVE
+	public static final String COMMAND_SAVE_NAME = "save";
+	public static final String COMMAND_SAVE_SHORTCUT = "s";
+	public static final String COMMAND_SAVE_DETAILS = "[s]ave <fileName>";
+	public static final String COMMAND_SAVE_HELP = "save the actual configuration in text file <fileName>";
+	public static final String SAVE_SUCCESFUL = "   File \"%s\" correctly saved";
+	public static final String ERROR_SAVING_GAME = "Error while saving the game in %s file ";
+
+	//LOAD
+	public static final String COMMAND_LOAD_NAME = "load";
+	public static final String COMMAND_LOAD_SHORTCUT = "l";
+	public static final String COMMAND_LOAD_DETAILS = "[l]oad <fileName>";
+	public static final String COMMAND_LOAD_HELP = "load the game configuration from text file <fileName>";
+	public static final String INVALID_FILE = "Unable to load game configuration from file \"%s\"";
+	public static final String FILE_NOT_FOUND = "File not found: \"%s\"";
+	public static final String INCORRECT_GAME_STATUS = "Invalid game status \"%s\"";
+	//Este mensaje lo genera el propio programa, pero por problemas de idioma se crea aquí
+	public static final String FILE_NO_ENCONTRADO = "%s (El sistema no puede encontrar el archivo especificado)";
+	
 	// HELP
 	public static final String COMMAND_HELP_NAME = "help";
 	public static final String COMMAND_HELP_SHORTCUT = "h";

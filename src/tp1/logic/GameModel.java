@@ -6,6 +6,9 @@ package tp1.logic;
 import tp1.exceptions.OffBoardException;
 import tp1.exceptions.PositionParseException;
 import tp1.exceptions.ActionParseException;
+
+import tp1.exceptions.GameLoadException;
+
 import tp1.exceptions.GameModelException;
 import tp1.exceptions.ObjectParseException;
 
@@ -16,6 +19,9 @@ public interface GameModel {
 	public boolean addGameObject(String[] objectDescription, String Mode)  throws GameModelException;
 	public void exit();
 	public void reset(int nLevel, boolean noArguments);
-	
+
+    public void save(String fileName) throws GameModelException;
+	public void load(String fileName) throws GameLoadException;
+
 	
 }

@@ -45,5 +45,17 @@ public enum Action {
 		}
 		return ret;
 	}
+
+	public String toString() {
+		String aux = "";
+		switch(this) {
+			case LEFT ->  aux = "LEFT";
+			case RIGHT -> aux = "RIGHT";
+			case DOWN -> aux = "DOWN";
+			case UP -> aux = "UP";
+			case STOP -> aux = "STOP";
+		};
+		return aux;
+	}
 	
 }

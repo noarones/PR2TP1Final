@@ -137,6 +137,8 @@ public abstract class GameObject implements GameItem {
     	return false;
     }
     
+    public abstract String save();
+
     public abstract GameObject clone();
     
 	public  boolean receiveInteraction(Land obj) { return false; }

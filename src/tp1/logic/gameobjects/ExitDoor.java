@@ -67,4 +67,9 @@ public class ExitDoor extends GameObject {
     public GameObject clone() {
         return new ExitDoor(this.game, this.pos);
     }
+
+    @Override
+    public String save() {
+        return this.pos.toString() + " " + this.toString();
+    }   
 }

@@ -299,7 +299,11 @@ public class Game implements GameStatus, GameWorld, GameModel {
     @Override
     public void save(String fileName) throws GameModelException {
         try(PrintWriter outChars = new PrintWriter(new OutputStreamWriter(new FileOutputStream(fileName), "UTF-8"))) {
-            outChars.print(this);   
+            // 1️⃣ Guardar primera línea: tiempo, puntos, vidas
+            outChars.println(Integer.toString(this.remainingTime) + " " + Integer.toString(this.points) + " " + Integer.toString(this.lives));
+
+        // 2️⃣ Guardar todos los objetos del juego
+            gameObjects.save(outChars);
         }
         catch (Exception e) {
             throw new GameModelException(Messages.ERROR_SAVING_GAME.formatted(fileName), e);

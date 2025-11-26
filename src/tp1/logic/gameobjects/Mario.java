@@ -338,4 +338,10 @@ public class Mario extends MovingObject {
     public boolean isMario(){
     	return true;
     }
+
+    @Override
+    public String save() {
+        String sizeStr = isBig() ? "Big" : "Small";
+        return this.pos.toString() + " " + this.toString() + " " + this.dir.toString() + " " + sizeStr;
+    }
 }

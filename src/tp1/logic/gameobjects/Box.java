@@ -108,4 +108,9 @@ public class Box extends GameObject {
         return new Box(this.game, this.pos);
     }
 
+    @Override
+    public String save() {
+        String statusStr = abierto ? "Empty" : "Full";
+        return this.pos.toString() + " " + this.toString() + " " + statusStr;
+    }
 }

@@ -61,6 +61,9 @@ public class Land extends GameObject{
 		return new Land(this.game, this.pos);
 	}
 
-
+	@Override
+	public String save() {
+		return this.pos.toString() + " " + this.toString();
+	}
 
 }

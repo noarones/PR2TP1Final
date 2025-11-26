@@ -4,6 +4,7 @@
  */
 package tp1.logic;
 
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -131,5 +132,11 @@ public class GameObjectContainer {
             sb.append(obj.toString()).append(System.lineSeparator());
         }
         return sb.toString();
+    }
+
+    public void save(PrintWriter outChars) {
+        for (GameObject obj : objects) {
+            outChars.println(obj.save());
+        }
     }
 }

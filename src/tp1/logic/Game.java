@@ -123,19 +123,18 @@ public class Game implements GameStatus, GameWorld, GameModel {
 
     // ===== Métodos de reinicio del juego =====
     public void reset(int nLevel, boolean noArguments) {
-
-        if (conf == FileGameConfiguration.NONE) { //No se está usando un fichero de configuración
-        	//Si hay argumentos, se actualiza el valor del nivel
+        //Si no hay argumentos y se está usando un fichero de configuración cargar ese fichero otra vez
+        if (noArguments && this.conf != FileGameConfiguration.NONE) {
+            handleConfigFile();
+        }
+        else {
+            //Si hay argumentos, se actualiza el valor del nivel
         	if (!noArguments) {
         		this.nLevel = nLevel;
             }
             handleInternalMap();
-            
+            this.conf = FileGameConfiguration.NONE;
         }
-        else {
-            handleConfigFile();
-        }
-
     }
 
     private void handleInternalMap() {

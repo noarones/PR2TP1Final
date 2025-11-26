@@ -111,9 +111,11 @@ public class Messages {
 	public static final String COMMAND_LOAD_HELP = "load the game configuration from text file <fileName>";
 	public static final String INVALID_FILE = "Unable to load game configuration from file \"%s\"";
 	public static final String FILE_NOT_FOUND = "File not found: \"%s\"";
-	public static final String INCORRECT_GAME_STATUS = "Invalid game status \"%s\"";
+	public static final String INCORRECT_GAME_STATUS = "Incorrect game status \"%s\"";
 	//Este mensaje lo genera el propio programa, pero por problemas de idioma se crea aquí
 	public static final String FILE_NO_ENCONTRADO = "%s (El sistema no puede encontrar el archivo especificado)";
+	public static final String INVALID_FILE_CONF = "Invalid file \"%s\" configuration";
+	
 	
 	// HELP
 	public static final String COMMAND_HELP_NAME = "help";

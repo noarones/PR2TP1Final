@@ -14,6 +14,7 @@ import tp1.view.Messages;
 import tp1.exceptions.OffBoardException;
 import tp1.exceptions.PositionParseException;
 import tp1.exceptions.ActionParseException;
+
 import tp1.exceptions.GameLoadException;
 import tp1.exceptions.GameModelException;
 import tp1.exceptions.ObjectParseException;
@@ -122,6 +123,7 @@ public class Game implements GameStatus, GameWorld, GameModel {
 
     // ===== Métodos de reinicio del juego =====
     public void reset(int nLevel, boolean noArguments) {
+
         if (conf == FileGameConfiguration.NONE) {
         	//Si no hay argumentos se mantiene el mismo nivel
         	if (!noArguments)
@@ -142,6 +144,7 @@ public class Game implements GameStatus, GameWorld, GameModel {
             this.won = false;
             this.playerExits = false;
         }
+
     }
 
     // ===== Actualización del juego =====

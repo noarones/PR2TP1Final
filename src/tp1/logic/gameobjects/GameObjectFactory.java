@@ -26,7 +26,8 @@ public class GameObjectFactory {
 		);
 	
 	public static GameObject parse(String[] objWords, GameWorld game)
-	        throws ObjectParseException, OffBoardException, GameModelException{
+
+	        throws GameModelException{
 
 	    for (GameObject g : availableObjects) {
 	        GameObject obj = g.parse(objWords, game);
@@ -43,17 +44,12 @@ public class GameObjectFactory {
 	    );
 	}
 
-	public static GameObject parse(String line, GameWorld game) throws ObjectParseException, OffBoardException {
-		String[] sLine = line.trim().split("[),\\s]+"); // delimitadores para leer
-
-		for (GameObject g : availableObjects) {
-			GameObject obj = g.parse(sLine, game);
-			if (obj != null)
-				return obj;
-		}
-		throw new ObjectParseException(Messages.UNKNOWN_GAME_OBJECT.formatted(line));
+	public  static GameObject parse(String line, GameWorld game)
+	        throws GameModelException {
+	    return parse(line.trim().split("\\s+"), game);  
 	}
 
-	}
+	
+}
 	
 

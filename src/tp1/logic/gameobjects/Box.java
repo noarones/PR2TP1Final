@@ -82,7 +82,10 @@ public class Box extends GameObject {
 
     // ===== Creación dinámica =====
     @Override
-    protected GameObject create(String[] words, GameWorld game, Position pos) throws ObjectParseException, OffBoardException {
+
+    protected GameObject create(String[] words, GameWorld game, Position pos) throws GameModelException{
+
+
     	
     	if(words.length > 3)
     		throw new ObjectParseException(Messages.OBJECT_PARSE_ERROR.formatted(String.join(" ", words)));

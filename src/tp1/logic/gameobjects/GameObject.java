@@ -51,7 +51,8 @@ public abstract class GameObject implements GameItem {
 
     public abstract String getIcon();
 
-    protected abstract GameObject create(String[] words, GameWorld game, Position pos) throws ObjectParseException, OffBoardException;
+    protected abstract GameObject create(String[] words, GameWorld game, Position pos) throws GameModelException;
+
 
     // ===== Movimiento =====
     protected boolean move(Action dir) {
@@ -96,7 +97,9 @@ public abstract class GameObject implements GameItem {
 
     // ===== Creación / parseo de objetos a partir de descripción =====
     public GameObject parse(String[] words, GameWorld game)
-            throws ObjectParseException, OffBoardException {
+
+            throws GameModelException{
+
 
         Position pos1;
 

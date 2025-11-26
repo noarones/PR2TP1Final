@@ -80,8 +80,8 @@ public class Goomba extends MovingObject {
     		
         Goomba goomba = new Goomba(game, pos);
         Action dir = ParamParser.parseDirection(words, 2);
-        
-        if(!dirValido(dir)) 
+        //ParamParser solo devuelve null si no hay args logicamente
+        if(!dirValido(dir == null ? Action.LEFT: dir)) 
         	throw new ObjectParseException(Messages.INVALID_MOVING_DIRECTION.formatted(String.join(" ", words)));
        
         goomba.setInitial(dir);

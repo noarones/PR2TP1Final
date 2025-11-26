@@ -100,8 +100,8 @@ public class Position {
     // ============================================================
 
     public boolean isInBoard(int DIM_X, int DIM_Y) {
-        return this.row >= 0 && this.row < DIM_X &&
-               this.col >= 0 && this.col < DIM_Y;
+        return this.row >= 0 && this.row < DIM_Y &&
+               this.col >= 0 && this.col < DIM_X;
     }
 
     /**

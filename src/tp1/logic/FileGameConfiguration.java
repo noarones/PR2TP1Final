@@ -38,33 +38,35 @@ public class FileGameConfiguration implements GameConfiguration {
 
 	        // Lee la primera línea
 	        l = inChars.readLine();
-	        if (l != null) {
-	            parseGameState(l);  // Procesar el estado del juego
-	              // Asigna la línea leída a la variable de instancia `line`
-	        }
+	        if (l != null) 
+	            parseGameState(l);  
+	             
+	        
 
 	        // Leemos las siguientes líneas
 	        while ((l = inChars.readLine()) != null) {
 	            try {
 	                // Puedes asignar la línea leída a `line` si lo necesitas
 	                this.line = l;
-	                GameObject o = GameObjectFactory.parse(l, game);  
+	                GameObject o = GameObjectFactory.parse(l,game);  
 	                this.gameObjects.add(o);
-	            } catch (ObjectParseException | OffBoardException x) {
-	                throw new GameLoadException (x.getMessage());  // En caso de un error durante el parseo
+	            } catch (GameModelException x) {
+	                throw new GameLoadException (Messages.INVALID_FILE_CONF.formatted(fileName), x);  // En caso de un error durante el parseo
 	            }
 	        }
 
 	    } catch (IOException e) {
-	        throw new GameLoadException(Messages.FILE_NOT_FOUND.formatted(fileName), e);
+	    	//Necesario para usuarios de Linux(Mensaje distinto de IOException utilizo Messages.static unico. 
+	        throw new GameLoadException(Messages.FILE_NOT_FOUND.formatted(fileName)
+	        		, new IOException(Messages.FILE_NO_ENCONTRADO.formatted(fileName)));
 	    }
     }
 
     // Método para analizar el estado del juego desde la primera línea
 	private void parseGameState(String line) throws GameLoadException {
 		String[] state = line.trim().split("\\s+");
-		if (state.length != 5) {
-			throw new GameLoadException(Messages.INCORRECT_GAME_STATUS.formatted(line.toString()));
+		if (state.length != 3) {
+			throw new GameLoadException(Messages.INCORRECT_GAME_STATUS.formatted(line.toString()) , new ObjectParseException("null"));
 		}
 		try {
 			this.remainingTime = Integer.parseInt(state[0]);

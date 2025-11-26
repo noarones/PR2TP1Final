@@ -94,4 +94,9 @@ public class Goomba extends MovingObject {
    
     }
 
+    @Override
+    public GameObject clone() {
+        return new Goomba(this.game, this.pos);
+    }
+
 }

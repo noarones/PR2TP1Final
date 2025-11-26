@@ -124,27 +124,42 @@ public class Game implements GameStatus, GameWorld, GameModel {
     // ===== Métodos de reinicio del juego =====
     public void reset(int nLevel, boolean noArguments) {
 
-        if (conf == FileGameConfiguration.NONE) {
-        	//Si no hay argumentos se mantiene el mismo nivel
-        	if (!noArguments)
+        if (conf == FileGameConfiguration.NONE) { //No se está usando un fichero de configuración
+        	//Si hay argumentos, se actualiza el valor del nivel
+        	if (!noArguments) {
         		this.nLevel = nLevel;
-        	
-            if (this.nLevel != -1) {
-                int pointsAux = this.points, livesAux = this.lives;
-                initLevel(this.nLevel);
-                points = pointsAux; 
-                lives = livesAux;
-            } else initLevel(this.nLevel);
+            }
+            handleInternalMap();
+            
         }
         else {
-            this.gameObjects = conf.getGameObjects();
-            this.remainingTime = conf.getRemainingTime();
-            this.points = conf.getPoints();
-            this.lives = conf.getNumLives();
-            this.won = false;
-            this.playerExits = false;
+            handleConfigFile();
         }
 
+    }
+
+    private void handleInternalMap() {
+        if (this.nLevel != -1) { //Si no es el mapa -1 se guardan los valores de vida y puntos
+            int pointsAux = this.points, livesAux = this.lives;
+            initLevel(this.nLevel);
+            points = pointsAux; 
+            lives = livesAux;
+        }
+        else { //Si es el mapa -1 se reinicia todo
+            initLevel(this.nLevel);
+        }
+    }
+
+    private void handleConfigFile() {
+        int pointsAux = this.points, livesAux = this.lives;
+        this.remainingTime = this.conf.getRemainingTime();
+        this.points = this.conf.getPoints();
+        this.lives = this.conf.getNumLives();
+        this.gameObjects = this.conf.getGameObjects();
+        setAsMainCharacter(this.conf.getMario());
+        this.gameObjects.add(this.mario);
+        this.points = pointsAux;
+        this.lives = livesAux;
     }
 
     // ===== Actualización del juego =====
@@ -299,6 +314,8 @@ public class Game implements GameStatus, GameWorld, GameModel {
         this.points = this.conf.getPoints();
         this.lives = this.conf.getNumLives();
         this.gameObjects = this.conf.getGameObjects();
+        setAsMainCharacter(this.conf.getMario());
+        this.gameObjects.add(this.mario);
     }
 
     // ===== Setters =====

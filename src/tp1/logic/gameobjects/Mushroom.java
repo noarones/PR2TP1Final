@@ -88,5 +88,10 @@ try {
         return mushroom;
     }
 
+    @Override
+    public GameObject clone() {
+        return new Mushroom(this.game, this.pos);
+    }
+
 
 }

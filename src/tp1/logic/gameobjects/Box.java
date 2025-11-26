@@ -103,4 +103,9 @@ public class Box extends GameObject {
         // No requiere actualización
     }
 
+    @Override
+    public GameObject clone() {
+        return new Box(this.game, this.pos);
+    }
+
 }

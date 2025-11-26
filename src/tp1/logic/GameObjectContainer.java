@@ -30,7 +30,10 @@ public class GameObjectContainer {
     }
 
     public GameObjectContainer(GameObjectContainer other) {
-        this.objects = new ArrayList<>(other.objects);
+		this.objects = new ArrayList<>();
+		for (GameObject obj : other.objects) {
+			this.objects.add(obj.clone());
+	    }
     }
 
     // ============================================================

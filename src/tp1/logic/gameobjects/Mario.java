@@ -27,6 +27,14 @@ public class Mario extends MovingObject {
         setInitial(true, Action.RIGHT);
     }
 
+    public Mario(Mario mario){
+        super(mario.game, mario.pos);
+        this.big = mario.big;
+        this.dir = mario.dir;
+        this.lastDir = mario.lastDir;
+        this.pendingActions = new ArrayList<>();
+    }
+
     Mario() {
         super(null, null);
     }
@@ -317,4 +325,17 @@ public class Mario extends MovingObject {
         return mario;
     }
 
+    @Override
+    public GameObject clone() { 
+        Mario clone = new Mario(this.game, this.pos);
+        clone.big = this.big;
+        clone.dir = this.dir;
+        clone.lastDir = this.lastDir;
+        return clone;
+    }
+
+    @Override
+    public boolean isMario(){
+    	return true;
+    }
 }

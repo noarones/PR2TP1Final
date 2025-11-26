@@ -305,7 +305,7 @@ public class Mario extends MovingObject {
         try {
         		
         mario.setInitial(
-            ParamParser.parseBoolean(words, 3, "big", "b", "small", "s", false),
+            ParamParser.parseBoolean(words, 3, "big", "b", "small", "s", true),
             ParamParser.parseDirection(words, 2)
         );
         }

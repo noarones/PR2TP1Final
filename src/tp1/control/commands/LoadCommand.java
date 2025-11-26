@@ -33,20 +33,8 @@ public class LoadCommand extends AbstractCommand {
             // Mostrar el juego actualizado
             view.showGame();
         } catch (GameLoadException e) {
-        	String errorMessage = e.getMessage();  // "Invalid file"
 
-    	    // Obtener la causa interna de la excepción
-    	    Throwable cause = e.getCause();
-
-    	    // Si hay una causa, agregar el mensaje de la causa en una línea separada
-    	    String causeMessage = "";
-    	    if (cause != null) {
-    	        String mensajeEsp = Messages.FILE_NO_ENCONTRADO.formatted(fileName);
-    	        causeMessage = "\n" + Messages.ERROR.formatted(mensajeEsp);
-    	    }
-
-    	    // Lanzar una nueva excepción con el mensaje combinado
-    	    throw new CommandExecuteException(Messages.INVALID_FILE.formatted(fileName) + "\n"  + Messages.ERROR.formatted(errorMessage) + causeMessage);
+    	    throw new CommandExecuteException(Messages.INVALID_FILE.formatted(fileName), e);
         }
     }
 

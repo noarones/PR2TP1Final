@@ -74,7 +74,7 @@ public class FileGameConfiguration implements GameConfiguration {
 	private void parseGameState(String line) throws GameLoadException {
 		String[] state = line.trim().split("\\s+");
 		if (state.length != 3) {
-			throw new GameLoadException(Messages.INCORRECT_GAME_STATUS.formatted(line.toString()) , new ObjectParseException("null"));
+			throw new GameLoadException(Messages.INCORRECT_GAME_STATUS.formatted(line.toString()));
 		}
 		try {
 			this.remainingTime = Integer.parseInt(state[0]);

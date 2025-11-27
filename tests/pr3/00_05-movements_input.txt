@@ -10,7 +10,8 @@ reset
 a up right u uP down
 a down
 a u u u u r
-a l u l u u u r
+a down
+a u l u l u u r
 a d
 a u u r u l u r r d
 reset

@@ -96,11 +96,20 @@ public class Goomba extends MovingObject {
 
     @Override
     public GameObject clone() {
-        return new Goomba(this.game, this.pos);
+        Goomba clone = new Goomba(this.game, this.pos);
+        clone.dir = this.dir;
+        clone.lastDir = this.lastDir;
+        return clone;
     }
 
     @Override
     public String save() {
-        return this.pos.toString() + " " + this.toString() + " " + this.dir.toString();
+    	String dirAux;
+    	if (this.dir== Action.DOWN || this.dir == Action.UP)
+    		dirAux = this.lastDir.toString();
+    	else
+    		dirAux = this.dir.toString();
+    		
+        return this.pos.toString() + " " + this.toString() + " " + dirAux;
     }
 }

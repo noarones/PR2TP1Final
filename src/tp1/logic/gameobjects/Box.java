@@ -57,19 +57,27 @@ public class Box extends GameObject {
     // ===== Interacciones con otros objetos =====
     @Override
     public boolean interactWith(GameItem item) {
-        return item.isInPosition(this.pos.under()) ? item.receiveInteraction(this) : false;
+        boolean canInteract = (!item.isBig() && item.isInPosition(this.pos.under())) ||
+                              (item.isBig() && (item.isInPosition(this.pos.under()) || item.isInPosition(this.pos)));
+        if (canInteract) {
+            return item.receiveInteraction(this);
+        }
+        return false;
     }
 
     @Override
     public boolean receiveInteraction(Mario obj) {
-        abierto = true;
-        game.addPoints(points);
-        try {
-            game.addGameObject(new String[] { pos.up().toString(), "Mushroom" }, "spawn");
-        } catch (GameModelException e) {
-        
+        if (!abierto) {
+            abierto = true;
+            game.addPoints(points);
+            try {
+                game.addGameObject(new String[] { pos.up().toString(), "Mushroom" }, "spawn");
+            } catch (GameModelException e) {
+            
+            }
+            return true;
         }
-        return isAlive();
+        return false;
     }
     
 
@@ -105,7 +113,9 @@ public class Box extends GameObject {
 
     @Override
     public GameObject clone() {
-        return new Box(this.game, this.pos);
+        Box clone = new Box(this.game, this.pos);
+        clone.abierto = this.abierto;
+        return clone;
     }
 
     @Override

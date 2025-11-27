@@ -58,7 +58,8 @@ public class Land extends GameObject{
 
 	@Override
 	public GameObject clone() {
-		return new Land(this.game, this.pos);
+		Land clone = new Land(this.game, this.pos);
+		return clone;
 	}
 
 	@Override

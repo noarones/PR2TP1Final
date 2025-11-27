@@ -22,4 +22,5 @@ public interface GameItem {
 	public  boolean receiveInteraction(Goomba obj);
 	public  boolean receiveInteraction(Mushroom obj);
 	public  boolean receiveInteraction(Box obj);
+    public boolean isBig();
 }

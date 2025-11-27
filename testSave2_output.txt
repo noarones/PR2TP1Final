@@ -1,1 +1,6 @@
-Mario Bros 2.0
+99 0 3
+(2,2) Mario DOWN Big
+(13,2) Goomba DOWN
+(12,2) Goomba LEFT
+(12,2) Goomba RIGHT
+(14,2) Land

@@ -124,27 +124,44 @@ public class Game implements GameStatus, GameWorld, GameModel {
     // ===== Métodos de reinicio del juego =====
     public void reset(int nLevel, boolean noArguments) {
 
-        if (conf == FileGameConfiguration.NONE) {
-        	//Si no hay argumentos se mantiene el mismo nivel
-        	if (!noArguments)
-        		this.nLevel = nLevel;
-        	
-            if (this.nLevel != -1) {
-                int pointsAux = this.points, livesAux = this.lives;
-                initLevel(this.nLevel);
-                points = pointsAux; 
-                lives = livesAux;
-            } else initLevel(this.nLevel);
+        //Si no hay argumentos y se está usando un fichero de configuración cargar ese fichero otra vez
+        if (noArguments && this.conf != FileGameConfiguration.NONE) {
+            handleConfigFile();
+
         }
         else {
-            this.gameObjects = conf.getGameObjects();
-            this.remainingTime = conf.getRemainingTime();
-            this.points = conf.getPoints();
-            this.lives = conf.getNumLives();
-            this.won = false;
-            this.playerExits = false;
+            //Si hay argumentos, se actualiza el valor del nivel
+        	if (!noArguments) {
+        		this.nLevel = nLevel;
+            }
+            handleInternalMap();
+            this.conf = FileGameConfiguration.NONE;
         }
 
+    }
+
+    private void handleInternalMap() {
+        if (this.nLevel != -1) { //Si no es el mapa -1 se guardan los valores de vida y puntos
+            int pointsAux = this.points, livesAux = this.lives;
+            initLevel(this.nLevel);
+            points = pointsAux; 
+            lives = livesAux;
+        }
+        else { //Si es el mapa -1 se reinicia todo
+            initLevel(this.nLevel);
+        }
+    }
+
+    private void handleConfigFile() {
+        int pointsAux = this.points, livesAux = this.lives;
+        this.remainingTime = this.conf.getRemainingTime();
+        this.points = this.conf.getPoints();
+        this.lives = this.conf.getNumLives();
+        this.gameObjects = this.conf.getGameObjects();
+        setAsMainCharacter(this.conf.getMario());
+        this.gameObjects.add(this.mario);
+        this.points = pointsAux;
+        this.lives = livesAux;
     }
 
     // ===== Actualización del juego =====
@@ -285,7 +302,11 @@ public class Game implements GameStatus, GameWorld, GameModel {
     @Override
     public void save(String fileName) throws GameModelException {
         try(PrintWriter outChars = new PrintWriter(new OutputStreamWriter(new FileOutputStream(fileName), "UTF-8"))) {
-            outChars.print(this);   
+            // 1️⃣ Guardar primera línea: tiempo, puntos, vidas
+            outChars.println(Integer.toString(this.remainingTime) + " " + Integer.toString(this.points) + " " + Integer.toString(this.lives));
+
+        // 2️⃣ Guardar todos los objetos del juego
+            gameObjects.save(outChars);
         }
         catch (Exception e) {
             throw new GameModelException(Messages.ERROR_SAVING_GAME.formatted(fileName), e);
@@ -299,6 +320,8 @@ public class Game implements GameStatus, GameWorld, GameModel {
         this.points = this.conf.getPoints();
         this.lives = this.conf.getNumLives();
         this.gameObjects = this.conf.getGameObjects();
+        setAsMainCharacter(this.conf.getMario());
+        this.gameObjects.add(this.mario);
     }
 
     // ===== Setters =====

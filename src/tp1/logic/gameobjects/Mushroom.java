@@ -88,5 +88,15 @@ try {
         return mushroom;
     }
 
+    @Override
+    public GameObject clone() {
+        return new Mushroom(this.game, this.pos);
+    }
+
+    @Override
+    public String save() {
+        return this.pos.toString() + " " + "Mushroom" + " " + this.dir.toString();
+    }
+
 
 }

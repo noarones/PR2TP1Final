@@ -56,6 +56,14 @@ public class Land extends GameObject{
 		return new Land(game,pos);
 	}
 
+	@Override
+	public GameObject clone() {
+		return new Land(this.game, this.pos);
+	}
 
+	@Override
+	public String save() {
+		return this.pos.toString() + " " + this.toString();
+	}
 
 }

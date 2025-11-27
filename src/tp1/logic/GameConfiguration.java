@@ -10,4 +10,5 @@ public interface GameConfiguration {
 
    // game objects
    public GameObjectContainer getGameObjects();
+   public Mario getMario();
 }

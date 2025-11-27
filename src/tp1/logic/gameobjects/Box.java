@@ -103,4 +103,14 @@ public class Box extends GameObject {
         // No requiere actualización
     }
 
+    @Override
+    public GameObject clone() {
+        return new Box(this.game, this.pos);
+    }
+
+    @Override
+    public String save() {
+        String statusStr = abierto ? "Empty" : "Full";
+        return this.pos.toString() + " " + this.toString() + " " + statusStr;
+    }
 }

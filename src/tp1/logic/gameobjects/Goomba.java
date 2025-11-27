@@ -94,4 +94,13 @@ public class Goomba extends MovingObject {
    
     }
 
+    @Override
+    public GameObject clone() {
+        return new Goomba(this.game, this.pos);
+    }
+
+    @Override
+    public String save() {
+        return this.pos.toString() + " " + this.toString() + " " + this.dir.toString();
+    }
 }

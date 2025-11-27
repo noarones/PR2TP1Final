@@ -15,6 +15,7 @@ import tp1.exceptions.ObjectParseException;
 import tp1.exceptions.OffBoardException;
 import tp1.exceptions.PositionParseException;
 import tp1.view.Messages;
+
 public abstract class GameObject implements GameItem {  
 
     // ===== Estado interno del objeto =====
@@ -132,8 +133,13 @@ public abstract class GameObject implements GameItem {
         return this.create(words, game, pos1);
     }
     
+    public boolean isMario(){
+    	return false;
+    }
     
-    
+    public abstract String save();
+
+    public abstract GameObject clone();
     
 	public  boolean receiveInteraction(Land obj) { return false; }
 	

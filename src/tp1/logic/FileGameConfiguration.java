@@ -12,6 +12,7 @@ import tp1.exceptions.ObjectParseException;
 import tp1.exceptions.OffBoardException;
 import tp1.logic.gameobjects.GameObject;
 import tp1.logic.gameobjects.GameObjectFactory;
+import tp1.logic.gameobjects.Mario;
 import tp1.view.Messages;
 
 public class FileGameConfiguration implements GameConfiguration {
@@ -23,6 +24,7 @@ public class FileGameConfiguration implements GameConfiguration {
     private int points;
     private int numLives;
     String line = "";
+	private Mario mario;
 
     public FileGameConfiguration() {
         this.remainingTime = 0;
@@ -49,7 +51,13 @@ public class FileGameConfiguration implements GameConfiguration {
 	                // Puedes asignar la línea leída a `line` si lo necesitas
 	                this.line = l;
 	                GameObject o = GameObjectFactory.parse(l,game);  
-	                this.gameObjects.add(o);
+
+					if (o.isMario()) {
+						this.mario = (Mario) o;
+					}
+					else {
+	                	this.gameObjects.add(o);
+					}
 	            } catch (GameModelException x) {
 	                throw new GameLoadException (Messages.INVALID_FILE_CONF.formatted(fileName), x);  // En caso de un error durante el parseo
 	            }
@@ -97,4 +105,8 @@ public class FileGameConfiguration implements GameConfiguration {
         return new GameObjectContainer(this.gameObjects);
     }
     
+	@Override
+	public Mario getMario() {
+		return new Mario(this.mario);
+	}
 }

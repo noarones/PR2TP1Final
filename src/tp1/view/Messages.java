@@ -25,7 +25,6 @@ public class Messages {
 
 	// GAME STATUS
 	public static final String NUMBER_OF_CYCLES = "Number of cycles: %s";
-
 	public static final String REMAINING_TIME = "Time: %s";
 	public static final String POINTS = "Points: %s";
 	public static final String NUM_LIVES = "Lives: %s";
@@ -34,10 +33,10 @@ public class Messages {
 	public static final String GAME_OVER = "Game over";
 	public static final String PLAYER_QUITS = "Player leaves the game";
 	public static final String MARIO_WINS = "Thanks, Mario! Your mission is complete.";
-	// Position format
+	// POSITION FORMAT
 	public static final String POSITION = "(%s,%s)";
 
-	// Other
+	// OTHER
 	public static final String SPACE = " ";
 	public static final String TAB = "   ";
 	public static final String LINE_SEPARATOR = System.lineSeparator();
@@ -45,7 +44,7 @@ public class Messages {
 	public static final String LINE_TAB = TAB + LINE;
 	public static final String LINE_2TABS = TAB + LINE_TAB;
 
-//Commands
+	//COMMANDS
 	// Errores de factorías:
 	public static final String UNKNOWN_COMMAND = "Unknown command: %s";
 	public static final String INVALID_GAME_OBJECT = "Invalid game object: %s";
@@ -64,7 +63,6 @@ public class Messages {
 	// Errores de objetos del juego
 	public static final String UNKNOWN_GAME_OBJECT = "Unknown game object: \"%s\"";
 	public static final String OFF_BOARD_OBJECT = "Object position is off board: \"%s\"";
-
 	public static final String UNKNOWN_MOVING_DIRECTION = "Unknown moving object direction: \"%s\"";
 	public static final String INVALID_MOVING_DIRECTION = "Invalid moving object direction: \"%s\"";
 	public static final String HELP_AVAILABLE_COMMANDS = "Available commands:";
@@ -123,16 +121,19 @@ public class Messages {
 	public static final String COMMAND_HELP_DETAILS = "[h]elp";
 	public static final String COMMAND_HELP_HELP = "print this help message";
 	
+	// RESET
 	public static final String COMMAND_RESET_NAME = "reset";
 	public static final String COMMAND_RESET_SHORTCUT = "r";
 	public static final String COMMAND_RESET_DETAILS = "[r]eset [numLevel]";
 	public static final String COMMAND_RESET_HELP = "reset the game to initial configuration if not numLevel else load the numLevel map";
 	
+	// ACTION
 	public static final String COMMAND_ACTION_NAME = "action";
 	public static final String COMMAND_ACTION_SHORTCUT = "a";
 	public static final String COMMAND_ACTION_DETAILS = "[a]ction [[R]IGHT | [L]EFT | [U]P | [D]OWN | [S]TOP]+";
 	public static final String COMMAND_ACTION_HELP = "user performs actions";
 
+	// ADD OBJECT
 	public static final String COMMAND_ADDOBJECT_NAME = "addObject";
 	public static final String COMMAND_ADDOBJECT_SHORTCUT = "aO";
 	public static final String COMMAND_ADDOBJECT_DETAILS = "[a]dd[O]bject <object_description>";

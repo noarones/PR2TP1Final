@@ -65,7 +65,8 @@ public class ExitDoor extends GameObject {
 
     @Override
     public GameObject clone() {
-        return new ExitDoor(this.game, this.pos);
+        ExitDoor clone = new ExitDoor(this.game, this.pos);
+        return clone;
     }
 
     @Override

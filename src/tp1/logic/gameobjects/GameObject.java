@@ -140,6 +140,8 @@ public abstract class GameObject implements GameItem {
     public abstract String save();
 
     public abstract GameObject clone();
+
+    public boolean isBig() { return false;}
     
 	public  boolean receiveInteraction(Land obj) { return false; }
 	

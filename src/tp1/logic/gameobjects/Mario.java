@@ -65,6 +65,7 @@ public class Mario extends MovingObject {
                   };
     }
 
+    @Override
     public boolean isBig() {
         return this.big;
     }
@@ -152,11 +153,14 @@ public class Mario extends MovingObject {
 
     // ===== Movimiento vertical =====
     private boolean handleUp(boolean movedDown, int verticalCount) {
-        if (!movedDown && verticalCount < 4 && !game.solidUp(pos)) {
-            pos = pos.move(Action.UP);
-            isFalling = false;
-            game.checkInteractions(this);
-            return true;
+        if (!movedDown && verticalCount < 4) {
+            boolean canMoveUp = (!isBig() && !game.solidUp(pos)) || (isBig() && !game.solidUp(pos.up()));
+            if (canMoveUp) {
+                pos = pos.move(Action.UP);
+                isFalling = false;
+                game.checkInteractions(this);
+                return true;
+            }
         }
         return false;
     }
@@ -227,7 +231,11 @@ public class Mario extends MovingObject {
     // ===== Interacciones con objetos =====
     @Override
     public boolean interactWith(GameItem item) {
-        return item.isInPosition(this.pos) ? item.receiveInteraction(this) : false;
+        boolean canInteract = (!isBig() && item.isInPosition(this.pos)) || (isBig() && (item.isInPosition(this.pos.up()) || item.isInPosition(this.pos)));
+        if (canInteract) {
+            return item.receiveInteraction(this);
+        }
+        return false;
     }
 
     public boolean marioExited() {
@@ -341,7 +349,12 @@ public class Mario extends MovingObject {
 
     @Override
     public String save() {
+    	String dirAux;
+    	if (this.dir== Action.DOWN || this.dir == Action.UP)
+    		dirAux = this.lastDir.toString();
+    	else
+    		dirAux = this.dir.toString();
         String sizeStr = isBig() ? "Big" : "Small";
-        return this.pos.toString() + " " + this.toString() + " " + this.dir.toString() + " " + sizeStr;
+        return this.pos.toString() + " " + this.toString() + " " + dirAux + " " + sizeStr;
     }
 }

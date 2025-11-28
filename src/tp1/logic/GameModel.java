@@ -3,14 +3,12 @@
 MATEI-CRISTIAN FLOREA
  */
 package tp1.logic;
-import tp1.exceptions.OffBoardException;
-import tp1.exceptions.PositionParseException;
-import tp1.exceptions.ActionParseException;
+
 
 import tp1.exceptions.GameLoadException;
 
 import tp1.exceptions.GameModelException;
-import tp1.exceptions.ObjectParseException;
+
 
 public interface GameModel {
 

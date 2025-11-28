@@ -9,7 +9,7 @@ import tp1.logic.GameItem;
 import tp1.logic.GameWorld;
 import tp1.logic.Position;
 import tp1.util.*;
-import tp1.exceptions.ActionParseException;
+
 import tp1.exceptions.GameModelException;
 import tp1.exceptions.ObjectParseException;
 import tp1.exceptions.OffBoardException;

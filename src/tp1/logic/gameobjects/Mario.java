@@ -153,10 +153,11 @@ public class Mario extends MovingObject {
 
     // ===== Movimiento vertical =====
     private boolean handleUp(boolean movedDown, int verticalCount) {
+     
         if (!movedDown && verticalCount < 4) {
             boolean canMoveUp = (!isBig() && !game.solidUp(pos)) || (isBig() && !game.solidUp(pos.up()));
             if (canMoveUp) {
-                pos = pos.move(Action.UP);
+                pos =  pos.move(Action.UP);
                 isFalling = false;
                 game.checkInteractions(this);
                 return true;

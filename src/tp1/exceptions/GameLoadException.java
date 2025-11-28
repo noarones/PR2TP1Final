@@ -2,7 +2,9 @@ package tp1.exceptions;
 
 public class GameLoadException extends CommandException {
 
-    public GameLoadException(String message) {
+    private static final long serialVersionUID = -8334214123004881517L;
+
+	public GameLoadException(String message) {
         super(message);
     }
 

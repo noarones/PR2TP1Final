@@ -2,7 +2,9 @@ package tp1.exceptions;
 
 public class ObjectParseException extends GameParseException {
 
-    public ObjectParseException(String message) {
+    private static final long serialVersionUID = 261840818349536677L;
+
+	public ObjectParseException(String message) {
         super(message);
     }
 

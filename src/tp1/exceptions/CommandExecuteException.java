@@ -2,7 +2,9 @@ package tp1.exceptions;
 
 public class CommandExecuteException extends CommandException {
 
-    public CommandExecuteException(String message) {
+    private static final long serialVersionUID = 5114978533241610720L;
+
+	public CommandExecuteException(String message) {
         super(message);
     }
 

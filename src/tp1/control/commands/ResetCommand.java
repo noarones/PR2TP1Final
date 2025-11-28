@@ -32,10 +32,16 @@ public class ResetCommand extends AbstractCommand{
 	@Override
 	public void execute(GameModel game, GameView view) throws CommandExecuteException{
 	
-     if(!((level > -2 && level <=2 || noArguments) && reset(game,view))) 
+     if(!(knownArgs() && reset(game,view))) 
         throw new CommandExecuteException(Messages.INVALID_LEVEL_NUMBER); 
 	
 	}
+	
+	private boolean knownArgs() {
+		return (level > -2 && level <=2 || noArguments);
+	}
+	
+	
 	
    private boolean reset(GameModel game, GameView view) {
 	   
@@ -54,17 +60,16 @@ public class ResetCommand extends AbstractCommand{
            throw new CommandParseException(Messages.COMMAND_INCORRECT_PARAMETER_NUMBER);
        
 
-       
-
        if (commandWords.length == 2) {
+    	   
            try {
-               int level = Integer.parseInt(commandWords[1]);
-               return new ResetCommand(level);
+             
+               return new ResetCommand(Integer.parseInt(commandWords[1]));
+               
            } catch (NumberFormatException nfe) {
-               throw new CommandParseException(
-                       Messages.LEVEL_NOT_A_NUMBER_ERROR.formatted(commandWords[1]),
-                       nfe
-               );
+        	   
+               throw new CommandParseException(Messages.LEVEL_NOT_A_NUMBER_ERROR.formatted(commandWords[1])
+            		   , nfe);
            }
        }
 

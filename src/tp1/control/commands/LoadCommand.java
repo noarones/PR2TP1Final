@@ -27,11 +27,10 @@ public class LoadCommand extends AbstractCommand {
     @Override
     public void execute(GameModel game, GameView view) throws CommandExecuteException {
         try {
-	        // Cargar la configuración desde el archivo
+
             game.load(fileName); // Este método cargará el archivo y actualizará `conf`
-            
-            // Mostrar el juego actualizado
             view.showGame();
+            
         } catch (GameLoadException e) {
 
     	    throw new CommandExecuteException(Messages.INVALID_FILE.formatted(fileName), e);
@@ -40,14 +39,14 @@ public class LoadCommand extends AbstractCommand {
 
     @Override
     public Command parse(String[] commandWords) throws CommandParseException {
-        if (!matchCommandName(commandWords[0]))
-			return null;
+        
+    	if (!matchCommandName(commandWords[0])) return null;
 
 		if (commandWords.length != 2)
 			throw new CommandParseException(Messages.COMMAND_INCORRECT_PARAMETER_NUMBER);
 
-		String fileName = commandWords[1];
-		return new LoadCommand(fileName);
+		
+		return new LoadCommand(commandWords[1]);
     }
     
 }

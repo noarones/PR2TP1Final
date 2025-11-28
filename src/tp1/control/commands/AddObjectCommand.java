@@ -10,13 +10,11 @@ import java.util.Arrays;
 import tp1.logic.GameModel;
 import tp1.view.GameView;
 import tp1.view.Messages;
-import tp1.exceptions.ActionParseException;
+
 import tp1.exceptions.CommandExecuteException;
 import tp1.exceptions.CommandParseException;
 import tp1.exceptions.GameModelException;
-import tp1.exceptions.OffBoardException;
-import tp1.exceptions.PositionParseException;
-import tp1.exceptions.ObjectParseException;
+
 
 public class AddObjectCommand extends AbstractCommand {
 
@@ -40,9 +38,12 @@ public class AddObjectCommand extends AbstractCommand {
 	@Override
 	public void execute(GameModel game, GameView view) throws CommandExecuteException {
 	    try {
-	        game.addGameObject(objectDescription, "command");
+	        
+	    	game.addGameObject(objectDescription, "command");
 	        view.showGame();
-	    } catch (GameModelException e) {
+	        
+	        } 
+	    catch (GameModelException e) {
 	        // Envolvemos en CommandExecuteException
 	        throw new CommandExecuteException(Messages.ERROR_COMMAND_EXECUTE, e);
 	    }
@@ -58,8 +59,6 @@ public class AddObjectCommand extends AbstractCommand {
 	        throw new CommandParseException(Messages.COMMAND_INCORRECT_PARAMETER_NUMBER);
 	    
 	   
-	 
-	    
 	    return new AddObjectCommand(Arrays.copyOfRange(commandWords, 1, commandWords.length));
 	}
 

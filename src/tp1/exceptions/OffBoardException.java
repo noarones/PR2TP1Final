@@ -2,7 +2,9 @@ package tp1.exceptions;
 
 public class OffBoardException extends GameModelException {
 
-    public OffBoardException(String message) {
+    private static final long serialVersionUID = -6315992177867572676L;
+
+	public OffBoardException(String message) {
         super(message);
     }
 

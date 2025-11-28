@@ -4,11 +4,9 @@
  */
 package tp1.logic;
 
-import tp1.exceptions.ActionParseException;
+
 import tp1.exceptions.GameModelException;
-import tp1.exceptions.ObjectParseException;
-import tp1.exceptions.OffBoardException;
-import tp1.exceptions.PositionParseException;
+
 import tp1.logic.gameobjects.GameObject;
 import tp1.logic.gameobjects.Mario;
 
@@ -31,4 +29,5 @@ public interface GameWorld{
 	public int numLives();
 	public boolean addGameObject(String[] objectDescription, String Mode) throws GameModelException;
     public void checkInteractions(GameObject obj);
+    public boolean castMainCharacter(GameObject mario);
 }

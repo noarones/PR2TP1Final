@@ -4,20 +4,16 @@
  */
 package tp1.logic;
 import java.io.FileOutputStream;
-import java.io.OutputStream;
+
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import tp1.logic.gameobjects.*;
 import tp1.view.Messages;
-import tp1.exceptions.OffBoardException;
-import tp1.exceptions.PositionParseException;
-import tp1.exceptions.ActionParseException;
 
 import tp1.exceptions.GameLoadException;
 import tp1.exceptions.GameModelException;
-import tp1.exceptions.ObjectParseException;
 
 public class Game implements GameStatus, GameWorld, GameModel {
     // ===== Configuración del juego =====
@@ -40,7 +36,7 @@ public class Game implements GameStatus, GameWorld, GameModel {
 
     // ===== Constructor =====
     public Game(int nLevel) {
-        initLevel(nLevel);
+        initLevel(nLevel == 6 ? 1 : nLevel);
     }
 
     // ===== Métodos de inicialización de nivel =====
@@ -88,7 +84,7 @@ public class Game implements GameStatus, GameWorld, GameModel {
     }
 
     private void buildFinalJump() {
-        int tamX = 8, tamY = 8;
+        int tamX = 8;
         int posIniX = Game.DIM_X - 3 - tamX;
         int posIniY = Game.DIM_Y - 3;
 
@@ -276,20 +272,15 @@ public class Game implements GameStatus, GameWorld, GameModel {
     // ===== Gestión de objetos del juego =====
 
     @Override
-    public boolean addGameObject(String[] objectDescription, String Mode)
-            throws GameModelException{
+    public boolean addGameObject(String[] objectDescription, String Mode) throws GameModelException {
 
-    
         GameObject o = GameObjectFactory.parse(objectDescription, this);
     	
-    
-     
-
-        if (Mode.equalsIgnoreCase("spawn")) {
+        if (Mode.equalsIgnoreCase("spawn")) 
             spawnObjects.add(o);
-        } else {
+         else 
             gameObjects.add(o);
-        }
+        
         return true;
     }
 
@@ -302,10 +293,10 @@ public class Game implements GameStatus, GameWorld, GameModel {
     @Override
     public void save(String fileName) throws GameModelException {
         try(PrintWriter outChars = new PrintWriter(new OutputStreamWriter(new FileOutputStream(fileName), "UTF-8"))) {
-            // 1️⃣ Guardar primera línea: tiempo, puntos, vidas
+            //Guardar primera línea: tiempo, puntos, vidas
             outChars.println(Integer.toString(this.remainingTime) + " " + Integer.toString(this.points) + " " + Integer.toString(this.lives));
 
-        // 2️⃣ Guardar todos los objetos del juego
+        //Guardar todos los objetos del juego
             gameObjects.save(outChars);
         }
         catch (Exception e) {
@@ -316,17 +307,31 @@ public class Game implements GameStatus, GameWorld, GameModel {
     // ===== Gestión del cargado =====
     public void load(String fileName) throws GameLoadException {
         this.conf = new FileGameConfiguration(fileName, this);
+        
         this.remainingTime = this.conf.getRemainingTime();
         this.points = this.conf.getPoints();
         this.lives = this.conf.getNumLives();
         this.gameObjects = this.conf.getGameObjects();
+        
         setAsMainCharacter(this.conf.getMario());
+        
         this.gameObjects.add(this.mario);
     }
 
     // ===== Setters =====
     @Override
     public void setAsMainCharacter(Mario mario) {
+    	if(mario.isMario())
         this.mario = mario;
     }
+    
+    public boolean castMainCharacter(GameObject mario) {
+    	if(mario.isMario())
+        this.mario = (Mario) mario;
+    	
+    	return mario.isMario();
+    }
+    
+    
+    
 }

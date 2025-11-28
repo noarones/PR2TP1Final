@@ -28,6 +28,7 @@ public class ConsoleView extends GameView {
 	private static final String UPPER_ROW_BORDER = "┌" + ROW_BORDER + "┐" + NEW_LINE;
 	private static final String LOWER_ROW_BORDER = "└" + ROW_BORDER + "┘" + NEW_LINE;
 
+	@SuppressWarnings("unused")
 	private static final String TAB = MyStringUtils.repeat(SPACE, CELL_SIZE);
 
 

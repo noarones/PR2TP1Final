@@ -4,14 +4,12 @@
  */
 package tp1.logic.gameobjects;
 
-import tp1.logic.Action;
+
 import tp1.logic.GameItem;
 import tp1.logic.GameWorld;
 import tp1.logic.Position;
 import tp1.view.Messages;
-import tp1.exceptions.OffBoardException;
-import tp1.exceptions.PositionParseException;
-import tp1.exceptions.ActionParseException;
+
 import tp1.exceptions.GameModelException;
 import tp1.exceptions.ObjectParseException;
 public class Box extends GameObject {
@@ -99,7 +97,7 @@ public class Box extends GameObject {
     		throw new ObjectParseException(Messages.OBJECT_PARSE_ERROR.formatted(String.join(" ", words)));
         Box box = new Box(game, pos);
         
-        if(!statusValido(words[2]))
+        if(words.length > 2 &&!statusValido(words[2]))
         	throw new ObjectParseException(Messages.INVALID_BOX_STATUS.formatted(String.join(" ", words)));
         box.setInitial(ParamParser.parseBoolean(words, 2, "empty", "e", "full", "f", false));
         return box;

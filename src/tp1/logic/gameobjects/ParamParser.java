@@ -2,7 +2,7 @@
 package tp1.logic.gameobjects;
 
 import tp1.exceptions.ActionParseException;
-import tp1.exceptions.ObjectParseException;
+
 import tp1.logic.Action;
 import tp1.view.Messages;
 

@@ -22,12 +22,13 @@ public interface GameWorld{
 	public void addPoints(int p);
 	public void marioExited();
 	public void removeLife();
-	public void setAsMainCharacter(Mario mario);
+
 	public boolean isInBoard(Position pos); 
 	// Se utilizan en Mario
 	public void reset(int nLevel, boolean noArguments);
 	public int numLives();
 	public boolean addGameObject(String[] objectDescription, String Mode) throws GameModelException;
     public void checkInteractions(GameObject obj);
-    public boolean castMainCharacter(GameObject mario);
+
+
 }

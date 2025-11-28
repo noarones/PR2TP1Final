@@ -22,12 +22,14 @@ public class GameObjectContainer {
     // == Atributos ===============================================
     // ============================================================
     private List<GameObject> objects;
+    private Mario mario;
     
     // ============================================================
     // == Constructor =============================================
     // ============================================================
     public GameObjectContainer() {
         this.objects = new ArrayList<>();
+        
     }
 
     public GameObjectContainer(GameObjectContainer other) {
@@ -45,8 +47,13 @@ public class GameObjectContainer {
      * Añade un objeto al contenedor.
      */
     public boolean add(GameObject object) {
-        if (object != null)
-            objects.add(object);
+    	
+        if (object != null) {
+        	
+        	if(object.isMario()) this.mario = (Mario) object;
+        	
+        	  objects.add(object);
+        }
         return true;
     }
 
@@ -139,4 +146,11 @@ public class GameObjectContainer {
             outChars.println(obj.save());
         }
     }
+    
+
+    
+    public Mario getMario() {
+    	return this.mario;
+    } 
+    
 }

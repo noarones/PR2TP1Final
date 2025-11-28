@@ -329,7 +329,6 @@ public class Mario extends MovingObject {
         catch(ActionParseException a) {
         	throw new ObjectParseException( Messages.UNKNOWN_MOVING_DIRECTION.formatted(String.join(" ", words)), a);
         }
-        game.setAsMainCharacter(mario);
 
         return mario;
     }

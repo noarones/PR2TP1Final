@@ -19,15 +19,11 @@ public class FileGameConfiguration implements GameConfiguration {
 	public static final GameConfiguration NONE = new FileGameConfiguration();
 
     private GameObjectContainer gameObjects;
-    private int remainingTime;
-    private int points;
-    private int numLives;
-	private Mario mario;
 
+    private InitialValues initialValues;
+    
     public FileGameConfiguration() {
-        this.remainingTime = 0;
-        this.points = 0;
-        this.numLives = 0;
+
         this.gameObjects = new GameObjectContainer();
     }
 
@@ -41,26 +37,24 @@ public class FileGameConfiguration implements GameConfiguration {
 
 	        // Lee la primera línea
 	       String l = inChars.readLine();
-	        if (l != null) parseGameState(l);  
+	       
+	        if (l != null) 
+	        	this.initialValues = parseGameState(l);  
 	             
 	        // Leemos las siguientes líneas
 	        while ((l = inChars.readLine()) != null) {
 	            try {
-	     
-	                GameObject o = GameObjectFactory.parse(l,game);  
-
-	                // CAMBIOOS
-				
-	                if(!game.castMainCharacter(o))
-						this.gameObjects.add(o);
-					else this.mario = (Mario) o;
-				
-					//
+	            	
+              gameObjects.add(GameObjectFactory.parse(l.trim().split("\\s+"),game));
+              			
 	            } catch (GameModelException x) {
 	                throw new GameLoadException (Messages.INVALID_FILE_CONF.formatted(fileName), x);  // En caso de un error durante el parseo
 	            }
 	        }
-
+	       
+	        //Al terminar de anadir objetos se guarda una copia en la clase FileGameConfiguration (es el estado Inicial de donde se partira)
+       
+	        
 	    } catch (IOException e) {
 	    	//Necesario para usuarios de Linux(Mensaje distinto de IOException utilizo Messages.static unico. 
 	        throw new GameLoadException(Messages.FILE_NOT_FOUND.formatted(fileName)
@@ -69,43 +63,31 @@ public class FileGameConfiguration implements GameConfiguration {
     }
 
     // Método para analizar el estado del juego desde la primera línea
-	private void parseGameState(String line) throws GameLoadException {
+	private InitialValues parseGameState(String line) throws GameLoadException {
 		String[] state = line.trim().split("\\s+");
 		
 		if (state.length != 3) 
 			throw new GameLoadException(Messages.INCORRECT_GAME_STATUS.formatted(line.toString()));
 		
 		try {
-			this.remainingTime = Integer.parseInt(state[0]);
-			this.points = Integer.parseInt(state[1]);
-			this.numLives = Integer.parseInt(state[2]);
+			
+			return new InitialValues(Integer.parseInt(state[0]),
+					                 Integer.parseInt(state[1]), 
+					                 Integer.parseInt(state[2]));
+
 		} catch (NumberFormatException e) {
 			throw new GameLoadException(Messages.INCORRECT_GAME_STATUS.formatted(line.toString()), e);
 		}
 	}
-
-    @Override
-    public int getRemainingTime() {
-        return this.remainingTime;
-    }
-
-    @Override
-    public int getPoints() {
-        return this.points;
-    }
-
-    @Override
-    public int getNumLives() {
-        return this.numLives;
-    }
+	
+	public InitialValues getInitialValues() {
+	   return this.initialValues; 
+	}
 
     @Override
     public GameObjectContainer getGameObjects() {
         return new GameObjectContainer(this.gameObjects);
     }
     
-	@Override
-	public Mario getMario() {
-		return new Mario(this.mario);
-	}
+
 }

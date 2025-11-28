@@ -29,7 +29,7 @@ public class Game implements GameStatus, GameWorld, GameModel {
     private int nLevel;
     private int points;
     private int lives;
-    private Mario mario;
+
     private GameObjectContainer gameObjects;
     private List<GameObject> spawnObjects = new ArrayList<>();
     private boolean playerExits = false;
@@ -96,8 +96,8 @@ public class Game implements GameStatus, GameWorld, GameModel {
     }
 
     private void addCharacters(int lvl) {
-        this.mario = new Mario(this, new Position(Game.DIM_Y - 3, 0));
-        gameObjects.add(this.mario);
+        
+        gameObjects.add(new Mario(this, new Position(Game.DIM_Y - 3, 0)));
 
         gameObjects.add(new Goomba(this, new Position(0, 19)));
         if(lvl == 1 || lvl == 2) {
@@ -150,12 +150,15 @@ public class Game implements GameStatus, GameWorld, GameModel {
 
     private void handleConfigFile() {
         int pointsAux = this.points, livesAux = this.lives;
-        this.remainingTime = this.conf.getRemainingTime();
-        this.points = this.conf.getPoints();
-        this.lives = this.conf.getNumLives();
+        
+        InitialValues v = this.conf.getInitialValues();
+        
+        this.remainingTime = v.getRemainingTime();
+        this.points = v.getPoints();
+        this.lives = v.getNumLives();
+        
         this.gameObjects = this.conf.getGameObjects();
-        setAsMainCharacter(this.conf.getMario());
-        this.gameObjects.add(this.mario);
+
         this.points = pointsAux;
         this.lives = livesAux;
     }
@@ -188,8 +191,10 @@ public class Game implements GameStatus, GameWorld, GameModel {
     }
 
     public void addAction(Action act) {
-        if (mario != null) {
-            mario.addAction(act);
+        if (this.gameObjects.getMario() != null) {
+            this.gameObjects.getMario().addAction(act);
+
+        	
         }
     }
 
@@ -278,17 +283,20 @@ public class Game implements GameStatus, GameWorld, GameModel {
     	
         if (Mode.equalsIgnoreCase("spawn")) 
             spawnObjects.add(o);
-         else 
+        else 
             gameObjects.add(o);
         
         return true;
     }
 
+    
+    
 
     public String positionToString(int col, int row) {
         return gameObjects.positionToString(new Position(row,col));
     }
 
+    
     // ===== Gestión del guardado =====
     @Override
     public void save(String fileName) throws GameModelException {
@@ -308,30 +316,22 @@ public class Game implements GameStatus, GameWorld, GameModel {
     public void load(String fileName) throws GameLoadException {
         this.conf = new FileGameConfiguration(fileName, this);
         
-        this.remainingTime = this.conf.getRemainingTime();
-        this.points = this.conf.getPoints();
-        this.lives = this.conf.getNumLives();
+        InitialValues v = this.conf.getInitialValues();
+        
+        this.remainingTime = v.getRemainingTime();
+        this.points = v.getPoints();
+        this.lives = v.getNumLives();
+        
         this.gameObjects = this.conf.getGameObjects();
-        
-        setAsMainCharacter(this.conf.getMario());
-        
-        this.gameObjects.add(this.mario);
+    
+
     }
 
-    // ===== Setters =====
-    @Override
-    public void setAsMainCharacter(Mario mario) {
-    	if(mario.isMario())
-        this.mario = mario;
-    }
+
     
-    public boolean castMainCharacter(GameObject mario) {
-    	if(mario.isMario())
-        this.mario = (Mario) mario;
-    	
-    	return mario.isMario();
-    }
+
     
-    
+
+
     
 }

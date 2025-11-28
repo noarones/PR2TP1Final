@@ -249,7 +249,6 @@ public class Mario extends MovingObject {
     public boolean receiveInteraction(ExitDoor obj) { return true; }
 
 
-
     @Override
     public boolean receiveInteraction(Mushroom obj) {
         if (this.isBig() && obj.isInPosition(this.pos.up())) {
@@ -335,11 +334,7 @@ public class Mario extends MovingObject {
 
     @Override
     public GameObject clone() { 
-        Mario clone = new Mario(this.game, this.pos);
-        clone.big = this.big;
-        clone.dir = this.dir;
-        clone.lastDir = this.lastDir;
-        return clone;
+        return new Mario(this);
     }
 
     @Override
@@ -347,14 +342,13 @@ public class Mario extends MovingObject {
     	return true;
     }
 
+    private String sizeStr() {
+    	return isBig() ? "Big" : "Small";
+    }
+        
     @Override
     public String save() {
-    	String dirAux;
-    	if (this.dir== Action.DOWN || this.dir == Action.UP)
-    		dirAux = this.lastDir.toString();
-    	else
-    		dirAux = this.dir.toString();
-        String sizeStr = isBig() ? "Big" : "Small";
-        return this.pos.toString() + " " + this.toString() + " " + dirAux + " " + sizeStr;
+          return "%s %s %s %s".formatted(pos,this,dirStr(),sizeStr());
+          
     }
 }

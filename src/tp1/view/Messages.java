@@ -48,6 +48,7 @@ public class Messages {
 	// Errores de factorías:
 	public static final String UNKNOWN_COMMAND = "Unknown command: %s";
 	public static final String INVALID_GAME_OBJECT = "Invalid game object: %s";
+	
 	// Errores de commandos:
 	public static final String COMMAND_PARAMETERS_MISSING = "Missing parameters";
 	public static final String COMMAND_INCORRECT_PARAMETER_NUMBER = "Incorrect parameter number";
@@ -60,7 +61,8 @@ public class Messages {
 	public static final String OBJECT_PARSE_ERROR ="Object parse error, too much args: \"%s\"";
     public static final String INVALID_OBJECT_POSITION = "Invalid object position: \"%s\"";
     public static final String INVALID_POSITION = "Invalid position: \"%s\"";
-	// Errores de objetos del juego
+	
+    // Errores de objetos del juego
 	public static final String UNKNOWN_GAME_OBJECT = "Unknown game object: \"%s\"";
 	public static final String OFF_BOARD_OBJECT = "Object position is off board: \"%s\"";
 	public static final String UNKNOWN_MOVING_DIRECTION = "Unknown moving object direction: \"%s\"";

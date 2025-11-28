@@ -23,7 +23,7 @@ public class GameObjectContainer {
     // ============================================================
     private List<GameObject> objects;
     private Mario mario;
-    
+
     // ============================================================
     // == Constructor =============================================
     // ============================================================
@@ -35,7 +35,14 @@ public class GameObjectContainer {
     public GameObjectContainer(GameObjectContainer other) {
 		this.objects = new ArrayList<>();
 		for (GameObject obj : other.objects) {
-			this.objects.add(obj.clone());
+			
+			 GameObject cloned = obj.clone();
+		        this.objects.add(cloned);
+
+		        if (cloned.isMario()) 
+		            this.mario = (Mario) cloned;
+		        
+		        
 	    }
     }
 
@@ -46,13 +53,12 @@ public class GameObjectContainer {
     /**
      * Añade un objeto al contenedor.
      */
-    public boolean add(GameObject object) {
+    public boolean add(GameObject obj) {
     	
-        if (object != null) {
-        	
-        	if(object.isMario()) this.mario = (Mario) object;
-        	
-        	  objects.add(object);
+        if (obj != null) {
+        	if(obj.isMario()) this.mario = (Mario) obj;
+                this.objects.add(obj);
+            
         }
         return true;
     }
@@ -64,9 +70,12 @@ public class GameObjectContainer {
     public void update() {
         // Primero actualizamos todos los objetos
         for (GameObject obj : objects) {
+        
             obj.update();
             doInteractions(obj);
         }
+ 
+ 
         // Limpiamos los objetos muertos
         clean(); 
     }
@@ -136,7 +145,7 @@ public class GameObjectContainer {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         for (GameObject obj : objects) {
-            sb.append(obj.toString()).append(System.lineSeparator());
+            sb.append(obj.toString()).append(Messages.LINE_SEPARATOR);
         }
         return sb.toString();
     }
@@ -146,8 +155,6 @@ public class GameObjectContainer {
             outChars.println(obj.save());
         }
     }
-    
-
     
     public Mario getMario() {
     	return this.mario;

@@ -24,6 +24,7 @@ public interface GameWorld{
 	public void removeLife();
 
 	public boolean isInBoard(Position pos); 
+	
 	// Se utilizan en Mario
 	public void reset(int nLevel, boolean noArguments);
 	public int numLives();

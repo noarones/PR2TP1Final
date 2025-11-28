@@ -23,20 +23,17 @@ public class GameObjectFactory {
 			new Box()
 		);
 	
-	public static GameObject parse(String[] objWords, GameWorld game)
-
-	        throws GameModelException{
+	public static GameObject parse(String[] objWords, GameWorld game) throws GameModelException {
 
 	    for (GameObject g : availableObjects) {
-	        GameObject obj = g.parse(objWords, game);
+	        
+	    	GameObject obj = g.parse(objWords, game);
 
-	        if (obj != null) {
-	            return obj;             // Objeto válido
-	        }
+	        if (obj != null) return obj;            
+	        
 	        // obj == null → tipo no coincide → seguir buscando
 	    }
 
-	    // Ningún objeto ha hecho match de tipo
 	    throw new ObjectParseException(
 	            Messages.UNKNOWN_GAME_OBJECT.formatted(String.join(" ", objWords))
 	    );

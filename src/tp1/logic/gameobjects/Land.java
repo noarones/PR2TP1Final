@@ -53,18 +53,18 @@ public class Land extends GameObject{
 	protected GameObject create(String[] words, GameWorld game, Position pos) throws ObjectParseException{
 		if(words.length >= 3) 
     		throw new ObjectParseException(Messages.OBJECT_PARSE_ERROR.formatted(String.join(" ", words)));
+		
 		return new Land(game,pos);
 	}
 
 	@Override
 	public GameObject clone() {
-		Land clone = new Land(this.game, this.pos);
-		return clone;
+		return new Land(this.game, this.pos);
 	}
 
 	@Override
 	public String save() {
-		return this.pos.toString() + " " + this.toString();
+		return "%s %s".formatted(pos,this);
 	}
 
 }

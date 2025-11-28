@@ -1,7 +1,4 @@
-/**
- *  GRUPO 19 : NOÉ HARIM ARONES DE LA CRUZ
- *  MATEI-CRISTIAN FLOREA
- */
+/* GRUPO 19 : NOÉ HARIM ARONES DE LA CRUZ  ,   MATEI-CRISTIAN FLOREA */
 package tp1.logic;
 import java.io.FileOutputStream;
 
@@ -120,43 +117,41 @@ public class Game implements GameStatus, GameWorld, GameModel {
     // ===== Métodos de reinicio del juego =====
     public void reset(int nLevel, boolean noArguments) {
 
-        //Si no hay argumentos y se está usando un fichero de configuración cargar ese fichero otra vez
-        if (noArguments && this.conf != FileGameConfiguration.NONE) {
-            handleConfigFile();
-
-        }
-        else {
-            //Si hay argumentos, se actualiza el valor del nivel
-        	if (!noArguments) {
-        		this.nLevel = nLevel;
-            }
-            handleInternalMap();
-            this.conf = FileGameConfiguration.NONE;
-        }
-
+        if (usingFile(noArguments)) handleConfigFile();
+        
+        else handleInternalMap(noArguments,nLevel);
+            
     }
 
-    private void handleInternalMap() {
-        if (this.nLevel != -1) { //Si no es el mapa -1 se guardan los valores de vida y puntos
+    private boolean usingFile(boolean noArgs) {
+    	return noArgs && this.conf != FileGameConfiguration.NONE;
+    }
+    
+    private void handleInternalMap(boolean noArguments, int nLevel) {
+    	
+    	this.nLevel = noArguments ? this.nLevel : nLevel;
+    	
+        if (this.nLevel != -1) { 
+        	//Si no es el mapa -1 se guardan los valores de vida y puntos
             int pointsAux = this.points, livesAux = this.lives;
+            
             initLevel(this.nLevel);
+            
             points = pointsAux; 
             lives = livesAux;
         }
-        else { //Si es el mapa -1 se reinicia todo
-            initLevel(this.nLevel);
-        }
+        
+        else initLevel(this.nLevel);
+
     }
 
     private void handleConfigFile() {
+    	
         int pointsAux = this.points, livesAux = this.lives;
         
-        InitialValues v = this.conf.getInitialValues();
         
-        this.remainingTime = v.getRemainingTime();
-        this.points = v.getPoints();
-        this.lives = v.getNumLives();
-        
+        this.conf.getInitialValues().applyTo(this);
+      
         this.gameObjects = this.conf.getGameObjects();
 
         this.points = pointsAux;
@@ -165,17 +160,24 @@ public class Game implements GameStatus, GameWorld, GameModel {
 
     // ===== Actualización del juego =====
     public void update() {
+    	
         this.remainingTime--;
+        
         if (!isFinished()) {
-            gameObjects.update();
-            if(!spawnObjects.isEmpty()) addSpawns();		
+        
+        	gameObjects.update();
+            
+        	if(!spawnObjects.isEmpty()) 
+        		addSpawns();		
         }
     }
 
     private void addSpawns() {
-        for (GameObject o : spawnObjects) {
+        
+    	for (GameObject o : spawnObjects) {
             if (o != null) gameObjects.add(o);
         }
+        
         spawnObjects.clear();
     }
 
@@ -191,16 +193,14 @@ public class Game implements GameStatus, GameWorld, GameModel {
     }
 
     public void addAction(Action act) {
-        if (this.gameObjects.getMario() != null) {
+       if (this.gameObjects.getMario() != null) 
             this.gameObjects.getMario().addAction(act);
 
-        	
-        }
     }
 
     // ===== Gestión de vidas =====
     public void removeLife() {
-        this.lives = this.lives - 1;
+        this.lives--;
     }
 
     // ===== Métodos de colisiones y límites =====
@@ -253,6 +253,10 @@ public class Game implements GameStatus, GameWorld, GameModel {
         this.playerExits = true;
     }
 
+    public void addPoints(int p) {
+        this.points += p;
+    }
+    
     public int remainingTime() {
         return this.remainingTime;
     }
@@ -261,14 +265,24 @@ public class Game implements GameStatus, GameWorld, GameModel {
         return this.points;
     }
 
-    public void addPoints(int p) {
-        this.points += p;
-    }
-
     public int numLives() {
         return this.lives;
     }
+    
+    
+    public void setRemainingTime(int time) {
+       this.remainingTime = time;
+    }
 
+    public void setPoints(int points) {
+        this.points = points;
+    }
+
+    public void setNumLives(int lives) {
+       this.lives = lives;
+    }
+    
+   
     @Override
     public String toString() {
         return "Mario Bros 2.0";
@@ -304,7 +318,7 @@ public class Game implements GameStatus, GameWorld, GameModel {
             //Guardar primera línea: tiempo, puntos, vidas
             outChars.println(Integer.toString(this.remainingTime) + " " + Integer.toString(this.points) + " " + Integer.toString(this.lives));
 
-        //Guardar todos los objetos del juego
+        //Guardar 
             gameObjects.save(outChars);
         }
         catch (Exception e) {
@@ -314,14 +328,11 @@ public class Game implements GameStatus, GameWorld, GameModel {
 
     // ===== Gestión del cargado =====
     public void load(String fileName) throws GameLoadException {
+    	
         this.conf = new FileGameConfiguration(fileName, this);
         
-        InitialValues v = this.conf.getInitialValues();
-        
-        this.remainingTime = v.getRemainingTime();
-        this.points = v.getPoints();
-        this.lives = v.getNumLives();
-        
+        this.conf.getInitialValues().applyTo(this);
+       
         this.gameObjects = this.conf.getGameObjects();
     
 

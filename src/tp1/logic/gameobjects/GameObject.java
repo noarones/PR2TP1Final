@@ -65,7 +65,7 @@ public abstract class GameObject implements GameItem {
     protected Position parsePosition(String[] words) throws PositionParseException {
 
         try {
-            // Extraer coordenadas (ej: "(a,4)" → "a", "4")
+            // Extraer coordenadas
             String cleaned = words[0].replace("(", "").replace(")", "");
             String[] coords = cleaned.split(",");
 
@@ -97,41 +97,45 @@ public abstract class GameObject implements GameItem {
     }
 
     // ===== Creación / parseo de objetos a partir de descripción =====
-    public GameObject parse(String[] words, GameWorld game)
+    public GameObject parse(String[] words, GameWorld game) throws GameModelException {
 
-            throws GameModelException{
-
-
-        Position pos1;
-
-        // 1. Parsear la posición
         try {
-            pos1 = parsePosition(words);
-        } catch (PositionParseException e) {
+       
+        	Position pos1 = parsePosition(words);
+     
+        	assertInBoard(pos1, words, game);
+        
+        	return matchesType(words) ? this.create(words, game, pos1) : null;
+       
+        
+        }
+        
+        catch (PositionParseException e) {
+        	
             throw new ObjectParseException(
                 Messages.INVALID_OBJECT_POSITION.formatted(String.join(" ", words)),
                 e
-            );
+            );   
         }
-
-        // 2. ¿Es el tipo correcto?
-        boolean matchesType =
-                words[1].equalsIgnoreCase(this.toString()) ||
-                words[1].equalsIgnoreCase(MyStringUtils.onlyUpper(this.toString()));
-
-        if (!matchesType) return null;
         
-
-        // 3. Tipo coincide → ahora cualquier fallo es ERROR REAL
-        if (!game.isInBoard(pos1)) {
+    }
+    
+    
+    private boolean matchesType(String[] words) {
+    	return words[1].equalsIgnoreCase(this.toString()) ||
+                words[1].equalsIgnoreCase(MyStringUtils.onlyUpper(this.toString()));
+    }
+    
+    private void assertInBoard(Position pos, String[] words, GameWorld game) throws OffBoardException{
+        if (!game.isInBoard(pos)) 
             throw new OffBoardException(
                 Messages.OFF_BOARD_OBJECT.formatted(String.join(" ", words))
             );
-        }
-
-        // 4. Crear el objeto válido
-        return this.create(words, game, pos1);
+        
     }
+
+    
+    
     
     public boolean isMario(){
     	return false;

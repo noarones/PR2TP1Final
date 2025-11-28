@@ -1,3 +1,4 @@
+/* GRUPO 19 : NOÉ HARIM ARONES DE LA CRUZ  ,   MATEI-CRISTIAN FLOREA */
 package tp1.logic;
 
 import java.io.BufferedReader;
@@ -32,37 +33,23 @@ public class FileGameConfiguration implements GameConfiguration {
         this.gameObjects = new GameObjectContainer();
         
 	   //Handle Exceptions  
-        try (BufferedReader inChars = new BufferedReader(new InputStreamReader(new FileInputStream(fileName), "UTF-8"))) {
+        try (BufferedReader inChars = 
+        		new BufferedReader(new InputStreamReader(new FileInputStream(fileName), "UTF-8"))) {
 	  
-
-	        // Lee la primera línea
-	       String l = inChars.readLine();
+	        //LEE INITIALVALUES Y GUARDA VALORES
+	       readInitialValues(inChars);
 	       
-	        if (l != null) 
-	        	this.initialValues = parseGameState(l);  
-	             
-	        // Leemos las siguientes líneas
-	        while ((l = inChars.readLine()) != null) {
-	            try {
-	            	
-              gameObjects.add(GameObjectFactory.parse(l.trim().split("\\s+"),game));
-              			
-	            } catch (GameModelException x) {
-	                throw new GameLoadException (Messages.INVALID_FILE_CONF.formatted(fileName), x);  // En caso de un error durante el parseo
-	            }
-	        }
-	       
-	        //Al terminar de anadir objetos se guarda una copia en la clase FileGameConfiguration (es el estado Inicial de donde se partira)
-       
+	       //LEE OBJECT VALUES RESTANTES
+	       readObjectValues(inChars, game,fileName);
 	        
 	    } catch (IOException e) {
-	    	//Necesario para usuarios de Linux(Mensaje distinto de IOException utilizo Messages.static unico. 
+	    	//Mensaje distinto en Linux, por lo que se usa un mensaje unico de Messages 
 	        throw new GameLoadException(Messages.FILE_NOT_FOUND.formatted(fileName)
 	        		, new IOException(Messages.FILE_NO_ENCONTRADO.formatted(fileName)));
 	    }
     }
 
-    // Método para analizar el estado del juego desde la primera línea
+    //Parsea primera linea
 	private InitialValues parseGameState(String line) throws GameLoadException {
 		String[] state = line.trim().split("\\s+");
 		
@@ -79,6 +66,30 @@ public class FileGameConfiguration implements GameConfiguration {
 			throw new GameLoadException(Messages.INCORRECT_GAME_STATUS.formatted(line.toString()), e);
 		}
 	}
+	
+	
+	private void readInitialValues(BufferedReader inChars) throws IOException, GameLoadException {
+		 String l = inChars.readLine();
+	       
+	        if (l != null) 
+	        	this.initialValues = parseGameState(l);  
+	}
+	
+	private void readObjectValues(BufferedReader inChars, GameWorld game,String fileName) throws GameLoadException, IOException {
+		
+		   String l;
+	        //LEE OBJETOS
+	        while ((l = inChars.readLine()) != null) {  
+	        		try {
+	        			gameObjects.add(GameObjectFactory.parse(l.trim().split("\\s+"),game));
+             			
+	        			} catch (GameModelException x) {
+	        				throw new GameLoadException (Messages.INVALID_FILE_CONF.formatted(fileName), x);  
+	        				// En caso de un error durante el parseo
+	        			}
+	        }
+	}
+	
 	
 	public InitialValues getInitialValues() {
 	   return this.initialValues; 

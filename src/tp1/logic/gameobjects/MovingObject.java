@@ -81,7 +81,11 @@ public abstract class MovingObject extends GameObject{
 
 	}
 
- 
+	protected String dirStr() {
+	    
+	    return (this.dir == Action.DOWN || this.dir == Action.UP) ? this.lastDir.toString() : this.dir.toString(); 
+	}
+	
 	protected void saveLastPosition() { lastPos = lastPos.copy(pos); }
 	
 	protected void automaticMove() {};

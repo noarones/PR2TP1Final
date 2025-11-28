@@ -65,12 +65,13 @@ public class ExitDoor extends GameObject {
 
     @Override
     public GameObject clone() {
-        ExitDoor clone = new ExitDoor(this.game, this.pos);
-        return clone;
-    }
 
+        return new ExitDoor(this.game, this.pos);
+    }
+    
+// Para aprovechar que tenemos implementados los toString() se utiliza %s . formatted
     @Override
     public String save() {
-        return this.pos.toString() + " " + this.toString();
+        return "%s %s".formatted(pos, this);
     }   
 }

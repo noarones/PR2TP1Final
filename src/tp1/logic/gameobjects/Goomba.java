@@ -18,18 +18,25 @@ public class Goomba extends MovingObject {
     // ===== Constructores =====
     public Goomba(GameWorld game, Position pos) {
         super(game, pos);
-        setInitial(Action.LEFT);
+        setInitial(Action.LEFT,Action.LEFT);
     }
 
+    
+    public Goomba(Goomba g) {
+        super(g.game, g.pos);
+        setInitial(g.dir, g.lastDir);
+    }
+    
+    
     Goomba() {
         super(null,null);
     }
 
     // ===== Inicialización =====
-    private void setInitial(Action dir) {
+    private void setInitial(Action dir, Action lastDir) {
     	
         if(dirValido(dir)) this.dir = dir;
-        this.lastDir = dir;
+        this.lastDir = lastDir;
         this.points = 100;
     }
 
@@ -77,14 +84,14 @@ public class Goomba extends MovingObject {
     		throw new ObjectParseException(Messages.OBJECT_PARSE_ERROR.formatted(String.join(" ", words)));
     	try {
     		
-    		
-        Goomba goomba = new Goomba(game, pos);
+
         Action dir = ParamParser.parseDirection(words, 2);
         //ParamParser solo devuelve null si no hay args logicamente
         if(!dirValido(dir == null ? Action.LEFT: dir)) 
         	throw new ObjectParseException(Messages.INVALID_MOVING_DIRECTION.formatted(String.join(" ", words)));
-       
-        goomba.setInitial(dir);
+        
+        Goomba goomba = new Goomba(game, pos);
+        goomba.setInitial(dir,dir);
         
         return goomba;
         
@@ -96,20 +103,15 @@ public class Goomba extends MovingObject {
 
     @Override
     public GameObject clone() {
-        Goomba clone = new Goomba(this.game, this.pos);
-        clone.dir = this.dir;
-        clone.lastDir = this.lastDir;
-        return clone;
+    	
+        return new Goomba(this);
     }
+
+
 
     @Override
     public String save() {
-    	String dirAux;
-    	if (this.dir== Action.DOWN || this.dir == Action.UP)
-    		dirAux = this.lastDir.toString();
-    	else
-    		dirAux = this.dir.toString();
-    		
-        return this.pos.toString() + " " + this.toString() + " " + dirAux;
+        return "%s %s %s".formatted(pos, this, dirStr());
     }
+
 }

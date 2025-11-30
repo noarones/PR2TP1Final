@@ -225,7 +225,7 @@ public class Mario extends MovingObject implements MarioPlayer{
     // ======================= MOVIMIENTO VERTICAL =====================
     // ================================================================
     private boolean handleUp(int verticalCount) {
-        return moveUpAvailable(verticalCount) && moveUp();
+        return moveUpAvailable(verticalCount) && moveUp(verticalCount);
     }
 
     private void handleDown(boolean movedUp) {
@@ -236,11 +236,25 @@ public class Mario extends MovingObject implements MarioPlayer{
     	return (verticalCount < 4) && !game.solidUp(isBig() ? pos.up() : pos);
     }
 
-    private boolean moveUp() {
-    	move(Action.UP);
-        isFalling = false;
-        game.checkInteractions(this);
-        return true;
+    private boolean moveUp(int verticalCount) {
+    	if (verticalCount == 0 && game.solidUnder(pos)) {
+    		move(Action.UP);
+    		isFalling = false;
+    		game.checkInteractions(this);
+    		return true;
+    	}
+    	else if (verticalCount > 0){
+	    	move(Action.UP);
+	        isFalling = false;
+	        game.checkInteractions(this);
+	        return true;
+    	}
+    	else {
+    		move(Action.DOWN);
+    		isFalling = true;
+    		game.checkInteractions(this);
+    		return true;
+    	}
     }
 
     private void fallVertically() {

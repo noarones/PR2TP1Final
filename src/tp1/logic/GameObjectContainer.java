@@ -33,18 +33,20 @@ public class GameObjectContainer {
     }
 
     public GameObjectContainer(GameObjectContainer other) {
-		this.objects = new ArrayList<>();
-		for (GameObject obj : other.objects) {
-			
-			 GameObject cloned = obj.clone();
-		        this.objects.add(cloned);
+        this.objects = new ArrayList<>();
+        
+        for (GameObject obj : other.objects) {
+            GameObject cloned = obj.clone();
+            this.objects.add(cloned);
 
-		        if (cloned.isMario()) 
-		            this.mario = (MarioPlayer) cloned;
-		        
-		        
-	    }
+            try {
+                this.mario = (MarioPlayer) cloned; 
+            } catch (ClassCastException e) {
+                //ignorar
+            }
+        }
     }
+
 
     // ============================================================
     // == Métodos principales =====================================
@@ -54,14 +56,19 @@ public class GameObjectContainer {
      * Añade un objeto al contenedor.
      */
     public boolean add(GameObject obj) {
-    	
         if (obj != null) {
-        	if(obj.isMario()) this.mario = (MarioPlayer) obj;
-                this.objects.add(obj);
+        	
+            try {
+                this.mario = (MarioPlayer) obj; // Intento de casting puro
+            } catch (ClassCastException e) {
+                //ignorar
+            }
             
+            objects.add(obj);
         }
         return true;
     }
+
 
  
     /**
@@ -160,8 +167,12 @@ public class GameObjectContainer {
         
     }
     
-    public MarioPlayer getMario() {
-    	return this.mario;
+    public void addActionToMario(Action dir) {
+    	 mario.addAction(dir);
     } 
+    
+    public boolean marioExists() {
+    	return this.mario != null;
+    }
     
 }

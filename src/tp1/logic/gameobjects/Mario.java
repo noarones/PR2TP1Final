@@ -378,11 +378,6 @@ public class Mario extends MovingObject implements MarioPlayer{
         return new Mario(this);
     }
 
-    @Override
-    public boolean isMario(){
-    	return true;
-    }
-
     private String sizeStr() {
     	return isBig() ? "Big" : "Small";
     }

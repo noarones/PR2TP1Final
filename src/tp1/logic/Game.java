@@ -124,8 +124,8 @@ public class Game implements GameStatus,GameStatusWriter, GameWorld, GameModel{
     }
 
     public void addAction(Action act) {
-    	 if (this.gameObjects.getMario() != null) 
-            this.gameObjects.getMario().addAction(act);
+    	 if(gameObjects.marioExists())
+            this.gameObjects.addActionToMario(act);
 
     }
 

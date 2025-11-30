@@ -138,11 +138,7 @@ public abstract class GameObject implements GameItem {
     	return item.isInPosition(pos);
     };   
     
-    
-    public boolean isMario(){
-    	return false;
-    }
-    
+
     public abstract String save();
 
     public abstract GameObject clone();

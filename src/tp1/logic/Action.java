@@ -46,6 +46,21 @@ public enum Action {
 		return ret;
 	}
 
+	
+    
+    public static boolean isXMove(Action dir) {
+    	return dir == Action.LEFT || dir == Action.RIGHT;
+    }
+ 
+    public static boolean isUpMove(Action dir) {
+    	return dir == Action.UP;
+    }
+    public static boolean isDownMove(Action dir) {
+    	return dir == Action.DOWN;
+    }
+    
+	
+	
 	public String toString() {
 		String aux = "";
 		switch(this) {
@@ -57,5 +72,8 @@ public enum Action {
 		};
 		return aux;
 	}
+	
+	
+	
 	
 }

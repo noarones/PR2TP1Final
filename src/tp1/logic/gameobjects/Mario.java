@@ -17,11 +17,17 @@ import tp1.view.Messages;
 
 public class Mario extends MovingObject implements MarioPlayer{
 
-    // ===== Estado interno =====
+    // ================================================================
+    // ======================= ESTADO INTERNO ==========================
+    // ================================================================
     private boolean big;
     private List<Action> pendingActions;
 
-    // ===== Constructores =====
+    
+
+    // ================================================================
+    // ======================== CONSTRUCTORES ==========================
+    // ================================================================
     public Mario(GameWorld game, Position pos) {
         super(game, pos);
         setInitial(true, Action.RIGHT);
@@ -39,7 +45,11 @@ public class Mario extends MovingObject implements MarioPlayer{
         super(null, null);
     }
 
-    // ===== Inicialización =====
+
+
+    // ================================================================
+    // ======================== INICIALIZACIÓN =========================
+    // ================================================================
     private void setInitial(Boolean big, Action dir) {
         this.big = (big == null) ? true : big;
         this.dir = (dir == null) ? Action.RIGHT : dir;
@@ -51,10 +61,14 @@ public class Mario extends MovingObject implements MarioPlayer{
     	return str.equalsIgnoreCase("big") ||
     			str.equalsIgnoreCase("small") ||
     			str.equalsIgnoreCase("s") ||
-    			str.equalsIgnoreCase("b") ;
-    			
+    			str.equalsIgnoreCase("b");
     }
-    // ===== Representación visual =====
+
+
+
+    // ================================================================
+    // ================== REPRESENTACIÓN VISUAL ========================
+    // ================================================================
     public String getIcon() {
         return (dir == Action.DOWN && lastDir == Action.STOP)
                 ? Messages.MARIO_STOP
@@ -75,7 +89,11 @@ public class Mario extends MovingObject implements MarioPlayer{
         return "Mario";
     }
 
-    // ===== Gestión de acciones pendientes =====
+
+
+    // ================================================================
+    // ================= GESTIÓN DE ACCIONES PENDIENTES ================
+    // ================================================================
     public void addAction(Action act) {
         pendingActions.add(act);
     }
@@ -84,11 +102,17 @@ public class Mario extends MovingObject implements MarioPlayer{
         pendingActions.clear();
     }
 
-    // ===== Movimiento automático =====
+
+
+    // ================================================================
+    // ========================== CICLO DE JUEGO =======================
+    // ================================================================
     @Override
     protected void automaticMove() {
         saveLastPosition();
+
         if (game.fallenOut(pos)) { handleDeath(); }
+
         if (pendingActions.size() > 0) action();
         else automatic();
     }
@@ -100,60 +124,66 @@ public class Mario extends MovingObject implements MarioPlayer{
         int YCount = 0;
 
         for (int i = 0; i < pendingActions.size(); i++) {
-        	
             Action act = pendingActions.get(i);
-            
-            	if (act != null) {
-            		
-            		if(act == Action.STOP) handleStop();
-            		
-            		else if (isXMove(act) && handleHorizontal(act,XMoved, XCount)) { XMoved = true; XCount++; } 
 
-            	    else if(isUpMove(act) && handleUp(YCount)) { movedUp = true; YCount++; }
-            	   
-            	    else if(isDownMove(act)) { handleDown(movedUp); }
-            	   
-       
-            	}
+            if (act != null) {
+                if(act == Action.STOP) handleStop();
+                else if (Action.isXMove(act) && handleHorizontal(act,XMoved, XCount)) { 
+                    XMoved = true; XCount++; 
+                }
+                else if(Action.isUpMove(act) && handleUp(YCount)) { 
+                    movedUp = true; YCount++; 
+                }
+                else if(Action.isDownMove(act)) { 
+                    handleDown(movedUp); 
+                }
+            }
         }
-        
         clearActions();
     }
-    
-    
+
+
+
+    // ================================================================
+    // ========================== MANEJO STOP ==========================
+    // ================================================================
     private void handleStop() {
-        if (!isFalling) {
-            dir = Action.STOP;
-            this.lastDir = Action.STOP;
-            game.checkInteractions(this);
-        }
+        dir = Action.STOP;
+        this.lastDir = Action.STOP;
+        game.checkInteractions(this);
     }
-    
-   private boolean handleHorizontal(Action dir, boolean moved, int count) {
-    	
+
+
+
+    // ================================================================
+    // ===================== MANEJO HORIZONTAL =========================
+    // ================================================================
+    private boolean handleHorizontal(Action dir, boolean moved, int count) {
         return horizontalCondition(dir,moved,count) && execHorizontal(dir,moved,count);
     }
-    
-    
-    private boolean handleUp(int verticalCount) {
-        return moveUpAvailable(verticalCount) && moveUp();
+
+    private boolean execHorizontal(Action dir, boolean moved, int count) {
+        if ( !( isDirAvailable(dir,moved,count) && moveHorizontal(dir) ) )
+              changeDirection(dir == Action.LEFT ? Action.RIGHT : Action.LEFT);
+
+        game.checkInteractions(this);
+        
+        return true;
     }
 
-    
-    private void handleDown(boolean movedUp) {
-        if (!movedUp) fallVertically();
+    private boolean isDirAvailable(Action dir, boolean moved, int count) {
+    	return  (dir == Action.LEFT  && !game.solidLeft(pos)  && !game.nextToLeftLimit(pos))
+             || (dir == Action.RIGHT && !game.solidRight(pos) && !game.nextToRightLimit(pos));
     }
 
-
-
- 
-
+    private boolean horizontalCondition(Action dir, boolean moved, int count ) {
+    	return !moved || (this.dir == dir && count < 4);
+    }
 
     private boolean moveHorizontal(Action moveDir) {
         move(moveDir);
         lastDir = dir;
         dir = moveDir;
-        
         return true;
     }
 
@@ -163,80 +193,83 @@ public class Mario extends MovingObject implements MarioPlayer{
         return true;
     }
 
-    // ===== Movimiento vertical =====
 
-    private void fallVertically() {
-        boolean wasOnGround = game.solidUnder(pos);
 
-        while (!game.solidUnder(pos)) {
-        	
-            lastPos = lastPos.copy(pos);
-            pos = pos.move(Action.DOWN);
-            isFalling = true;
-
-            if (game.fallenOut(pos.up().up())) {
-                handleDeath();
-                if (game.numLives() > 0) {
-                    dir = Action.STOP;
-                    isFalling = false;
-                }
-                pendingActions.clear();
-                return;
-            } 
-            
-            else game.checkInteractions(this);
-            
-        }
-
-        isFalling = false;
-        if (wasOnGround) {
-            dir = Action.STOP;
-            this.lastDir = Action.STOP;
-        }
+    // ================================================================
+    // ======================= MOVIMIENTO VERTICAL =====================
+    // ================================================================
+    private boolean handleUp(int verticalCount) {
+        return moveUpAvailable(verticalCount) && moveUp();
     }
 
-    // ===== Movimiento horizontal auxiliar =====
+    private void handleDown(boolean movedUp) {
+        if (!movedUp) fallVertically();
+    }
+
+    private boolean moveUpAvailable(int verticalCount) {
+    	return (verticalCount < 4) && !game.solidUp(isBig() ? pos.up() : pos);
+    }
+
+    private boolean moveUp() {
+    	move(Action.UP);
+        isFalling = false;
+        game.checkInteractions(this);
+        return true;
+    }
+
+    private void fallVertically() {
+
+        if(game.solidUnder(pos)) { handleStop(); return; }
+        
+        while (!game.solidUnder(pos) && moveDown() && !handleFallenOut()) 
+            game.checkInteractions(this);
+    }
+
+    private boolean moveDown() {
+        lastPos = lastPos.copy(pos);
+        pos = pos.move(Action.DOWN);
+        return true;
+    }
+
+    private boolean handleFallenOut() {
+    	return game.fallenOut(pos) && handleDeath();
+    }
+
+
+
+    // ================================================================
+    // ====================== MOVIMIENTO AUTOMÁTICO ====================
+    // ================================================================
     @Override
     protected void horizontalMove() {
         isFalling = false;
 
         if (dir == Action.STOP) return;
 
-        Action moveDir = (dir == Action.LEFT || dir == Action.RIGHT) ? dir : lastDir;
+        Action m = (Action.isXMove(dir)) ? dir : lastDir;
 
-        if (moveDir == Action.RIGHT) moveRight();
-        else if (moveDir == Action.LEFT) moveLeft();
+        if (m == Action.RIGHT) moveRight();
+        else if (m == Action.LEFT) moveLeft();
     }
 
     private void moveRight() {
-        if (!game.solidRight(pos) && !game.nextToRightLimit(pos)) pos = pos.move(Action.RIGHT);
-        else dir = lastDir = Action.LEFT;
+        if (!game.solidRight(pos) && !game.nextToRightLimit(pos)) move(Action.RIGHT);
+        else changeDirection(Action.LEFT);
     }
 
     private void moveLeft() {
-        if (!game.solidLeft(pos) && !game.nextToLeftLimit(pos)) pos = pos.move(Action.LEFT);
-        else dir = lastDir = Action.RIGHT;
+        if (!game.solidLeft(pos) && !game.nextToLeftLimit(pos)) move(Action.LEFT);
+        else changeDirection(Action.RIGHT);
     }
-    
-    
-    private boolean moveUpAvailable(int verticalCount) {
-    	return (verticalCount < 4) && ((!isBig() && !game.solidUp(pos)) || (isBig() && !game.solidUp(pos.up())));
-    }
-    
-    private boolean moveUp() {
-    	
-    	move(Action.UP);
-        isFalling = false;
-        game.checkInteractions(this);
-        
-        return true;
-    }
-    
 
-    // ===== Interacciones con objetos =====
+
+
+    // ================================================================
+    // ===================== INTERACCIONES CON OBJETOS =================
+    // ================================================================
     @Override
     public boolean interactWith(GameItem item) {
-        return super.interactWith(item) &&  item.receiveInteraction(this);
+        return super.interactWith(item) && item.receiveInteraction(this);
     }
 
     public boolean marioExited() {
@@ -244,30 +277,19 @@ public class Mario extends MovingObject implements MarioPlayer{
         return true;
     }
 
-
     @Override
     public boolean receiveInteraction(ExitDoor obj) { return true; }
 
-
     @Override
-    public boolean receiveInteraction(Mushroom obj) {
-    	
-        return this.big = true;
-    }
+    public boolean receiveInteraction(Mushroom obj) { return this.big = true; }
 
-    
     @Override
     public boolean receiveInteraction(Goomba obj) {
-       
-    	if (obj.isInPosition(lastPos.under())) 
-    		return true;
-        
+    	if (obj.isInPosition(lastPos.under())) return true;
         if (obj.isInPosition(this.pos.up())) 
             return !(this.big = false) && obj.receiveInteraction(this);
-        
 
-       return !isBig() && handleDeath() || !(this.big = false) ;
-  
+        return !isBig() && handleDeath() || !(this.big = false);
     }
 
     @Override
@@ -275,91 +297,82 @@ public class Mario extends MovingObject implements MarioPlayer{
         return obj.receiveInteraction(this);
     }
 
-    // ===== Posición considerando tamaño =====
+
+
+    // ================================================================
+    // ===================== POSICIÓN / GEOMETRÍA ======================
+    // ================================================================
     @Override
     public boolean isInPosition(Position pos) {
-        return super.isInPosition(pos) || (isAlive() && isBig() && super.isInPosition(pos.under()));
+        return super.isInPosition(pos)
+            || (isAlive() && isBig() && super.isInPosition(pos.under()));
     }
 
 
 
-    // ===== Creación dinámica =====
+    // ================================================================
+    // ====================== CREACIÓN DINÁMICA ========================
+    // ================================================================
     @Override
-    protected GameObject create(String[] words, GameWorld game, Position pos) throws ObjectParseException{
+    protected GameObject create(String[] words, GameWorld game, Position pos) 
+        throws ObjectParseException {
+
         Mario mario = new Mario(game, pos);
 
         if(words.length > 4)
         	throw new ObjectParseException(Messages.OBJECT_PARSE_ERROR.formatted(String.join(" ", words)));
-        
-        if(words.length > 3 &&!tamValido(words[3]))
-        	throw new ObjectParseException(Messages.INVALID_MARIO_SIZE.formatted(String.join(" ", words)));
-        
-        try {
-        		
-        mario.setInitial(
-            ParamParser.parseBoolean(words, 3, "big", "b", "small", "s", true),
-            ParamParser.parseDirection(words, 2)
-        );
-        
-        	}
-        
-        catch(ActionParseException a) {
-        	throw new ObjectParseException( Messages.UNKNOWN_MOVING_DIRECTION.formatted(String.join(" ", words)), a);
-        }
 
+        if(words.length > 3 && !tamValido(words[3]))
+        	throw new ObjectParseException(Messages.INVALID_MARIO_SIZE.formatted(String.join(" ", words)));
+
+        try {
+            mario.setInitial(
+                ParamParser.parseBoolean(words, 3, "big", "b", "small", "s", true),
+                ParamParser.parseDirection(words, 2)
+            );
+        }
+        catch(ActionParseException a) {
+        	throw new ObjectParseException(
+                Messages.UNKNOWN_MOVING_DIRECTION.formatted(String.join(" ", words)), a
+            );
+        }
         return mario;
     }
-    
-    // ===== Manejo de muerte =====
+
+
+
+    // ================================================================
+    // ======================== MANEJO DE MUERTE =======================
+    // ================================================================
     @Override 
     protected boolean handleDeath() {
         game.removeLife();
-        this.dead();
-        if (game.numLives() > 0) {
+        this.dead(); 
+        if (game.numLives() > 0) 
             game.reset(2025,true);
-        }
+        
+        
+        pendingActions.clear();
         return true;
     }
-    
-    // Pred
+
+
+
+    // ================================================================
+    // ========================== PREDICADOS ===========================
+    // ================================================================
     @Override
     protected boolean canInteract(GameItem item) {
-    	return (!isBig() && item.isInPosition(this.pos)) || 
-    			(isBig() && (item.isInPosition(this.pos.up()) ||
-    					item.isInPosition(this.pos)));
+    	return (!isBig() && item.isInPosition(this.pos)) ||
+    		   (isBig() && (item.isInPosition(this.pos.up()) ||
+    		                item.isInPosition(this.pos)));
     }
-    
-    private boolean execHorizontal(Action dir, boolean moved, int count) {
 
-        if ( !( isDirAvailable(dir,moved,count) && moveHorizontal(dir) ) )
-              changeDirection(dir == Action.LEFT ? Action.RIGHT : Action.LEFT);
 
-        game.checkInteractions(this);
-        
-        return true;
-    }
-    
-    private boolean isDirAvailable(Action dir, boolean moved, int count) {
-        
-    	return  (dir == Action.LEFT  && !game.solidLeft(pos)  && !game.nextToLeftLimit(pos)) ||
-                (dir == Action.RIGHT && !game.solidRight(pos) && !game.nextToRightLimit(pos));
-    }
-    
-    private boolean horizontalCondition(Action dir, boolean moved, int count ) {
-    	return !moved || (this.dir == dir && count < 4);
-    }
-    
-    private boolean isXMove(Action dir) {
-    	return dir == Action.LEFT || dir == Action.RIGHT;
-    }
- 
-    private boolean isUpMove(Action dir) {
-    	return dir == Action.UP;
-    }
-    private boolean isDownMove(Action dir) {
-    	return dir == Action.DOWN;
-    }
-    
+
+    // ================================================================
+    // ======================== CLON Y SAVE ============================
+    // ================================================================
     @Override
     public GameObject clone() { 
         return new Mario(this);
@@ -376,7 +389,7 @@ public class Mario extends MovingObject implements MarioPlayer{
         
     @Override
     public String save() {
-          return "%s %s %s %s".formatted(pos,this,dirStr(),sizeStr());
-          
+        return "%s %s %s %s".formatted(pos,this,dirStr(),sizeStr());
     }
+
 }

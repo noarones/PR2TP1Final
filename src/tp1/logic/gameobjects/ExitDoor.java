@@ -4,7 +4,7 @@
  */
 package tp1.logic.gameobjects;
 
-import tp1.exceptions.ActionParseException;
+
 import tp1.exceptions.ObjectParseException;
 import tp1.logic.GameItem;
 import tp1.logic.GameWorld;
@@ -23,11 +23,7 @@ public class ExitDoor extends GameObject {
     }
 
     // ===== Interacciones con otros objetos =====
-    @Override
-    public boolean interactWith(GameItem item) {
-        return false;
-    }
-    
+
     @Override
     public boolean receiveInteraction(Mario obj) {
         return obj.marioExited();
@@ -65,12 +61,13 @@ public class ExitDoor extends GameObject {
 
     @Override
     public GameObject clone() {
-        ExitDoor clone = new ExitDoor(this.game, this.pos);
-        return clone;
-    }
 
+        return new ExitDoor(this.game, this.pos);
+    }
+    
+// Para aprovechar que tenemos implementados los toString() se utiliza %s . formatted
     @Override
     public String save() {
-        return this.pos.toString() + " " + this.toString();
+        return "%s %s".formatted(pos, this);
     }   
 }

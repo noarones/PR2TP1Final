@@ -1,7 +1,4 @@
-/**
- *  GRUPO 19 : NOÉ HARIM ARONES DE LA CRUZ
-MATEI-CRISTIAN FLOREA
- */
+/* GRUPO 19 : NOÉ HARIM ARONES DE LA CRUZ  ,   MATEI-CRISTIAN FLOREA */
 package tp1.logic;
 
 
@@ -22,5 +19,5 @@ public interface GameItem {
 	public  boolean receiveInteraction(Goomba obj);
 	public  boolean receiveInteraction(Mushroom obj);
 	public  boolean receiveInteraction(Box obj);
-    public boolean isBig();
+    
 }

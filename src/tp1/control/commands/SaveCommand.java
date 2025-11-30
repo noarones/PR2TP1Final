@@ -1,3 +1,4 @@
+/* GRUPO 19 : NOÉ HARIM ARONES DE LA CRUZ  ,   MATEI-CRISTIAN FLOREA */
 package tp1.control.commands;
 
 import tp1.exceptions.CommandExecuteException;
@@ -6,7 +7,7 @@ import tp1.exceptions.GameModelException;
 import tp1.logic.GameModel;
 import tp1.view.GameView;
 import tp1.view.Messages;
-import java.io.File;
+
 
 public class SaveCommand extends AbstractCommand {
 
@@ -28,9 +29,9 @@ public class SaveCommand extends AbstractCommand {
 	@Override
 	public void execute(GameModel game, GameView view) throws CommandExecuteException {
 		try {
-			File file = new File(fileName);
 			game.save(fileName);
 			view.showMessage(Messages.SAVE_SUCCESFUL.formatted(fileName) + Messages.LINE_SEPARATOR);
+			
 		}
 		catch(GameModelException e){
 			throw new CommandExecuteException(Messages.COMMAND_INCORRECT_PARAMETER_NUMBER);
@@ -46,8 +47,7 @@ public class SaveCommand extends AbstractCommand {
 		if (commandWords.length != 2)
 			throw new CommandParseException(Messages.COMMAND_INCORRECT_PARAMETER_NUMBER);
 
-		String fileName = commandWords[1];
-		return new SaveCommand(fileName);
+		return new SaveCommand(commandWords[1]);
 	}
 
 }

@@ -7,9 +7,7 @@ package tp1.logic.gameobjects;
 import java.util.Arrays;
 import java.util.List;
 import tp1.logic.GameWorld;
-import tp1.exceptions.OffBoardException;
-import tp1.exceptions.PositionParseException;
-import tp1.exceptions.ActionParseException;
+
 import tp1.exceptions.GameModelException;
 import tp1.exceptions.ObjectParseException;
 import tp1.view.Messages;
@@ -25,29 +23,22 @@ public class GameObjectFactory {
 			new Box()
 		);
 	
-	public static GameObject parse(String[] objWords, GameWorld game)
-
-	        throws GameModelException{
+	public static GameObject parse(String[] objWords, GameWorld game) throws GameModelException {
 
 	    for (GameObject g : availableObjects) {
-	        GameObject obj = g.parse(objWords, game);
+	        
+	    	GameObject obj = g.parse(objWords, game);
 
-	        if (obj != null) {
-	            return obj;             // Objeto válido
-	        }
+	        if (obj != null) return obj;            
+	        
 	        // obj == null → tipo no coincide → seguir buscando
 	    }
 
-	    // Ningún objeto ha hecho match de tipo
 	    throw new ObjectParseException(
 	            Messages.UNKNOWN_GAME_OBJECT.formatted(String.join(" ", objWords))
 	    );
 	}
 
-	public  static GameObject parse(String line, GameWorld game)
-	        throws GameModelException {
-	    return parse(line.trim().split("\\s+"), game);  
-	}
 
 	
 }

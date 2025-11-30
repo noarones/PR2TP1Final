@@ -22,20 +22,31 @@ public class GameObjectContainer {
     // == Atributos ===============================================
     // ============================================================
     private List<GameObject> objects;
-    
+    private MarioPlayer mario; //La interfaz de mario que solo permite anadir acciones no Modificar mario.
+
     // ============================================================
     // == Constructor =============================================
     // ============================================================
     public GameObjectContainer() {
         this.objects = new ArrayList<>();
+        
     }
 
     public GameObjectContainer(GameObjectContainer other) {
-		this.objects = new ArrayList<>();
-		for (GameObject obj : other.objects) {
-			this.objects.add(obj.clone());
-	    }
+        this.objects = new ArrayList<>();
+        
+        for (GameObject obj : other.objects) {
+            GameObject cloned = obj.clone();
+            this.objects.add(cloned);
+
+            try {
+                this.mario = (MarioPlayer) cloned; 
+            } catch (ClassCastException e) {
+                //ignorar
+            }
+        }
     }
+
 
     // ============================================================
     // == Métodos principales =====================================
@@ -44,31 +55,44 @@ public class GameObjectContainer {
     /**
      * Añade un objeto al contenedor.
      */
-    public boolean add(GameObject object) {
-        if (object != null)
-            objects.add(object);
+    public boolean add(GameObject obj) {
+        if (obj != null) {
+        	
+            try {
+                this.mario = (MarioPlayer) obj; // Intento de casting puro
+            } catch (ClassCastException e) {
+                //ignorar
+            }
+            
+            objects.add(obj);
+        }
         return true;
     }
+
 
  
     /**
      * Actualiza todos los objetos y gestiona interacciones y limpieza.
      */
-    public void update() {
+    public boolean update() {
         // Primero actualizamos todos los objetos
         for (GameObject obj : objects) {
+        
             obj.update();
             doInteractions(obj);
         }
+ 
+ 
         // Limpiamos los objetos muertos
-        clean(); 
+        clean();
+        
+        return true;
+    }
+    
+    public void doInteractions(GameObject obj) {
+        for (int i = 0; i < objects.size() && !interactPred(obj, objects.get(i)); i++);
     }
 
-    public void doInteractions(GameObject obj) {
-        for (GameObject other : objects) 
-            if (obj.isAlive() && obj.interactWith(other) && !other.interactWith(obj)) 
-              break; 
-    }
 
     /**
      * Elimina los objetos marcados como muertos.
@@ -95,9 +119,9 @@ public class GameObjectContainer {
         StringBuilder cellContent = new StringBuilder();
 
         for (GameObject obj : objects) {
-            if (obj.isInPosition(pos)) {
+            if (obj.isInPosition(pos)) 
                 cellContent.append(obj.getIcon());
-            }
+            
         }
 
         // Si no hay ningún objeto en esa posición, mostrar el carácter vacío
@@ -115,10 +139,13 @@ public class GameObjectContainer {
     	for (GameObject ob : objects) {
 			if(ob.isInPosition(pos)&&ob.isSolid()) return true;
 		}
+    	
       return false;
     }
 
-  
+    private boolean interactPred(GameObject obj, GameObject other) {
+        return obj.isAlive() && obj.interactWith(other) && !other.interactWith(obj);
+    }
 
 
     // ============================================================
@@ -129,14 +156,23 @@ public class GameObjectContainer {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         for (GameObject obj : objects) {
-            sb.append(obj.toString()).append(System.lineSeparator());
+            sb.append(obj.toString()).append(Messages.LINE_SEPARATOR);
         }
         return sb.toString();
     }
 
     public void save(PrintWriter outChars) {
-        for (GameObject obj : objects) {
+        for (GameObject obj : objects) 
             outChars.println(obj.save());
-        }
+        
     }
+    
+    public void addActionToMario(Action dir) {
+    	 mario.addAction(dir);
+    } 
+    
+    public boolean marioExists() {
+    	return this.mario != null;
+    }
+    
 }

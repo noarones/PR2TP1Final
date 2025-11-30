@@ -1,25 +1,18 @@
-/**
- *  GRUPO 19 : NOÉ HARIM ARONES DE LA CRUZ
- *  MATEI-CRISTIAN FLOREA
- */
+/* GRUPO 19 : NOÉ HARIM ARONES DE LA CRUZ  ,   MATEI-CRISTIAN FLOREA */
 package tp1.logic;
 import java.io.FileOutputStream;
-import java.io.OutputStream;
+
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import tp1.logic.gameobjects.*;
 import tp1.view.Messages;
-import tp1.exceptions.OffBoardException;
-import tp1.exceptions.PositionParseException;
-import tp1.exceptions.ActionParseException;
 
 import tp1.exceptions.GameLoadException;
 import tp1.exceptions.GameModelException;
-import tp1.exceptions.ObjectParseException;
 
-public class Game implements GameStatus, GameWorld, GameModel {
+public class Game implements GameStatus,GameStatusWriter, GameWorld, GameModel{
     // ===== Configuración del juego =====
     private GameConfiguration conf = FileGameConfiguration.NONE;
 
@@ -33,148 +26,90 @@ public class Game implements GameStatus, GameWorld, GameModel {
     private int nLevel;
     private int points;
     private int lives;
-    private Mario mario;
+    private InitialValues initValues = new InitialValues(100/*Time*/,0/*Points*/,3/*Lives*/);
     private GameObjectContainer gameObjects;
     private List<GameObject> spawnObjects = new ArrayList<>();
     private boolean playerExits = false;
 
     // ===== Constructor =====
     public Game(int nLevel) {
-        initLevel(nLevel);
+        initLevel(nLevel == 6 ? 1 : nLevel);
     }
 
     // ===== Métodos de inicialización de nivel =====
     private void initLevel(int lvl) {
         setInitialGameValues(lvl);
+        
         if(lvl == -1) return;
+        
+        LevelFactory l = new LevelFactory(this);
+        
+        this.gameObjects = l.createLevel(lvl);
 
-        // Construcción del mapa
-        buildBaseGround();
-        buildPlatforms();
-        buildFinalJump();
-        addCharacters(lvl);
     }
 
     private void setInitialGameValues(int lvl) {
         this.nLevel = lvl;
-        this.remainingTime = 100;
-        this.lives = 3;
-        this.points = 0;
+        
         gameObjects = new GameObjectContainer();
+        
+        initValues.applyTo(this);
+        
     }
 
-    /* Construcción del mapa (refactorizado para evitar duplicación) */
-    private void buildBaseGround() {
-        for(int c = 0; c < 15; c++) {
-            gameObjects.add(new Land(this,new Position(13, c)));
-            gameObjects.add(new Land(this,new Position(14, c)));		
-        }
-
-        gameObjects.add(new Land(this,new Position(Game.DIM_Y - 3, 9)));
-        gameObjects.add(new Land(this,new Position(Game.DIM_Y - 3, 12)));
-
-        for (int c = 17; c < Game.DIM_X; c++) {
-            gameObjects.add(new Land(this,new Position(Game.DIM_Y - 2, c)));
-            gameObjects.add(new Land(this,new Position(Game.DIM_Y - 1, c)));		
-        }
-    }
-
-    private void buildPlatforms() {
-        gameObjects.add(new Land(this,new Position(9,2)));
-        gameObjects.add(new Land(this,new Position(9,5)));
-        gameObjects.add(new Land(this,new Position(9,6)));
-        gameObjects.add(new Land(this,new Position(9,7)));
-        gameObjects.add(new Land(this,new Position(5,6)));
-    }
-
-    private void buildFinalJump() {
-        int tamX = 8, tamY = 8;
-        int posIniX = Game.DIM_X - 3 - tamX;
-        int posIniY = Game.DIM_Y - 3;
-
-        for(int col = 0; col < tamX; col++) {
-            for (int fila = 0; fila < col + 1; fila++) {
-                gameObjects.add(new Land(this,new Position(posIniY - fila, posIniX + col)));
-            }
-        }
-    }
-
-    private void addCharacters(int lvl) {
-        this.mario = new Mario(this, new Position(Game.DIM_Y - 3, 0));
-        gameObjects.add(this.mario);
-
-        gameObjects.add(new Goomba(this, new Position(0, 19)));
-        if(lvl == 1 || lvl == 2) {
-            gameObjects.add(new Goomba(this, new Position(4, 6)));
-            gameObjects.add(new Goomba(this, new Position(12, 6)));
-            gameObjects.add(new Goomba(this, new Position(12, 8)));
-            gameObjects.add(new Goomba(this, new Position(10, 10)));
-            gameObjects.add(new Goomba(this, new Position(12, 11)));
-            gameObjects.add(new Goomba(this, new Position(12, 14)));
-        }
-        if(lvl == 2) {
-            gameObjects.add(new Box(this, new Position(9,4)));
-            gameObjects.add(new Mushroom(this, new Position(12,8)));
-            gameObjects.add(new Mushroom(this, new Position(2,20)));
-        }
-
-        gameObjects.add(new ExitDoor(this,new Position(Game.DIM_Y - 3, Game.DIM_X - 1)));
-    }
 
     // ===== Métodos de reinicio del juego =====
     public void reset(int nLevel, boolean noArguments) {
-        //Si no hay argumentos y se está usando un fichero de configuración cargar ese fichero otra vez
-        if (noArguments && this.conf != FileGameConfiguration.NONE) {
-            handleConfigFile();
-        }
-        else {
-            //Si hay argumentos, se actualiza el valor del nivel
-        	if (!noArguments) {
-        		this.nLevel = nLevel;
-            }
-            handleInternalMap();
-            this.conf = FileGameConfiguration.NONE;
-        }
+
+        if (usingFile(noArguments)) handleConfigFile();
+        
+        else handleInternalMap(noArguments,nLevel);
+            
     }
 
-    private void handleInternalMap() {
-        if (this.nLevel != -1) { //Si no es el mapa -1 se guardan los valores de vida y puntos
-            int pointsAux = this.points, livesAux = this.lives;
-            initLevel(this.nLevel);
-            points = pointsAux; 
-            lives = livesAux;
-        }
-        else { //Si es el mapa -1 se reinicia todo
-            initLevel(this.nLevel);
-        }
+
+    
+    private void handleInternalMap(boolean noArguments, int nLevel) {
+    	
+    	this.nLevel = noArguments ? this.nLevel : nLevel;
+    	
+    	int p = this.points, l = this.lives;
+    	
+    	initLevel(this.nLevel);
+    	
+        if (this.nLevel != -1)  
+          initValues.applyTo(this,p,l);
+
     }
 
     private void handleConfigFile() {
-        int pointsAux = this.points, livesAux = this.lives;
-        this.remainingTime = this.conf.getRemainingTime();
-        this.points = this.conf.getPoints();
-        this.lives = this.conf.getNumLives();
+
+        this.conf.getInitialValues().applyTo(this, points, lives);
+      
         this.gameObjects = this.conf.getGameObjects();
-        setAsMainCharacter(this.conf.getMario());
-        this.gameObjects.add(this.mario);
-        this.points = pointsAux;
-        this.lives = livesAux;
     }
 
+    
+    
     // ===== Actualización del juego =====
     public void update() {
+    	
         this.remainingTime--;
-        if (!isFinished()) {
-            gameObjects.update();
-            if(!spawnObjects.isEmpty()) addSpawns();		
-        }
+        
+        if (updatePred());		
+        
     }
-
-    private void addSpawns() {
-        for (GameObject o : spawnObjects) {
+   
+    
+    private boolean addSpawns() {
+        
+    	for (GameObject o : spawnObjects) 
             if (o != null) gameObjects.add(o);
-        }
+        
+        
         spawnObjects.clear();
+        
+        return true;
     }
 
     public void checkInteractions(GameObject obj) {
@@ -183,20 +118,20 @@ public class Game implements GameStatus, GameWorld, GameModel {
 
     // ===== Métodos de Mario =====
     public void marioExited() {
-        this.points += this.remainingTime * 10;
-        this.won = true;
-        this.remainingTime = 0;
+        addPoints(remainingTime * 10);
+        won = true;
+        remainingTime = 0;
     }
 
     public void addAction(Action act) {
-        if (mario != null) {
-            mario.addAction(act);
-        }
+    	 if(gameObjects.marioExists())
+            this.gameObjects.addActionToMario(act);
+
     }
 
     // ===== Gestión de vidas =====
     public void removeLife() {
-        this.lives = this.lives - 1;
+        this.lives--;
     }
 
     // ===== Métodos de colisiones y límites =====
@@ -249,6 +184,10 @@ public class Game implements GameStatus, GameWorld, GameModel {
         this.playerExits = true;
     }
 
+    public void addPoints(int p) {
+        this.points += p;
+    }
+    
     public int remainingTime() {
         return this.remainingTime;
     }
@@ -257,52 +196,60 @@ public class Game implements GameStatus, GameWorld, GameModel {
         return this.points;
     }
 
-    public void addPoints(int p) {
-        this.points += p;
-    }
-
     public int numLives() {
         return this.lives;
     }
+    
+    
+    public void setRemainingTime(int time) {
+       this.remainingTime = time;
+    }
 
+    public void setPoints(int points) {
+        this.points = points;
+    }
+
+    public void setNumLives(int lives) {
+       this.lives = lives;
+    }
+    
+   
     @Override
     public String toString() {
-        return "Mario Bros 2.0";
+        return Messages.GAME_NAME;
     }
 
     // ===== Gestión de objetos del juego =====
 
     @Override
-    public boolean addGameObject(String[] objectDescription, String Mode)
-            throws GameModelException{
+    public boolean addGameObject(String[] objectDescription, String Mode) throws GameModelException {
 
-    
         GameObject o = GameObjectFactory.parse(objectDescription, this);
     	
-    
-     
-
-        if (Mode.equalsIgnoreCase("spawn")) {
+        if (Mode.equalsIgnoreCase("spawn")) 
             spawnObjects.add(o);
-        } else {
+        else 
             gameObjects.add(o);
-        }
+        
         return true;
     }
 
+    
+    
 
     public String positionToString(int col, int row) {
         return gameObjects.positionToString(new Position(row,col));
     }
 
+    
     // ===== Gestión del guardado =====
     @Override
     public void save(String fileName) throws GameModelException {
         try(PrintWriter outChars = new PrintWriter(new OutputStreamWriter(new FileOutputStream(fileName), "UTF-8"))) {
-            // 1️⃣ Guardar primera línea: tiempo, puntos, vidas
-            outChars.println(Integer.toString(this.remainingTime) + " " + Integer.toString(this.points) + " " + Integer.toString(this.lives));
+            //Guardar primera línea: tiempo, puntos, vidas
+        	  outChars.println(Integer.toString(this.remainingTime) + " " + Integer.toString(this.points) + " " + Integer.toString(this.lives));
 
-        // 2️⃣ Guardar todos los objetos del juego
+        //Guardar 
             gameObjects.save(outChars);
         }
         catch (Exception e) {
@@ -312,18 +259,28 @@ public class Game implements GameStatus, GameWorld, GameModel {
 
     // ===== Gestión del cargado =====
     public void load(String fileName) throws GameLoadException {
+    	
         this.conf = new FileGameConfiguration(fileName, this);
-        this.remainingTime = this.conf.getRemainingTime();
-        this.points = this.conf.getPoints();
-        this.lives = this.conf.getNumLives();
+        
+        this.conf.getInitialValues().applyTo(this);
+       
         this.gameObjects = this.conf.getGameObjects();
-        setAsMainCharacter(this.conf.getMario());
-        this.gameObjects.add(this.mario);
+    
+
     }
 
-    // ===== Setters =====
-    @Override
-    public void setAsMainCharacter(Mario mario) {
-        this.mario = mario;
+    
+    //Pred
+    private boolean updatePred() {
+    	return !isFinished() && gameObjects.update() && !spawnObjects.isEmpty() && addSpawns();
     }
+    
+    private boolean usingFile(boolean noArgs) {
+    	return noArgs && this.conf != FileGameConfiguration.NONE;
+    }
+
+    
+
+
+    
 }

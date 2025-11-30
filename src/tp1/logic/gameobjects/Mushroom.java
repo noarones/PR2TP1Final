@@ -16,9 +16,15 @@ public class Mushroom extends MovingObject{
     // ==========================================================
     public Mushroom(GameWorld game, Position pos) {
         super(game, pos);
-        setInitial(Action.RIGHT);
+        setInitial(Action.RIGHT,Action.RIGHT);
+        
     }
 
+    public Mushroom(Mushroom m) {
+        super(m.game, m.pos);
+        setInitial(m.dir,m.lastDir);
+    }
+    
     Mushroom() {
         super(null, null);
     }
@@ -30,10 +36,14 @@ public class Mushroom extends MovingObject{
         return Messages.MUSHROOM;
     }
 
-
     private void setInitial(Action dir) {
     	this.dir = dir == null ?  Action.RIGHT : dir ;
-    	this.lastDir = dir;
+    	this.lastDir = this.dir;
+    }
+    
+    private void setInitial(Action dir, Action lastDir) {
+    	this.dir = dir == null ?  Action.RIGHT : dir ;
+    	this.lastDir = lastDir;
     }
 
     // ==========================================================
@@ -60,11 +70,7 @@ public class Mushroom extends MovingObject{
     // ==========================================================
     @Override
     public boolean interactWith(GameItem item) {
-        boolean canInteract = item.isInPosition(this.pos);
-        if (canInteract) {
-            return item.receiveInteraction(this);
-        }
-        return canInteract;
+    	return super.canInteract(item) && item.receiveInteraction(this);
     }
 
 
@@ -78,10 +84,14 @@ public class Mushroom extends MovingObject{
 
     @Override
     protected GameObject create(String[] words, GameWorld game, Position pos) throws ObjectParseException{
-        Mushroom mushroom = new Mushroom(game, pos);
-try {
-        mushroom.setInitial(ParamParser.parseDirection(words, 2));
-}
+        
+    	Mushroom mushroom = new Mushroom(game, pos);
+    	
+        try {
+        	
+        	mushroom.setInitial(ParamParser.parseDirection(words, 2));
+        	
+        }
         catch(ActionParseException a) {
         	throw new ObjectParseException( Messages.UNKNOWN_MOVING_DIRECTION.formatted(String.join("", words)), a);
         }
@@ -90,20 +100,13 @@ try {
 
     @Override
     public GameObject clone() {
-        Mushroom clone = new Mushroom(this.game, this.pos);
-        clone.dir = this.dir;
-        clone.lastDir = this.lastDir;
-        return clone;
+
+        return new Mushroom(this);
     }
 
     @Override
     public String save() {
-    	String dirAux;
-    	if (this.dir== Action.DOWN || this.dir == Action.UP)
-    		dirAux = this.lastDir.toString();
-    	else
-    		dirAux = this.dir.toString();
-        return this.pos.toString() + " " + "Mushroom" + " " + dirAux;
+    	 return "%s %s %s".formatted(pos,this,dirStr());
     }
 
 

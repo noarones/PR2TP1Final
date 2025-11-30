@@ -1,8 +1,11 @@
+/* GRUPO 19 : NOÉ HARIM ARONES DE LA CRUZ  ,   MATEI-CRISTIAN FLOREA */
 package tp1.exceptions;
 
 public class ActionParseException extends GameParseException {
 
-    public ActionParseException(String message) {
+    private static final long serialVersionUID = 9123113903640416197L;
+
+	public ActionParseException(String message) {
         super(message);
     }
 

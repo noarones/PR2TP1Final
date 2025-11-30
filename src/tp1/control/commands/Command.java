@@ -1,10 +1,6 @@
-/**
- *  GRUPO 19 : NOÉ HARIM ARONES DE LA CRUZ
-MATEI-CRISTIAN FLOREA
- */
+/* GRUPO 19 : NOÉ HARIM ARONES DE LA CRUZ  ,   MATEI-CRISTIAN FLOREA */
 package tp1.control.commands;
 
-import tp1.exceptions.ActionParseException;
 import tp1.exceptions.CommandExecuteException;
 import tp1.exceptions.CommandParseException;
 import tp1.logic.GameModel;

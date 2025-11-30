@@ -1,7 +1,4 @@
-/**
- *  GRUPO 19 : NOÉ HARIM ARONES DE LA CRUZ
-MATEI-CRISTIAN FLOREA
- */
+/* GRUPO 19 : NOÉ HARIM ARONES DE LA CRUZ  ,   MATEI-CRISTIAN FLOREA */
 package tp1.control.commands;
 
 import tp1.exceptions.CommandParseException;
@@ -16,11 +13,9 @@ public abstract class NoParamsCommand extends AbstractCommand {
     @Override
     public Command parse(String[] commandWords) throws CommandParseException {
 
-        if (commandWords.length > 1 && matchCommandName(commandWords[0])) {
-            // nombre correcto, pero sobran parámetros
+        if (commandWords.length > 1 && matchCommandName(commandWords[0])) 
             throw new CommandParseException(Messages.COMMAND_INCORRECT_PARAMETER_NUMBER);
-        }
-
+        
         return commandWords.length == 1 && matchCommandName(commandWords[0]) ? create() : null;
     }
 

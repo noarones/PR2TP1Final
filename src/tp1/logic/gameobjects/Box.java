@@ -4,14 +4,12 @@
  */
 package tp1.logic.gameobjects;
 
-import tp1.logic.Action;
+
 import tp1.logic.GameItem;
 import tp1.logic.GameWorld;
 import tp1.logic.Position;
 import tp1.view.Messages;
-import tp1.exceptions.OffBoardException;
-import tp1.exceptions.PositionParseException;
-import tp1.exceptions.ActionParseException;
+
 import tp1.exceptions.GameModelException;
 import tp1.exceptions.ObjectParseException;
 public class Box extends GameObject {
@@ -25,6 +23,11 @@ public class Box extends GameObject {
         setInitial(abierto);
     }
 
+    public Box(GameWorld game, Position pos, boolean abierto) {
+        super(game, pos);
+        setInitial(abierto);
+    }
+    
     Box() {
         super(null,null);
     }
@@ -57,29 +60,27 @@ public class Box extends GameObject {
     // ===== Interacciones con otros objetos =====
     @Override
     public boolean interactWith(GameItem item) {
-        boolean canInteract = (!item.isBig() && item.isInPosition(this.pos.under())) ||
-                              (item.isBig() && (item.isInPosition(this.pos.under()) || item.isInPosition(this.pos)));
-        if (canInteract) {
-            return item.receiveInteraction(this);
-        }
-        return false;
+        return super.interactWith(item) &&  item.receiveInteraction(this);
     }
 
     @Override
     public boolean receiveInteraction(Mario obj) {
-        if (!abierto) {
-            abierto = true;
-            game.addPoints(points);
-            try {
-                game.addGameObject(new String[] { pos.up().toString(), "Mushroom" }, "spawn");
-            } catch (GameModelException e) {
-            
-            }
-            return true;
-        }
-        return false;
+
+        if (abierto) return false;
+
+        abierto = true;
+        game.addPoints(points);
+
+        try {
+            game.addGameObject(
+                new String[] { pos.up().toString(), "Mushroom" },
+                "spawn"
+            );
+        } catch (GameModelException ignored) { }
+
+        return true;
     }
-    
+
 
 
     // ===== Colisión =====
@@ -90,18 +91,20 @@ public class Box extends GameObject {
 
     // ===== Creación dinámica =====
     @Override
-
-    protected GameObject create(String[] words, GameWorld game, Position pos) throws GameModelException{
-
-
-    	
+    
+    protected GameObject create(String[] words, GameWorld game, Position pos) throws GameModelException {
+    
     	if(words.length > 3)
     		throw new ObjectParseException(Messages.OBJECT_PARSE_ERROR.formatted(String.join(" ", words)));
+        
+        if(words.length > 2 &&!statusValido(words[2]))
+        	throw new ObjectParseException(Messages.INVALID_BOX_STATUS.formatted(String.join(" ", words)));
+        
+   
         Box box = new Box(game, pos);
         
-        if(!statusValido(words[2]))
-        	throw new ObjectParseException(Messages.INVALID_BOX_STATUS.formatted(String.join(" ", words)));
-        box.setInitial(ParamParser.parseBoolean(words, 2, "empty", "e", "full", "f", false));
+    	box.setInitial(ParamParser.parseBoolean(words, 2, "empty", "e", "full", "f", false));
+        
         return box;
     }
 
@@ -113,14 +116,20 @@ public class Box extends GameObject {
 
     @Override
     public GameObject clone() {
-        Box clone = new Box(this.game, this.pos);
-        clone.abierto = this.abierto;
-        return clone;
+        return new Box(this.game, this.pos, this.abierto);
     }
 
+    
+    public String statusStr() {
+    	return abierto ? "Empty" : "Full";
+    }
+    
+    protected boolean canInteract(GameItem item) {
+    	return item.isInPosition(this.pos.under()) || item.isInPosition(this.pos);
+    }
+    
     @Override
     public String save() {
-        String statusStr = abierto ? "Empty" : "Full";
-        return this.pos.toString() + " " + this.toString() + " " + statusStr;
+        return "%s %s %s".formatted(pos,this,statusStr());
     }
 }

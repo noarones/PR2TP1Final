@@ -4,7 +4,7 @@
  */
 package tp1.logic.gameobjects;
 
-import tp1.exceptions.ActionParseException;
+
 import tp1.exceptions.ObjectParseException;
 import tp1.logic.GameItem;
 import tp1.logic.GameWorld;
@@ -21,12 +21,6 @@ public class Land extends GameObject{
 	Land() {
 		super(null,null);
 	}
-	
-	@Override
-	public boolean interactWith(GameItem item) {
-		return false;
-	}
-
 	
 
 	@Override
@@ -53,18 +47,18 @@ public class Land extends GameObject{
 	protected GameObject create(String[] words, GameWorld game, Position pos) throws ObjectParseException{
 		if(words.length >= 3) 
     		throw new ObjectParseException(Messages.OBJECT_PARSE_ERROR.formatted(String.join(" ", words)));
+		
 		return new Land(game,pos);
 	}
 
 	@Override
 	public GameObject clone() {
-		Land clone = new Land(this.game, this.pos);
-		return clone;
+		return new Land(this.game, this.pos);
 	}
 
 	@Override
 	public String save() {
-		return this.pos.toString() + " " + this.toString();
+		return "%s %s".formatted(pos,this);
 	}
 
 }

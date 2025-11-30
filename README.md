@@ -12,6 +12,13 @@ aplica directamente en game)
 
 --Finalmente aplique los cambios que propuso inicialmente el profe en la correccion de PR2
 
+--Clase Mario reorganizada , quitando logica innecesaria
+
+--IMPORTANTE: Se ha reducido Game y se ha utilizado una factoria de niveles para inicializar los mapas. Por si en el examen piden crear un mapa nuevo o algo asi.
+
+--Ahora se utiliza una interfaz para el Mario que se ve desde container MarioPlayer.
+
+--NuevaInterfaz GameStatusWriter que hereda de GameStatus para poder aplicar cambios en los atributos de game. 
 
 Falta: 
  --solo comportamiento opcional de mario (test opcional) .

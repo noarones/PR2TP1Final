@@ -22,7 +22,7 @@ public class GameObjectContainer {
     // == Atributos ===============================================
     // ============================================================
     private List<GameObject> objects;
-    private Mario mario;
+    private MarioPlayer mario; //La interfaz de mario que solo permite anadir acciones no Modificar mario.
 
     // ============================================================
     // == Constructor =============================================
@@ -40,7 +40,7 @@ public class GameObjectContainer {
 		        this.objects.add(cloned);
 
 		        if (cloned.isMario()) 
-		            this.mario = (Mario) cloned;
+		            this.mario = (MarioPlayer) cloned;
 		        
 		        
 	    }
@@ -56,7 +56,7 @@ public class GameObjectContainer {
     public boolean add(GameObject obj) {
     	
         if (obj != null) {
-        	if(obj.isMario()) this.mario = (Mario) obj;
+        	if(obj.isMario()) this.mario = (MarioPlayer) obj;
                 this.objects.add(obj);
             
         }
@@ -67,7 +67,7 @@ public class GameObjectContainer {
     /**
      * Actualiza todos los objetos y gestiona interacciones y limpieza.
      */
-    public void update() {
+    public boolean update() {
         // Primero actualizamos todos los objetos
         for (GameObject obj : objects) {
         
@@ -77,14 +77,15 @@ public class GameObjectContainer {
  
  
         // Limpiamos los objetos muertos
-        clean(); 
+        clean();
+        
+        return true;
+    }
+    
+    public void doInteractions(GameObject obj) {
+        for (int i = 0; i < objects.size() && !interactPred(obj, objects.get(i)); i++);
     }
 
-    public void doInteractions(GameObject obj) {
-        for (GameObject other : objects) 
-            if (obj.isAlive() && obj.interactWith(other) && !other.interactWith(obj)) 
-              break; 
-    }
 
     /**
      * Elimina los objetos marcados como muertos.
@@ -111,9 +112,9 @@ public class GameObjectContainer {
         StringBuilder cellContent = new StringBuilder();
 
         for (GameObject obj : objects) {
-            if (obj.isInPosition(pos)) {
+            if (obj.isInPosition(pos)) 
                 cellContent.append(obj.getIcon());
-            }
+            
         }
 
         // Si no hay ningún objeto en esa posición, mostrar el carácter vacío
@@ -131,10 +132,13 @@ public class GameObjectContainer {
     	for (GameObject ob : objects) {
 			if(ob.isInPosition(pos)&&ob.isSolid()) return true;
 		}
+    	
       return false;
     }
 
-  
+    private boolean interactPred(GameObject obj, GameObject other) {
+        return obj.isAlive() && obj.interactWith(other) && !other.interactWith(obj);
+    }
 
 
     // ============================================================
@@ -151,12 +155,12 @@ public class GameObjectContainer {
     }
 
     public void save(PrintWriter outChars) {
-        for (GameObject obj : objects) {
+        for (GameObject obj : objects) 
             outChars.println(obj.save());
-        }
+        
     }
     
-    public Mario getMario() {
+    public MarioPlayer getMario() {
     	return this.mario;
     } 
     

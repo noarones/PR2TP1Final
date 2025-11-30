@@ -7,6 +7,7 @@ public class InitialValues {
 	private int remainingTime;
 	private int points;
 	private int numLives;
+
 	
 	public InitialValues(int time, int points, int numLives) {
 	 
@@ -17,6 +18,15 @@ public class InitialValues {
 	}
 	
 
+	public InitialValues(InitialValues v) {
+		 
+		this.remainingTime = v.remainingTime;
+	    this.points = v.points;
+	    this.numLives = v.numLives;
+		
+	}
+	
+	
 	public int getNumLives() {
 		return numLives;
 	}
@@ -29,10 +39,21 @@ public class InitialValues {
 		return remainingTime;
 	}
 	
-	public void applyTo(Game g) {
+	public void applyTo(GameStatusWriter g) {
 		g.setNumLives(numLives);
 		g.setPoints(points);
 		g.setRemainingTime(remainingTime);
+	    
 	}
+	
+	public void applyTo(GameStatusWriter g, int points, int lives) {
+		g.setNumLives(lives);
+		g.setPoints(points);
+		g.setRemainingTime(remainingTime);
+	    
+	}
+	
+
+	
 	
 }

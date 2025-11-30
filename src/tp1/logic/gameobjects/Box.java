@@ -60,13 +60,7 @@ public class Box extends GameObject {
     // ===== Interacciones con otros objetos =====
     @Override
     public boolean interactWith(GameItem item) {
-        boolean canInteract =  item.isInPosition(this.pos.under()) || item.isInPosition(this.pos);
-        
-        if (canInteract) 
-            return item.receiveInteraction(this);
-        
-        
-        return false;
+        return super.interactWith(item) &&  item.receiveInteraction(this);
     }
 
     @Override
@@ -128,6 +122,10 @@ public class Box extends GameObject {
     
     public String statusStr() {
     	return abierto ? "Empty" : "Full";
+    }
+    
+    protected boolean canInteract(GameItem item) {
+    	return item.isInPosition(this.pos.under()) || item.isInPosition(this.pos);
     }
     
     @Override

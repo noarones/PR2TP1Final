@@ -23,11 +23,7 @@ public class ExitDoor extends GameObject {
     }
 
     // ===== Interacciones con otros objetos =====
-    @Override
-    public boolean interactWith(GameItem item) {
-        return false;
-    }
-    
+
     @Override
     public boolean receiveInteraction(Mario obj) {
         return obj.marioExited();

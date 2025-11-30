@@ -134,7 +134,9 @@ public abstract class GameObject implements GameItem {
         
     }
 
-    
+    protected boolean canInteract(GameItem item) {
+    	return item.isInPosition(pos);
+    };   
     
     
     public boolean isMario(){
@@ -158,5 +160,7 @@ public abstract class GameObject implements GameItem {
 	public  boolean receiveInteraction(Mushroom obj) { return false; }
 	
 	public  boolean receiveInteraction(Box obj) { return false; }
-
+	
+	public boolean interactWith(GameItem item) { return canInteract(item); }
+ 
 }

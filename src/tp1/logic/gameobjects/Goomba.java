@@ -65,7 +65,7 @@ public class Goomba extends MovingObject {
 
     @Override
     public boolean interactWith(GameItem item) {        
-        return item.isInPosition(this.pos) ? item.receiveInteraction(this) : false;
+        return super.interactWith(item) && item.receiveInteraction(this);
     }
 
 

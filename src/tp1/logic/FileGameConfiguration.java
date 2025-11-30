@@ -37,7 +37,7 @@ public class FileGameConfiguration implements GameConfiguration {
         		new BufferedReader(new InputStreamReader(new FileInputStream(fileName), "UTF-8"))) {
 	  
 	        //LEE INITIALVALUES Y GUARDA VALORES
-	       readInitialValues(inChars);
+        	this.initialValues = parseGameState(inChars.readLine()); 
 	       
 	       //LEE OBJECT VALUES RESTANTES
 	       readObjectValues(inChars, game,fileName);
@@ -51,6 +51,7 @@ public class FileGameConfiguration implements GameConfiguration {
 
     //Parsea primera linea
 	private InitialValues parseGameState(String line) throws GameLoadException {
+		
 		String[] state = line.trim().split("\\s+");
 		
 		if (state.length != 3) 
@@ -67,14 +68,7 @@ public class FileGameConfiguration implements GameConfiguration {
 		}
 	}
 	
-	
-	private void readInitialValues(BufferedReader inChars) throws IOException, GameLoadException {
-		 String l = inChars.readLine();
-	       
-	        if (l != null) 
-	        	this.initialValues = parseGameState(l);  
-	}
-	
+
 	private void readObjectValues(BufferedReader inChars, GameWorld game,String fileName) throws GameLoadException, IOException {
 		
 		   String l;
@@ -92,7 +86,7 @@ public class FileGameConfiguration implements GameConfiguration {
 	
 	
 	public InitialValues getInitialValues() {
-	   return this.initialValues; 
+	   return new InitialValues(this.initialValues); 
 	}
 
     @Override

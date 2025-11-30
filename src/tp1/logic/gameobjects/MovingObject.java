@@ -90,6 +90,6 @@ public abstract class MovingObject extends GameObject{
 	
 	protected void automaticMove() {};
 
-	protected void handleDeath() {};
+	protected boolean handleDeath() {return true;};
 
 }

@@ -22,12 +22,6 @@ public class Land extends GameObject{
 		super(null,null);
 	}
 	
-	@Override
-	public boolean interactWith(GameItem item) {
-		return false;
-	}
-
-	
 
 	@Override
 	public boolean isSolid() {

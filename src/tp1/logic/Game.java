@@ -12,7 +12,7 @@ import tp1.view.Messages;
 import tp1.exceptions.GameLoadException;
 import tp1.exceptions.GameModelException;
 
-public class Game implements GameStatus, GameWorld, GameModel {
+public class Game implements GameStatus,GameStatusWriter, GameWorld, GameModel{
     // ===== Configuración del juego =====
     private GameConfiguration conf = FileGameConfiguration.NONE;
 
@@ -26,7 +26,7 @@ public class Game implements GameStatus, GameWorld, GameModel {
     private int nLevel;
     private int points;
     private int lives;
-
+    private InitialValues initValues = new InitialValues(100/*Time*/,0/*Points*/,3/*Lives*/);
     private GameObjectContainer gameObjects;
     private List<GameObject> spawnObjects = new ArrayList<>();
     private boolean playerExits = false;
@@ -39,80 +39,24 @@ public class Game implements GameStatus, GameWorld, GameModel {
     // ===== Métodos de inicialización de nivel =====
     private void initLevel(int lvl) {
         setInitialGameValues(lvl);
+        
         if(lvl == -1) return;
+        
+        LevelFactory l = new LevelFactory(this);
+        
+        this.gameObjects = l.createLevel(lvl);
 
-        // Construcción del mapa
-        buildBaseGround();
-        buildPlatforms();
-        buildFinalJump();
-        addCharacters(lvl);
     }
 
     private void setInitialGameValues(int lvl) {
         this.nLevel = lvl;
-        this.remainingTime = 100;
-        this.lives = 3;
-        this.points = 0;
-        gameObjects = new GameObjectContainer();
-    }
-
-    /* Construcción del mapa (refactorizado para evitar duplicación) */
-    private void buildBaseGround() {
-        for(int c = 0; c < 15; c++) {
-            gameObjects.add(new Land(this,new Position(13, c)));
-            gameObjects.add(new Land(this,new Position(14, c)));		
-        }
-
-        gameObjects.add(new Land(this,new Position(Game.DIM_Y - 3, 9)));
-        gameObjects.add(new Land(this,new Position(Game.DIM_Y - 3, 12)));
-
-        for (int c = 17; c < Game.DIM_X; c++) {
-            gameObjects.add(new Land(this,new Position(Game.DIM_Y - 2, c)));
-            gameObjects.add(new Land(this,new Position(Game.DIM_Y - 1, c)));		
-        }
-    }
-
-    private void buildPlatforms() {
-        gameObjects.add(new Land(this,new Position(9,2)));
-        gameObjects.add(new Land(this,new Position(9,5)));
-        gameObjects.add(new Land(this,new Position(9,6)));
-        gameObjects.add(new Land(this,new Position(9,7)));
-        gameObjects.add(new Land(this,new Position(5,6)));
-    }
-
-    private void buildFinalJump() {
-        int tamX = 8;
-        int posIniX = Game.DIM_X - 3 - tamX;
-        int posIniY = Game.DIM_Y - 3;
-
-        for(int col = 0; col < tamX; col++) {
-            for (int fila = 0; fila < col + 1; fila++) {
-                gameObjects.add(new Land(this,new Position(posIniY - fila, posIniX + col)));
-            }
-        }
-    }
-
-    private void addCharacters(int lvl) {
         
-        gameObjects.add(new Mario(this, new Position(Game.DIM_Y - 3, 0)));
-
-        gameObjects.add(new Goomba(this, new Position(0, 19)));
-        if(lvl == 1 || lvl == 2) {
-            gameObjects.add(new Goomba(this, new Position(4, 6)));
-            gameObjects.add(new Goomba(this, new Position(12, 6)));
-            gameObjects.add(new Goomba(this, new Position(12, 8)));
-            gameObjects.add(new Goomba(this, new Position(10, 10)));
-            gameObjects.add(new Goomba(this, new Position(12, 11)));
-            gameObjects.add(new Goomba(this, new Position(12, 14)));
-        }
-        if(lvl == 2) {
-            gameObjects.add(new Box(this, new Position(9,4)));
-            gameObjects.add(new Mushroom(this, new Position(12,8)));
-            gameObjects.add(new Mushroom(this, new Position(2,20)));
-        }
-
-        gameObjects.add(new ExitDoor(this,new Position(Game.DIM_Y - 3, Game.DIM_X - 1)));
+        gameObjects = new GameObjectContainer();
+        
+        initValues.applyTo(this);
+        
     }
+
 
     // ===== Métodos de reinicio del juego =====
     public void reset(int nLevel, boolean noArguments) {
@@ -123,62 +67,49 @@ public class Game implements GameStatus, GameWorld, GameModel {
             
     }
 
-    private boolean usingFile(boolean noArgs) {
-    	return noArgs && this.conf != FileGameConfiguration.NONE;
-    }
+
     
     private void handleInternalMap(boolean noArguments, int nLevel) {
     	
     	this.nLevel = noArguments ? this.nLevel : nLevel;
     	
-        if (this.nLevel != -1) { 
-        	//Si no es el mapa -1 se guardan los valores de vida y puntos
-            int pointsAux = this.points, livesAux = this.lives;
-            
-            initLevel(this.nLevel);
-            
-            points = pointsAux; 
-            lives = livesAux;
-        }
-        
-        else initLevel(this.nLevel);
+    	int p = this.points, l = this.lives;
+    	
+    	initLevel(this.nLevel);
+    	
+        if (this.nLevel != -1)  
+          initValues.applyTo(this,p,l);
 
     }
 
     private void handleConfigFile() {
-    	
-        int pointsAux = this.points, livesAux = this.lives;
-        
-        
-        this.conf.getInitialValues().applyTo(this);
+
+        this.conf.getInitialValues().applyTo(this, points, lives);
       
         this.gameObjects = this.conf.getGameObjects();
-
-        this.points = pointsAux;
-        this.lives = livesAux;
     }
 
+    
+    
     // ===== Actualización del juego =====
     public void update() {
     	
         this.remainingTime--;
         
-        if (!isFinished()) {
+        if (updatePred());		
         
-        	gameObjects.update();
-            
-        	if(!spawnObjects.isEmpty()) 
-        		addSpawns();		
-        }
     }
-
-    private void addSpawns() {
+   
+    
+    private boolean addSpawns() {
         
-    	for (GameObject o : spawnObjects) {
+    	for (GameObject o : spawnObjects) 
             if (o != null) gameObjects.add(o);
-        }
+        
         
         spawnObjects.clear();
+        
+        return true;
     }
 
     public void checkInteractions(GameObject obj) {
@@ -187,13 +118,13 @@ public class Game implements GameStatus, GameWorld, GameModel {
 
     // ===== Métodos de Mario =====
     public void marioExited() {
-        this.points += this.remainingTime * 10;
-        this.won = true;
-        this.remainingTime = 0;
+        addPoints(remainingTime * 10);
+        won = true;
+        remainingTime = 0;
     }
 
     public void addAction(Action act) {
-       if (this.gameObjects.getMario() != null) 
+    	 if (this.gameObjects.getMario() != null) 
             this.gameObjects.getMario().addAction(act);
 
     }
@@ -285,7 +216,7 @@ public class Game implements GameStatus, GameWorld, GameModel {
    
     @Override
     public String toString() {
-        return "Mario Bros 2.0";
+        return Messages.GAME_NAME;
     }
 
     // ===== Gestión de objetos del juego =====
@@ -316,7 +247,7 @@ public class Game implements GameStatus, GameWorld, GameModel {
     public void save(String fileName) throws GameModelException {
         try(PrintWriter outChars = new PrintWriter(new OutputStreamWriter(new FileOutputStream(fileName), "UTF-8"))) {
             //Guardar primera línea: tiempo, puntos, vidas
-            outChars.println(Integer.toString(this.remainingTime) + " " + Integer.toString(this.points) + " " + Integer.toString(this.lives));
+        	  outChars.println(Integer.toString(this.remainingTime) + " " + Integer.toString(this.points) + " " + Integer.toString(this.lives));
 
         //Guardar 
             gameObjects.save(outChars);
@@ -338,8 +269,15 @@ public class Game implements GameStatus, GameWorld, GameModel {
 
     }
 
-
     
+    //Pred
+    private boolean updatePred() {
+    	return !isFinished() && gameObjects.update() && !spawnObjects.isEmpty() && addSpawns();
+    }
+    
+    private boolean usingFile(boolean noArgs) {
+    	return noArgs && this.conf != FileGameConfiguration.NONE;
+    }
 
     
 

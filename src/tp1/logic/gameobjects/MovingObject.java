@@ -39,39 +39,37 @@ public abstract class MovingObject extends GameObject{
 	}
 
     protected void horizontalMove() {
-        dir = (dir == Action.DOWN) ? lastDir : dir;
-        moveHorizontally();
-        saveLastDir(dir);
+    	
+    	if (dir == Action.STOP) return;
+        dir = (Action.isXMove(dir)) ? dir : lastDir;
+        moveX(this.dir);
+       saveLastDir(dir);
     }
 
 
     /** Controla el movimiento horizontal y el rebote ante obstáculos. */
-    private boolean moveHorizontally() {
-    	
-        return isBlockedHorizontally() ? reverseDirection() : (move(dir));
+    protected boolean moveX(Action d) {
+    	if(canMove(d)) { move(d); this.dir = d;} 
+    	else reverseDirection(d);
+    return true;
     }
+    
+ 
     
     private boolean saveLastDir(Action dir) {
     	lastDir = dir;
     	return true;
     }
 
-    /** Devuelve true si el movimiento horizontal está bloqueado. */
-    private boolean isBlockedHorizontally() {
-        return switch (dir) {
-            case LEFT -> game.solidLeft(pos) || game.nextToLeftLimit(pos);
-            case RIGHT -> game.solidRight(pos) || game.nextToRightLimit(pos);
-            default -> false;
-        };
-    }
 
     /** Invierte la dirección actual y actualiza la última dirección válida. */
-    private boolean reverseDirection() {
-        dir = (dir == Action.LEFT) ? Action.RIGHT : Action.LEFT;
+    protected boolean reverseDirection(Action dir) {
+    	lastDir = dir;
+    	this.dir = Action.oppositeAction(dir);
+        
         return true;
     }
 
-    
   
 	protected void fall() {
 
@@ -81,10 +79,45 @@ public abstract class MovingObject extends GameObject{
 
 	}
 
+	//Puede moverse un objeto desde una posicion concreta(Generalizar movimiento)
+	   protected boolean canMove(Action a, Position pos) {
+	    	switch(a) {
+	    	case LEFT: return  (!game.solidLeft(pos)  && !game.nextToLeftLimit(pos));
+	    	case RIGHT: return !game.solidRight(pos) && !game.nextToRightLimit(pos);
+	    	case UP: return !game.solidUp(pos);
+	    	case DOWN: return !game.solidUnder(pos);
+	    	
+	    		default:
+	    			return true;
+	    	}
+	    }
+	   
+	   //Puede moverse un objeto desde la posicion actual
+	   protected boolean canMove(Action a) {
+	    	switch(a) {
+	    	case LEFT: return  (!game.solidLeft(pos)  && !game.nextToLeftLimit(pos));
+	    	case RIGHT: return !game.solidRight(pos) && !game.nextToRightLimit(pos);
+	    	case UP: return !game.solidUp(pos);
+	    	case DOWN: return !game.solidUnder(pos);
+	    	
+	    		default:
+	    			return true;
+	    	}
+	    }
+	
 	protected String dirStr() {
 	    
 	    return (this.dir == Action.DOWN || this.dir == Action.UP) ? this.lastDir.toString() : this.dir.toString(); 
 	}
+	
+    protected boolean move(Action dir) {
+    	
+        lastPos = lastPos.copy(pos);
+        pos = pos.move(dir);
+        
+       
+        return true;
+    }
 	
 	protected void saveLastPosition() { lastPos = lastPos.copy(pos); }
 	

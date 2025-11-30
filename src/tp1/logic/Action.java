@@ -46,7 +46,17 @@ public enum Action {
 		return ret;
 	}
 
-	
+	public static Action oppositeAction(Action a) {
+		switch(a) {
+		case LEFT: return Action.RIGHT;
+		case UP:  return Action.DOWN;
+		case DOWN: return Action.UP;
+		case RIGHT: return Action.LEFT;
+		
+		default:
+			return Action.STOP;
+		}
+	}
     
     public static boolean isXMove(Action dir) {
     	return dir == Action.LEFT || dir == Action.RIGHT;

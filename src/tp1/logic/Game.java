@@ -112,8 +112,9 @@ public class Game implements GameStatus,GameStatusWriter, GameWorld, GameModel{
         return true;
     }
 
-    public void checkInteractions(GameObject obj) {
+    public boolean checkInteractions(GameObject obj) {
         gameObjects.doInteractions(obj);
+    return true;
     }
 
     // ===== Métodos de Mario =====

@@ -117,6 +117,7 @@ public class Mario extends MovingObject implements MarioPlayer{
         else automatic();
     }
 
+    
     private void action() {
         boolean XMoved = false;
         boolean movedUp = false;
@@ -139,6 +140,7 @@ public class Mario extends MovingObject implements MarioPlayer{
                 }
             }
         }
+        
         clearActions();
     }
 
@@ -150,7 +152,7 @@ public class Mario extends MovingObject implements MarioPlayer{
     private void handleStop() {
         dir = Action.STOP;
         this.lastDir = Action.STOP;
-        game.checkInteractions(this);
+ 
     }
 
 
@@ -159,110 +161,44 @@ public class Mario extends MovingObject implements MarioPlayer{
     // ===================== MANEJO HORIZONTAL =========================
     // ================================================================
     private boolean handleHorizontal(Action dir, boolean moved, int count) {
-        return horizontalCondition(dir,moved,count) && execHorizontal(dir,moved,count);
+        return (!moved || (this.dir == dir && count < 4 )) && moveX(dir) && game.checkInteractions(this);
     }
-
-    private boolean execHorizontal(Action dir, boolean moved, int count) {
-        if ( !( isDirAvailable(dir,moved,count) && moveHorizontal(dir) ) )
-              changeDirection(dir == Action.LEFT ? Action.RIGHT : Action.LEFT);
-
-        game.checkInteractions(this);
-        
-        return true;
-    }
-
-    private boolean isDirAvailable(Action dir, boolean moved, int count) {
-    	return  (dir == Action.LEFT  && !game.solidLeft(pos)  && !game.nextToLeftLimit(pos))
-             || (dir == Action.RIGHT && !game.solidRight(pos) && !game.nextToRightLimit(pos));
-    }
-
-    private boolean horizontalCondition(Action dir, boolean moved, int count ) {
-    	return !moved || (this.dir == dir && count < 4);
-    }
-
-    private boolean moveHorizontal(Action moveDir) {
-        move(moveDir);
-        lastDir = dir;
-        dir = moveDir;
-        return true;
-    }
-
-    private boolean changeDirection(Action newDir) {
-        lastDir = dir;
-        dir = newDir;
-        return true;
-    }
-
 
 
     // ================================================================
     // ======================= MOVIMIENTO VERTICAL =====================
     // ================================================================
     private boolean handleUp(int verticalCount) {
-        return moveUpAvailable(verticalCount) && moveUp();
+        return canMoveUp(verticalCount) && moveUp();
     }
 
     private void handleDown(boolean movedUp) {
         if (!movedUp) fallVertically();
     }
 
-    private boolean moveUpAvailable(int verticalCount) {
-    	return (verticalCount < 4) && !game.solidUp(isBig() ? pos.up() : pos);
+    private boolean canMoveUp(int verticalCount) {
+    	return (verticalCount < 4) && canMove(Action.UP, isBig() ? pos.up() : pos);
     }
 
     private boolean moveUp() {
     	move(Action.UP);
         isFalling = false;
         game.checkInteractions(this);
-        return true;
+        return true; 
     }
 
     private void fallVertically() {
 
-        if(game.solidUnder(pos)) { handleStop(); return; }
+        if(!canMove(Action.DOWN)) { handleStop(); return; }
         
-        while (!game.solidUnder(pos) && moveDown() && !handleFallenOut()) 
+        while (canMove(Action.DOWN) && move(Action.DOWN) && !handleFallenOut()) 
             game.checkInteractions(this);
     }
 
-    private boolean moveDown() {
-        lastPos = lastPos.copy(pos);
-        pos = pos.move(Action.DOWN);
-        return true;
-    }
 
     private boolean handleFallenOut() {
     	return game.fallenOut(pos) && handleDeath();
     }
-
-
-
-    // ================================================================
-    // ====================== MOVIMIENTO AUTOMÁTICO ====================
-    // ================================================================
-    @Override
-    protected void horizontalMove() {
-        isFalling = false;
-
-        if (dir == Action.STOP) return;
-
-        Action m = (Action.isXMove(dir)) ? dir : lastDir;
-
-        if (m == Action.RIGHT) moveRight();
-        else if (m == Action.LEFT) moveLeft();
-    }
-
-    private void moveRight() {
-        if (!game.solidRight(pos) && !game.nextToRightLimit(pos)) move(Action.RIGHT);
-        else changeDirection(Action.LEFT);
-    }
-
-    private void moveLeft() {
-        if (!game.solidLeft(pos) && !game.nextToLeftLimit(pos)) move(Action.LEFT);
-        else changeDirection(Action.RIGHT);
-    }
-
-
 
     // ================================================================
     // ===================== INTERACCIONES CON OBJETOS =================

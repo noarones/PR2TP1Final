@@ -55,12 +55,6 @@ public abstract class GameObject implements GameItem {
     protected abstract GameObject create(String[] words, GameWorld game, Position pos) throws GameModelException;
 
 
-    // ===== Movimiento =====
-    protected boolean move(Action dir) {
-        pos = pos.move(dir);
-        return true;
-    }
-
     // ===== Manejo de posiciones =====
     protected Position parsePosition(String[] words) throws PositionParseException {
 

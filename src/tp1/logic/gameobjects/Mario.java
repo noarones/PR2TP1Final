@@ -22,7 +22,7 @@ public class Mario extends MovingObject implements MarioPlayer{
     // ================================================================
     private boolean big;
     private List<Action> pendingActions;
-
+  
     
 
     // ================================================================
@@ -160,8 +160,10 @@ public class Mario extends MovingObject implements MarioPlayer{
     // ================================================================
     // ===================== MANEJO HORIZONTAL =========================
     // ================================================================
-    private boolean handleHorizontal(Action dir, boolean moved, int count) {
-        return (!moved || (this.dir == dir && count < 4 )) && moveX(dir) && game.checkInteractions(this);
+    private boolean handleHorizontal(Action dir, boolean moved, int count) {//Debe poder ir a la derecha tanto el cuerpo como la cabeza de Mario (pos.up() && pos)
+        return (!moved || (this.dir == dir && count < 4 )) 
+        		&& moveX(dir, canMove(dir, isBig()? pos.up():pos)&&canMove(dir,pos) ) 
+        		&& game.checkInteractions(this);
     }
 
 
@@ -169,6 +171,7 @@ public class Mario extends MovingObject implements MarioPlayer{
     // ======================= MOVIMIENTO VERTICAL =====================
     // ================================================================
     private boolean handleUp(int verticalCount) {
+ 
         return canMoveUp(verticalCount) && moveUp();
     }
 
@@ -230,6 +233,8 @@ public class Mario extends MovingObject implements MarioPlayer{
 
     @Override
     public boolean receiveInteraction(Box obj) {
+
+    
         return obj.receiveInteraction(this);
     }
 

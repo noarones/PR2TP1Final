@@ -16,7 +16,6 @@ public class Box extends GameObject {
 
     // ===== Estado interno =====
     private boolean abierto = false;
-
     // ===== Constructores =====
     public Box(GameWorld game, Position pos) {
         super(game, pos);
@@ -67,7 +66,7 @@ public class Box extends GameObject {
     public boolean receiveInteraction(Mario obj) {
 
         if (abierto) return false;
-
+        
         abierto = true;
         game.addPoints(points);
 
@@ -124,8 +123,9 @@ public class Box extends GameObject {
     	return abierto ? "Empty" : "Full";
     }
     
+    @Override
     protected boolean canInteract(GameItem item) {
-    	return item.isInPosition(this.pos.under()) || item.isInPosition(this.pos);
+    	return (item.isInPosition(pos.under()) || item.isInPosition(this.pos)) ;
     }
     
     @Override

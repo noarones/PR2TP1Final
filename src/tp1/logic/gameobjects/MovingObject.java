@@ -42,14 +42,14 @@ public abstract class MovingObject extends GameObject{
     	
     	if (dir == Action.STOP) return;
         dir = (Action.isXMove(dir)) ? dir : lastDir;
-        moveX(this.dir);
+        moveX(this.dir, canMove(this.dir));
        saveLastDir(dir);
     }
 
 
     /** Controla el movimiento horizontal y el rebote ante obstáculos. */
-    protected boolean moveX(Action d) {
-    	if(canMove(d)) { move(d); this.dir = d;} 
+    protected boolean moveX(Action d , boolean canMove) {
+    	if(canMove) { move(d); this.dir = d;} 
     	else reverseDirection(d);
     return true;
     }
@@ -84,7 +84,7 @@ public abstract class MovingObject extends GameObject{
 	    	switch(a) {
 	    	case LEFT: return  (!game.solidLeft(pos)  && !game.nextToLeftLimit(pos));
 	    	case RIGHT: return !game.solidRight(pos) && !game.nextToRightLimit(pos);
-	    	case UP: return !game.solidUp(pos);
+	    	case UP: return !game.solidUp(pos) && game.isInBoard(pos.up());
 	    	case DOWN: return !game.solidUnder(pos);
 	    	
 	    		default:
@@ -97,7 +97,7 @@ public abstract class MovingObject extends GameObject{
 	    	switch(a) {
 	    	case LEFT: return  (!game.solidLeft(pos)  && !game.nextToLeftLimit(pos));
 	    	case RIGHT: return !game.solidRight(pos) && !game.nextToRightLimit(pos);
-	    	case UP: return !game.solidUp(pos);
+	    	case UP: return !game.solidUp(pos) && game.isInBoard(pos.up());
 	    	case DOWN: return !game.solidUnder(pos);
 	    	
 	    		default:

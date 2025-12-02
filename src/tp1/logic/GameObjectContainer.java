@@ -95,7 +95,6 @@ public class GameObjectContainer {
         for(GameObject o : objects) {
         	
         	if(o.equals(obj)) continue;
-        	if(o == obj) continue;
         	if(!obj.isAlive()) continue;
         	
      

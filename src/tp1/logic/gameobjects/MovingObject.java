@@ -107,14 +107,13 @@ public abstract class MovingObject extends GameObject{
 	
 	protected String dirStr() {
 	    
-	    return (this.dir == Action.DOWN || this.dir == Action.UP) ? this.lastDir.toString() : this.dir.toString(); 
+	    return (Action.isYMove(dir)) ? this.lastDir.toString() : this.dir.toString(); 
 	}
 	
     protected boolean move(Action dir) {
     	
-        lastPos = lastPos.copy(pos);
+        saveLastPosition();
         pos = pos.move(dir);
-        
        
         return true;
     }

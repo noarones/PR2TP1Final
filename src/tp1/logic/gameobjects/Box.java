@@ -118,16 +118,10 @@ public class Box extends GameObject {
         return new Box(this.game, this.pos, this.abierto);
     }
 
-    
     public String statusStr() {
     	return abierto ? "Empty" : "Full";
     }
-    
-    @Override
-    protected boolean canInteract(GameItem item) {
-    	return (item.isInPosition(pos.under()) || item.isInPosition(this.pos)) ;
-    }
-    
+   
     @Override
     public String save() {
         return "%s %s %s".formatted(pos,this,statusStr());

@@ -250,7 +250,6 @@ public class Game implements GameStatus,GameStatusWriter, GameWorld, GameModel{
             //Guardar primera línea: tiempo, puntos, vidas
         	  outChars.println(Integer.toString(this.remainingTime) + " " + Integer.toString(this.points) + " " + Integer.toString(this.lives));
 
-        //Guardar 
             gameObjects.save(outChars);
         }
         catch (Exception e) {

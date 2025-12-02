@@ -109,7 +109,6 @@ public class Goomba extends MovingObject {
     }
 
 
-
     @Override
     public String save() {
         return "%s %s %s".formatted(pos, this, dirStr());

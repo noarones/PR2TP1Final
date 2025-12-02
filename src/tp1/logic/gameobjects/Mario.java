@@ -180,13 +180,25 @@ public class Mario extends MovingObject implements MarioPlayer{
     }
 
     private boolean canMoveUp(int verticalCount) {
-    	return (verticalCount < 4) && canMove(Action.UP, isBig() ? pos.up() : pos);
+    	return (verticalCount < 4) && tryHit(Action.UP) && canMove(Action.UP, isBig() ? pos.up() : pos);
     }
 
+    //Este metodo evalua las Interacciones provocadas de un movimiento en colision
+    //
+    //Necesario! -> mario no atraviesa solidos por lo que nunca entra en la
+    //posicion de un objeto. Su interaccion voluntaria (a [up][left]....) debe manejarse.
+   
+    private boolean tryHit(Action dir) {
+    	 move(dir);
+    	 game.checkInteractions(this);
+    	 move(Action.oppositeAction(dir));
+    	 
+    	 return true;
+    }
+    
     private boolean moveUp() {
     	move(Action.UP);
         isFalling = false;
-        game.checkInteractions(this);
         return true; 
     }
 
@@ -225,9 +237,12 @@ public class Mario extends MovingObject implements MarioPlayer{
     @Override
     public boolean receiveInteraction(Goomba obj) {
     	if (obj.isInPosition(lastPos.under())) return true;
-        if (obj.isInPosition(this.pos.up())) 
-            return !(this.big = false) && obj.receiveInteraction(this);
-
+        
+    	if(obj.isInPosition(pos.up())) {
+    		this.big = false;
+    		return obj.receiveInteraction(this);
+    	}
+    	
         return !isBig() && handleDeath() || !(this.big = false);
     }
 
@@ -289,8 +304,7 @@ public class Mario extends MovingObject implements MarioPlayer{
     protected boolean handleDeath() {
         game.removeLife();
         dead();
-  
-        
+   
         if (game.numLives() > 0) 
             game.reset(2025,true);
         pendingActions.clear();

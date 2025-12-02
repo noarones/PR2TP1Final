@@ -96,6 +96,7 @@ public class Mushroom extends MovingObject{
         	throw new ObjectParseException( Messages.UNKNOWN_MOVING_DIRECTION.formatted(String.join("", words)), a);
         }
         return mushroom;
+
     }
 
     @Override

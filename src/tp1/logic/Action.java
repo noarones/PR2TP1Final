@@ -69,6 +69,10 @@ public enum Action {
     	return dir == Action.DOWN;
     }
     
+    public static boolean isYMove(Action dir) {
+    	return isDownMove(dir) || isUpMove(dir);
+    }
+    
 	
 	
 	public String toString() {

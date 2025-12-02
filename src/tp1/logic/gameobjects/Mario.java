@@ -79,8 +79,8 @@ public class Mario extends MovingObject implements MarioPlayer{
                   };
     }
 
-    @Override
-    public boolean isBig() {
+ 
+    private boolean isBig() {
         return this.big;
     }
 
@@ -288,11 +288,11 @@ public class Mario extends MovingObject implements MarioPlayer{
     @Override 
     protected boolean handleDeath() {
         game.removeLife();
-        this.dead(); 
+        dead();
+  
+        
         if (game.numLives() > 0) 
             game.reset(2025,true);
-        
-        
         pendingActions.clear();
         return true;
     }
@@ -304,12 +304,9 @@ public class Mario extends MovingObject implements MarioPlayer{
     // ================================================================
     @Override
     protected boolean canInteract(GameItem item) {
-    	return (!isBig() && item.isInPosition(this.pos)) ||
-    		   (isBig() && (item.isInPosition(this.pos.up()) ||
-    		                item.isInPosition(this.pos)));
+    	return isBig() ? item.isInPosition(pos.up()) || item.isInPosition(pos) 
+    			        : item.isInPosition(pos) ;
     }
-
-
 
     // ================================================================
     // ======================== CLON Y SAVE ============================

@@ -137,19 +137,17 @@ public abstract class GameObject implements GameItem {
 
     public abstract GameObject clone();
 
-    public boolean isBig() { return false;}
-    
-	public  boolean receiveInteraction(Land obj) { return false; }
+	public  boolean receiveInteraction(Land obj) { return true; }
 	
-	public  boolean receiveInteraction(ExitDoor obj) { return false; }
+	public  boolean receiveInteraction(ExitDoor obj) { return true; }
 	
-	public  boolean receiveInteraction(Mario obj) { return false; }
+	public  boolean receiveInteraction(Mario obj) { return true; }
 	
-	public  boolean receiveInteraction(Goomba obj) { return false; }
+	public  boolean receiveInteraction(Goomba obj) { return true; }
 	
-	public  boolean receiveInteraction(Mushroom obj) { return false; }
+	public  boolean receiveInteraction(Mushroom obj) { return true; }
 	
-	public  boolean receiveInteraction(Box obj) { return false; }
+	public  boolean receiveInteraction(Box obj) { return true; }
 	
 	public boolean interactWith(GameItem item) { return canInteract(item); }
  

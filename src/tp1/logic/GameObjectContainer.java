@@ -90,7 +90,20 @@ public class GameObjectContainer {
     }
     
     public void doInteractions(GameObject obj) {
-        for (int i = 0; i < objects.size() && !interactPred(obj, objects.get(i)); i++);
+    
+        
+        for(GameObject o : objects) {
+        	
+        	if(o.equals(obj)) continue;
+        	if(o == obj) continue;
+        	if(!obj.isAlive()) continue;
+        	
+     
+              if(obj.interactWith(o))
+            	  o.interactWith(obj);
+            
+        	
+        }
     }
 
 
@@ -143,9 +156,7 @@ public class GameObjectContainer {
       return false;
     }
 
-    private boolean interactPred(GameObject obj, GameObject other) {
-        return obj.isAlive() && obj.interactWith(other) && !other.interactWith(obj);
-    }
+
 
 
     // ============================================================

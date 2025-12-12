@@ -5,11 +5,20 @@ public class CommandParseException extends CommandException {
 
     private static final long serialVersionUID = 1492672150817663511L;
 
-	public CommandParseException(String message) {
+    public CommandParseException() {
+        super();
+    }
+
+    public CommandParseException(String message) {
         super(message);
+    }
+
+    public CommandParseException(Throwable cause) {
+        super(cause);
     }
 
     public CommandParseException(String message, Throwable cause) {
         super(message, cause);
     }
 }
+

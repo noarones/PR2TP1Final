@@ -59,12 +59,15 @@ public class Game implements GameStatus,GameStatusWriter, GameWorld, GameModel{
 
 
     // ===== Métodos de reinicio del juego =====
-    public void reset(int nLevel, boolean noArguments) {
+    public boolean reset(int level, boolean noArguments) {
 
+    	if(!(level > -2 && level <=2 || noArguments)) return false;
+    	
         if (usingFile(noArguments)) handleConfigFile();
         
-        else handleInternalMap(noArguments,nLevel);
-            
+        else handleInternalMap(noArguments,level);
+        
+        return true;
     }
 
 

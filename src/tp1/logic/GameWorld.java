@@ -26,7 +26,7 @@ public interface GameWorld{
 	public boolean isInBoard(Position pos); 
 	
 	// Se utilizan en Mario
-	public void reset(int nLevel, boolean noArguments);
+	public boolean reset(int nLevel, boolean noArguments);
 	public int numLives();
 	public boolean addGameObject(String[] objectDescription, String Mode) throws GameModelException;
     public boolean checkInteractions(GameObject obj);

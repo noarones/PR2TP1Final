@@ -5,8 +5,16 @@ public class OffBoardException extends GameModelException {
 
     private static final long serialVersionUID = -6315992177867572676L;
 
-	public OffBoardException(String message) {
+    public OffBoardException() {
+        super();
+    }
+
+    public OffBoardException(String message) {
         super(message);
+    }
+
+    public OffBoardException(Throwable cause) {
+        super(cause);
     }
 
     public OffBoardException(String message, Throwable cause) {

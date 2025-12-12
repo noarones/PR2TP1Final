@@ -29,25 +29,16 @@ public class ResetCommand extends AbstractCommand{
 	@Override
 	public void execute(GameModel game, GameView view) throws CommandExecuteException{
 	
-     if(!(knownArgs() && reset(game,view))) 
+     if(!(game.reset(level, noArguments) && showGame(view)))
         throw new CommandExecuteException(Messages.INVALID_LEVEL_NUMBER); 
 	
 	}
-	
-	private boolean knownArgs() {
-		return (level > -2 && level <=2 || noArguments);
-	}
-	
-	
-	
-   private boolean reset(GameModel game, GameView view) {
-	   
-	   game.reset(level, noArguments);
-	   view.showGame(); 
-	 	
+
+   private boolean showGame(GameView view) {
+	   view.showGame();
 	   return true;
    }
-
+   
    @Override
    public Command parse(String[] commandWords) throws CommandParseException {
 

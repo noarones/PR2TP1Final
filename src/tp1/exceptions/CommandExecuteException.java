@@ -5,11 +5,20 @@ public class CommandExecuteException extends CommandException {
 
     private static final long serialVersionUID = 5114978533241610720L;
 
-	public CommandExecuteException(String message) {
+    public CommandExecuteException() {
+        super();
+    }
+
+    public CommandExecuteException(String message) {
         super(message);
+    }
+
+    public CommandExecuteException(Throwable cause) {
+        super(cause);
     }
 
     public CommandExecuteException(String message, Throwable cause) {
         super(message, cause);
     }
 }
+

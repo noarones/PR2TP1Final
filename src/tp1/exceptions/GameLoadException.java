@@ -5,12 +5,20 @@ public class GameLoadException extends CommandException {
 
     private static final long serialVersionUID = -8334214123004881517L;
 
-	public GameLoadException(String message) {
+    public GameLoadException() {
+        super();
+    }
+
+    public GameLoadException(String message) {
         super(message);
+    }
+
+    public GameLoadException(Throwable cause) {
+        super(cause);
     }
 
     public GameLoadException(String message, Throwable cause) {
         super(message, cause);
     }
-    
 }
+

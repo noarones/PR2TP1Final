@@ -5,11 +5,24 @@ public class ActionParseException extends GameParseException {
 
     private static final long serialVersionUID = 9123113903640416197L;
 
-	public ActionParseException(String message) {
+
+    public ActionParseException() {
+        super();
+    }
+
+
+    public ActionParseException(String message) {
         super(message);
     }
+
+
+    public ActionParseException(Throwable cause) {
+        super(cause);
+    }
+
 
     public ActionParseException(String message, Throwable cause) {
         super(message, cause);
     }
 }
+

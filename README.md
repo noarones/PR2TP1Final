@@ -7,5 +7,4 @@ De esta forma se interactua con objetos sin atravesarlos(Caso box, tienes que ac
 
 --Movimiento general automatico: Se ha anadido metodo canMove y su sobrecarga canMove(action, pos) para verificar si un objeto dada una posicion puede moverse en una direccion. 
 
-Falta: 
- --solo comportamiento opcional de mario (test opcional) .
+

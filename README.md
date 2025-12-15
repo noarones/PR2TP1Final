@@ -1,10 +1,19 @@
-Cambios importantes en: 
+# Super Mario Bros - Juego por Consola en Java 🍄🎮
 
---Movimiento de objetos: 
-Los objetos(en especial Mario) antes de verificar si pueden moverse hacen un TryHit, 
-es decir se mueven provisionalmente checkean interacciones y vuelven a su sitio para de nuevo comprobar si pueden moverse, si es asi se moveran sino no. 
-De esta forma se interactua con objetos sin atravesarlos(Caso box, tienes que activarlo sin atravesarlo, goomba mismo comportamiento) 
+## 📌 Descripción
+Este proyecto es una implementación del clásico **Super Mario Bros**, desarrollada en **Java** y ejecutada completamente por **consola**.  
+El objetivo es recrear la experiencia básica del juego utilizando **Programación Orientada a Objetos (POO)**, aplicando **buenas prácticas**, **modularización**, **herencia** y **código limpio y legible**.
 
---Movimiento general automatico: Se ha anadido metodo canMove y su sobrecarga canMove(action, pos) para verificar si un objeto dada una posicion puede moverse en una direccion. 
+El jugador controla a Mario a través de distintos niveles, interactuando con enemigos, obstáculos y elementos del entorno mediante comandos de texto.
 
+---
 
+## 🚀 Características Principales
+- Juego completamente jugable por **consola**
+- Arquitectura basada en **POO**
+- Uso de **herencia y polimorfismo**
+- Código **modular**, **escalable** y **fácil de mantener**
+- Separación clara de responsabilidades
+- Diseño orientado a buenas prácticas de desarrollo en Java
+
+---

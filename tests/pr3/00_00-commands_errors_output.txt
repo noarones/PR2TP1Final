@@ -152,4 +152,3 @@ Command > [DEBUG] Executing: load unknownFile
 [ERROR] Error: unknownFile (El sistema no puede encontrar el archivo especificado)
 Command > [DEBUG] Executing: exit
 
-Player leaves the game

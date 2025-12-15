@@ -12,7 +12,7 @@ El jugador controla a Mario a través de distintos niveles, interactuando con en
 - Juego completamente jugable por **consola**
 - Arquitectura basada en **POO**
 - Uso de **herencia y polimorfismo**
-- Código **modular**, **con intencion de escalabilidad** y **fácil de mantener**
+- Código **modular** y **con intencion de escalabilidad**.
 - Separación clara de responsabilidades
 - Diseño orientado a buenas prácticas de desarrollo en Java
 

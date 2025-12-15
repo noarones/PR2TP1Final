@@ -3,4 +3,4 @@
 (13,2) Goomba LEFT
 (12,2) Goomba LEFT
 (12,2) Goomba RIGHT
-(14,2) Land
+

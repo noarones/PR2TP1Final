@@ -1,6 +1,6 @@
-# Super Mario Bros - Juego por Consola en Java 🍄🎮
+# Super Mario Bros - Juego por Consola en Java 
 
-## 📌 Descripción
+##  Descripción
 Este proyecto es una implementación del clásico **Super Mario Bros**, desarrollada en **Java** y ejecutada completamente por **consola**.  
 El objetivo es recrear la experiencia básica del juego utilizando **Programación Orientada a Objetos (POO)**, aplicando **buenas prácticas**, **modularización**, **herencia** y **código limpio y legible**.
 
@@ -8,7 +8,7 @@ El jugador controla a Mario a través de distintos niveles, interactuando con en
 
 ---
 
-## 🚀 Características Principales
+##  Características Principales
 - Juego completamente jugable por **consola**
 - Arquitectura basada en **POO**
 - Uso de **herencia y polimorfismo**

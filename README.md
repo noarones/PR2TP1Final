@@ -15,5 +15,5 @@ El jugador controla a Mario a través de distintos niveles, interactuando con en
 - Código **modular** y **con intencion de escalabilidad**.
 - Separación clara de responsabilidades
 - Diseño orientado a buenas prácticas de desarrollo en Java
-
+- Testing w JUnit
 ---
